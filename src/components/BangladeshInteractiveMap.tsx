@@ -13,7 +13,11 @@ import {
   CheckCircle2,
   Navigation,
   Globe2,
-  Satellite
+  Satellite,
+  GraduationCap,
+  Building2,
+  Activity,
+  ArrowRight
 } from 'lucide-react';
 import districtsGeoData from '../data/bangladeshDistrictsGeo.json';
 import {
@@ -25,11 +29,16 @@ import {
   TransactionFlow,
 } from '../data/bangladeshMapData';
 import { getDistrictLandData } from '../data/landtechData';
+import {
+  getDistrictIntelligence,
+  searchIntelligence,
+  SearchResultItem,
+} from '../data/districtIntelligence';
 
 interface BangladeshInteractiveMapProps {
   isBn: boolean;
-  theme: "reference" | "emerald" | "atlas" | "midnight";
-  setTheme: (t: "reference" | "emerald" | "atlas" | "midnight") => void;
+  theme: "light" | "reference" | "emerald" | "atlas" | "midnight";
+  setTheme: (t: "light" | "reference" | "emerald" | "atlas" | "midnight") => void;
   selectedDistrict: DistrictData | null;
   onSelectDistrict: (district: DistrictData) => void;
   selectedDivision: DivisionData | null;
@@ -85,9 +94,30 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
     return map;
   }, []);
 
+  // Search Dropdown Focus state
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+
+  // Unified Search across 64 districts, upazilas, institutions, hospitals, and tourism
+  const searchResults = useMemo(() => {
+    if (!searchQuery || searchQuery.trim().length < 2) return [];
+    return searchIntelligence(searchQuery).slice(0, 8);
+  }, [searchQuery]);
+
   // Theme styling definitions
   const themeStyles = useMemo(() => {
     switch (theme) {
+      case "light":
+        return {
+          bg: "#F8FAFC",
+          border: "#E2E8F0",
+          landDefault: "#E2E8F0",
+          landHover: "#10B981",
+          landSelected: "#F59E0B",
+          stroke: "#CBD5E1",
+          selectedStroke: "#0F172A",
+          waterColor: "#E0F2FE",
+          waterText: "#0284C7",
+        };
       case "emerald":
         return {
           bg: "#062319",
@@ -206,18 +236,28 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
   }, [selectedDistrict]);
 
   return (
-    <div className="relative w-full rounded-2xl bg-slate-950/80 border border-slate-700/80 shadow-2xl overflow-hidden flex flex-col backdrop-blur-xl">
+    <div className={`relative w-full rounded-2xl border shadow-2xl overflow-hidden flex flex-col backdrop-blur-xl transition-colors duration-200 ${
+      theme === "light"
+        ? "bg-white/95 border-slate-200 text-slate-800 shadow-slate-200/50"
+        : "bg-slate-950/80 border-slate-700/80 text-slate-100"
+    }`}>
       {/* ── TOP CONTROL BAR ── */}
-      <div className="flex flex-wrap items-center justify-between p-3 sm:p-4 bg-slate-900/90 border-b border-slate-800 gap-3 z-10">
+      <div className={`flex flex-wrap items-center justify-between p-3 sm:p-4 border-b gap-3 z-10 transition-colors ${
+        theme === "light" ? "bg-slate-50/90 border-slate-200 text-slate-800" : "bg-slate-900/90 border-slate-800 text-slate-100"
+      }`}>
         
         {/* Left: Map Layer Mode Toggles */}
-        <div className="flex items-center gap-1.5 p-1 bg-slate-950/90 rounded-xl border border-slate-800">
+        <div className={`flex items-center gap-1.5 p-1 rounded-xl border ${
+          theme === "light" ? "bg-slate-100 border-slate-200" : "bg-slate-950/90 border-slate-800"
+        }`}>
           <button
             type="button"
             onClick={() => setMapMode("districts")}
             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
               mapMode === "districts"
                 ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/30"
+                : theme === "light"
+                ? "text-slate-600 hover:text-slate-900 hover:bg-slate-200/70"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
             }`}
           >
@@ -230,6 +270,8 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
               mapMode === "atlas"
                 ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/30"
+                : theme === "light"
+                ? "text-slate-600 hover:text-slate-900 hover:bg-slate-200/70"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
             }`}
           >
@@ -242,6 +284,8 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
               mapMode === "satellite"
                 ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/30"
+                : theme === "light"
+                ? "text-slate-600 hover:text-slate-900 hover:bg-slate-200/70"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
             }`}
           >
@@ -250,16 +294,77 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
           </button>
         </div>
 
-        {/* Center: Search & Quick Find */}
+        {/* Center: Search & Quick Find with Omnibox Intelligence */}
         <div className="relative flex-1 min-w-[200px] max-w-xs">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search size={14} className={`absolute left-3 top-1/2 -translate-y-1/2 ${theme === "light" ? "text-slate-400" : "text-slate-400"}`} />
           <input
             type="text"
             value={searchQuery}
+            onFocus={() => setIsSearchFocused(true)}
+            onBlur={() => setTimeout(() => setIsSearchFocused(false), 250)}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={isBn ? "জেলা বা এলাকা অনুসন্ধান..." : "Search district or city..."}
-            className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition-colors"
+            placeholder={isBn ? "জেলা, উপজেলা, শিক্ষাপ্রতিষ্ঠান খুঁজুন..." : "Search 64 districts, upazila, POI..."}
+            className={`w-full rounded-xl pl-8 pr-3 py-1.5 text-xs transition-colors focus:outline-none focus:border-emerald-500 ${
+              theme === "light"
+                ? "bg-white border border-slate-300 text-slate-900 placeholder-slate-400 shadow-sm"
+                : "bg-slate-950 border border-slate-800 text-white placeholder-slate-500"
+            }`}
           />
+
+          {/* Unified Intelligence Search Dropdown */}
+          {isSearchFocused && searchResults.length > 0 && (
+            <div className={`absolute top-full left-0 right-0 mt-1 rounded-xl border shadow-2xl p-1 z-50 max-h-72 overflow-y-auto ${
+              theme === "light" ? "bg-white border-slate-200 text-slate-800" : "bg-slate-900 border-slate-700 text-slate-100"
+            }`}>
+              <div className={`px-2 py-1 text-[10px] font-bold uppercase tracking-wider flex justify-between border-b ${
+                theme === "light" ? "text-slate-400 border-slate-100" : "text-slate-400 border-slate-800"
+              }`}>
+                <span>{isBn ? "অনুসন্ধান ফলাফল" : "Search Results"}</span>
+                <span className="text-emerald-500 font-semibold">{searchResults.length} {isBn ? "পাওয়া গেছে" : "found"}</span>
+              </div>
+              {searchResults.map((item) => {
+                const targetDistrict = ALL_BANGLADESH_DISTRICTS.find((d) => d.id === item.districtId);
+                return (
+                  <button
+                    key={`${item.type}-${item.id}`}
+                    type="button"
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => {
+                      if (targetDistrict) {
+                        onSelectDistrict(targetDistrict);
+                        setIsSearchFocused(false);
+                        setSearchQuery("");
+                        const el = document.getElementById("district-dashboard");
+                        if (el) el.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }}
+                    className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs flex items-center justify-between gap-2 transition ${
+                      theme === "light" ? "hover:bg-slate-100" : "hover:bg-slate-800"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 truncate">
+                      <div className="p-1 rounded bg-emerald-500/10 text-emerald-500 shrink-0">
+                        {item.type === 'district' ? <MapPin size={12} /> :
+                         item.type === 'upazila' ? <Navigation size={12} /> :
+                         item.type === 'institution' ? <GraduationCap size={12} /> :
+                         item.type === 'hospital' ? <Activity size={12} /> :
+                         <Compass size={12} />}
+                      </div>
+                      <div className="truncate">
+                        <div className="font-semibold truncate">{isBn && item.bnTitle ? item.bnTitle : item.title}</div>
+                        <div className="text-[10px] text-slate-400 truncate">{item.details}</div>
+                      </div>
+                    </div>
+                    <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded uppercase shrink-0 ${
+                      theme === "light" ? "bg-slate-100 text-slate-600" : "bg-slate-800 text-slate-300"
+                    }`}>
+                      {item.badge}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Right: Map View Switches (Labels, Heatmap, Flows) */}
@@ -271,7 +376,11 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                 onClick={() => setShowLabels((prev) => !prev)}
                 className={`px-2.5 py-1.5 rounded-xl text-xs font-semibold border transition-all flex items-center gap-1 ${
                   showLabels
-                    ? "bg-slate-800 border-emerald-500/40 text-emerald-400"
+                    ? theme === "light"
+                      ? "bg-emerald-50 border-emerald-500 text-emerald-700 font-bold"
+                      : "bg-slate-800 border-emerald-500/40 text-emerald-400"
+                    : theme === "light"
+                    ? "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
                     : "bg-slate-950 border-slate-800 text-slate-400"
                 }`}
                 title="Toggle District Labels"
@@ -285,7 +394,11 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                 onClick={() => setColorByViability((prev) => !prev)}
                 className={`px-2.5 py-1.5 rounded-xl text-xs font-semibold border transition-all flex items-center gap-1 ${
                   colorByViability
-                    ? "bg-slate-800 border-amber-500/40 text-amber-400"
+                    ? theme === "light"
+                      ? "bg-amber-50 border-amber-500 text-amber-700 font-bold"
+                      : "bg-slate-800 border-amber-500/40 text-amber-400"
+                    : theme === "light"
+                    ? "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
                     : "bg-slate-950 border-slate-800 text-slate-400"
                 }`}
                 title="Color code by Land Viability Score"
@@ -299,7 +412,11 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                 onClick={() => setShowFlows((prev) => !prev)}
                 className={`px-2.5 py-1.5 rounded-xl text-xs font-semibold border transition-all flex items-center gap-1 ${
                   showFlows
-                    ? "bg-slate-800 border-teal-500/40 text-teal-400"
+                    ? theme === "light"
+                      ? "bg-teal-50 border-teal-500 text-teal-700 font-bold"
+                      : "bg-slate-800 border-teal-500/40 text-teal-400"
+                    : theme === "light"
+                    ? "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
                     : "bg-slate-950 border-slate-800 text-slate-400"
                 }`}
                 title="Toggle Economic Corridors"
@@ -321,11 +438,19 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
         
         {/* Floating Zoom Controls */}
         {mapMode !== "satellite" && (
-          <div className="absolute top-4 right-4 z-20 flex flex-col gap-1.5 bg-slate-900/90 p-1.5 rounded-xl border border-slate-700/80 backdrop-blur-md shadow-xl">
+          <div className={`absolute top-4 right-4 z-20 flex flex-col gap-1.5 p-1.5 rounded-xl border backdrop-blur-md shadow-xl ${
+            theme === "light"
+              ? "bg-white/95 border-slate-200 shadow-slate-200/60"
+              : "bg-slate-900/90 border-slate-700/80"
+          }`}>
             <button
               type="button"
               onClick={() => setZoomLevel((z) => Math.min(z + 0.35, 3.2))}
-              className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 active:bg-slate-600 flex items-center justify-center text-slate-200 font-bold transition-all"
+              className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold transition-all ${
+                theme === "light"
+                  ? "bg-slate-100 hover:bg-slate-200 text-slate-700"
+                  : "bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-slate-200"
+              }`}
               aria-label="Zoom In"
               title="Zoom In"
             >
@@ -334,7 +459,11 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
             <button
               type="button"
               onClick={() => setZoomLevel((z) => Math.max(z - 0.35, 0.75))}
-              className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 active:bg-slate-600 flex items-center justify-center text-slate-200 font-bold transition-all"
+              className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold transition-all ${
+                theme === "light"
+                  ? "bg-slate-100 hover:bg-slate-200 text-slate-700"
+                  : "bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-slate-200"
+              }`}
               aria-label="Zoom Out"
               title="Zoom Out"
             >
@@ -343,7 +472,11 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
             <button
               type="button"
               onClick={handleResetZoom}
-              className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 active:bg-slate-600 flex items-center justify-center text-slate-200 font-bold transition-all"
+              className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold transition-all ${
+                theme === "light"
+                  ? "bg-slate-100 hover:bg-slate-200 text-slate-700"
+                  : "bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-slate-200"
+              }`}
               aria-label="Reset Zoom"
               title="Reset View"
             >
@@ -353,10 +486,14 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
         )}
 
         {/* Floating Compass Badge */}
-        <div className="absolute top-4 left-4 z-20 pointer-events-none flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/80 border border-slate-700/60 backdrop-blur-md text-[11px] text-slate-300">
-          <Compass className="w-4 h-4 text-emerald-400 animate-spin-slow" />
+        <div className={`absolute top-4 left-4 z-20 pointer-events-none flex items-center gap-2 px-3 py-1.5 rounded-xl border backdrop-blur-md text-[11px] ${
+          theme === "light"
+            ? "bg-white/95 border-slate-200 text-slate-700 shadow-sm"
+            : "bg-slate-900/80 border-slate-700/60 text-slate-300"
+        }`}>
+          <Compass className="w-4 h-4 text-emerald-500 animate-spin-slow" />
           <span>{isBn ? "উচ্চ-নির্ভুল ভেক্টর মানচিত্র" : "High-Precision Vector GIS"}</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
         </div>
 
         {/* 1. SATELLITE GOOGLE MAP VIEW */}
@@ -368,8 +505,12 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
               className="w-full h-full border-0"
               loading="lazy"
             />
-            <div className="absolute bottom-4 left-4 z-20 px-3 py-2 rounded-xl bg-slate-900/90 border border-slate-700 text-xs text-slate-300 backdrop-blur-md">
-              <span className="font-bold text-white">
+            <div className={`absolute bottom-4 left-4 z-20 px-3 py-2 rounded-xl border text-xs backdrop-blur-md ${
+              theme === "light"
+                ? "bg-white/95 border-slate-200 text-slate-700 shadow-md"
+                : "bg-slate-900/90 border-slate-700 text-slate-300"
+            }`}>
+              <span className={`font-bold ${theme === "light" ? "text-slate-900" : "text-white"}`}>
                 {selectedDistrict ? (isBn ? selectedDistrict.bnName : selectedDistrict.name) : (isBn ? "সারাদেশ" : "Bangladesh")}
               </span>
               <span className="text-slate-400 ml-2">Satellite Layer Live</span>
@@ -444,6 +585,8 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                   fillColor = isSelected ? themeStyles.landSelected : isHovered ? themeStyles.landHover : themeStyles.landDefault;
                 } else if (theme === "atlas") {
                   fillColor = isSelected ? "#F59E0B" : isHovered ? "#FDE047" : getAtlasDivColor(dst.divisionId);
+                } else if (theme === "light") {
+                  fillColor = isSelected ? "#F59E0B" : isHovered ? "#10B981" : ((geo as any).color || "#E2E8F0");
                 } else {
                   // Authentic reference colors
                   fillColor = isSelected ? "#F59E0B" : isHovered ? "#FEE08B" : ((geo as any).color || "#D4C2A5");
@@ -458,9 +601,9 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                 }
 
                 const strokeColor = isSelected
-                  ? "#FFFFFF"
+                  ? (theme === "light" ? "#0F172A" : "#FFFFFF")
                   : isHovered
-                  ? "#38BDF8"
+                  ? "#0284C7"
                   : themeStyles.stroke;
 
                 const strokeWidth = isSelected ? 2.5 : isHovered ? 1.8 : 0.85;
@@ -694,54 +837,107 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
           </svg>
         )}
 
-        {/* ── DYNAMIC HOVER TOOLTIP ── */}
-        {hoveredDistrict && tooltipPos && (
-          <div
-            className="absolute z-30 pointer-events-none -translate-x-1/2 -translate-y-full mb-3"
-            style={{
-              left: `${Math.max(120, Math.min(tooltipPos.x, (mapSvgRef.current?.clientWidth || 500) - 120))}px`,
-              top: `${Math.max(80, tooltipPos.y)}px`,
-            }}
-          >
-            <div className="bg-slate-900/95 border border-emerald-500/50 rounded-xl p-3 shadow-2xl backdrop-blur-md min-w-[190px] text-xs">
-              <div className="flex items-center justify-between gap-2 border-b border-slate-700/80 pb-1.5 mb-1.5">
-                <span className="font-black text-white text-sm">
-                  {isBn ? hoveredDistrict.bnName : hoveredDistrict.name}
-                </span>
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                  {isBn ? `${hoveredDistrict.bnDivisionName} বিভাগ` : `${hoveredDistrict.divisionName} Div`}
-                </span>
-              </div>
-              <div className="space-y-1 text-slate-300">
-                <div className="flex justify-between">
-                  <span className="text-slate-400">{isBn ? "ভূমি দর (কাঠা):" : "Avg Rate/Katha:"}</span>
-                  <span className="font-bold text-amber-400">
-                    ৳{(getDistrictLandData(hoveredDistrict.id).avgPricePerKathaBDT / 100000).toFixed(1)}L
+        {/* ── DYNAMIC HOVER TOOLTIP (FEATURE A: MICRO-INTELLIGENCE PREVIEW) ── */}
+        {hoveredDistrict && tooltipPos && (() => {
+          const intel = getDistrictIntelligence(hoveredDistrict.id);
+          const landMeta = getDistrictLandData(hoveredDistrict.id);
+          return (
+            <div
+              className="absolute z-30 pointer-events-none -translate-x-1/2 -translate-y-full mb-3"
+              style={{
+                left: `${Math.max(140, Math.min(tooltipPos.x, (mapSvgRef.current?.clientWidth || 500) - 140))}px`,
+                top: `${Math.max(90, tooltipPos.y)}px`,
+              }}
+            >
+              <div className={`rounded-2xl p-3.5 shadow-2xl backdrop-blur-md min-w-[250px] max-w-[290px] text-xs border transition-all ${
+                theme === "light"
+                  ? "bg-white/95 border-emerald-500/40 text-slate-800 shadow-slate-300/40"
+                  : "bg-slate-900/95 border-emerald-500/50 text-slate-200"
+              }`}>
+                {/* Header: Name and Division */}
+                <div className={`flex items-center justify-between gap-2 border-b pb-2 mb-2 ${
+                  theme === "light" ? "border-slate-200" : "border-slate-700/80"
+                }`}>
+                  <div>
+                    <span className={`font-black text-sm block leading-tight ${theme === "light" ? "text-slate-900" : "text-white"}`}>
+                      {isBn ? hoveredDistrict.bnName : hoveredDistrict.name}
+                    </span>
+                    <span className="text-[10px] text-slate-400 font-medium">
+                      {isBn ? `${hoveredDistrict.name} District` : `${hoveredDistrict.bnName} জেলা`}
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30 shrink-0">
+                    {isBn ? `${hoveredDistrict.bnDivisionName} বিভাগ` : `${hoveredDistrict.divisionName} Div`}
                   </span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-400">{isBn ? "ভূমি মান সূচক:" : "Viability Score:"}</span>
-                  <span className="font-bold text-emerald-400">
-                    {getDistrictLandData(hoveredDistrict.id).viabilityScore}/100
-                  </span>
+
+                {/* Key Statistics */}
+                <div className="space-y-1.5 text-[11px]">
+                  {/* Administrative Overview (Official BBS) */}
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-500 dark:text-slate-400">{isBn ? "প্রশাসনিক একক:" : "Administrative:"}</span>
+                    <span className="font-bold text-slate-700 dark:text-slate-200">
+                      {intel.upazilas.length} {isBn ? "উপজেলা" : "Upazilas"} • {intel.pourashavasCount} {isBn ? "পৌরসভা" : "Paurashavas"}
+                    </span>
+                  </div>
+
+                  {/* Institutions & Healthcare */}
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-500 dark:text-slate-400">{isBn ? "প্রতিষ্ঠান ও স্বাস্থ্য:" : "Institutions:"}</span>
+                    <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+                      {intel.universitiesCount + intel.collegesCount} {isBn ? "কলেজ/ভার্সিটি" : "Higher Edu"} • {intel.hospitalsCount} {isBn ? "হাসপাতাল" : "Hospitals"}
+                    </span>
+                  </div>
+
+                  {/* Tourist Attractions */}
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-500 dark:text-slate-400">{isBn ? "পর্যটন স্পট:" : "Attractions:"}</span>
+                    <span className="font-semibold text-sky-600 dark:text-sky-400">
+                      {intel.attractionsCount} {isBn ? "চিহ্নিত স্থান" : "Tourist Spots"}
+                    </span>
+                  </div>
+
+                  {/* Land Valuation & Listings */}
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-500 dark:text-slate-400">{isBn ? "ভূমি দর ও লিস্টিং:" : "Land Rate & Sale:"}</span>
+                    <span className="font-bold text-amber-600 dark:text-amber-400">
+                      ৳{(landMeta.avgPricePerKathaBDT / 100000).toFixed(1)}L/{isBn ? "কাঠা" : "Katha"} • {intel.landListingsCount} {isBn ? "বিক্রয়যোগ্য" : "Listings"}
+                    </span>
+                  </div>
+
+                  {/* Suitability Index */}
+                  <div className={`pt-1.5 border-t flex justify-between items-center text-[10px] ${
+                    theme === "light" ? "border-slate-100" : "border-slate-800"
+                  }`}>
+                    <span className="text-slate-400">{isBn ? "উপযোগিতা সূচক:" : "Suitability Index:"}</span>
+                    <div className="flex gap-1.5">
+                      <span className="px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 font-bold">Res {intel.suitabilityScores.residential}/100</span>
+                      <span className="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-600 font-bold">Com {intel.suitabilityScores.commercial}/100</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-400">{isBn ? "জরিপ ধরন:" : "Cadastral Survey:"}</span>
-                  <span className="font-medium text-slate-300">
-                    {getDistrictLandData(hoveredDistrict.id).cadastralSurvey}
-                  </span>
+
+                {/* Footer Prompt */}
+                <div className={`mt-2 pt-1.5 border-t text-[10px] flex items-center justify-between font-semibold ${
+                  theme === "light" ? "border-slate-200 text-emerald-600" : "border-slate-800 text-emerald-400"
+                }`}>
+                  <div className="flex items-center gap-1">
+                    <CheckCircle2 size={11} />
+                    <span>{isBn ? "সম্পূর্ণ জেলা ড্যাশবোর্ডের জন্য ক্লিক করুন" : "Click for Full District Intel"}</span>
+                  </div>
+                  <ArrowRight size={11} />
                 </div>
-              </div>
-              <div className="mt-2 pt-1 border-t border-slate-800 text-[10px] text-emerald-400 flex items-center gap-1 font-semibold">
-                <CheckCircle2 size={11} />
-                <span>{isBn ? "বিস্তারিত তথ্যের জন্য ক্লিক করুন" : "Click to inspect area details"}</span>
               </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* ── MAP LEGEND (BOTTOM-LEFT) ── */}
-        <div className="absolute bottom-3 left-3 z-20 hidden sm:flex items-center gap-3 bg-slate-900/90 border border-slate-800 rounded-xl px-3 py-2 backdrop-blur-md text-[11px] text-slate-300">
+        <div className={`absolute bottom-3 left-3 z-20 hidden sm:flex items-center gap-3 rounded-xl px-3 py-2 backdrop-blur-md text-[11px] border ${
+          theme === "light"
+            ? "bg-white/95 border-slate-200 text-slate-700 shadow-md"
+            : "bg-slate-900/90 border-slate-800 text-slate-300"
+        }`}>
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-red-500 ring-2 ring-red-400/30"></span>
             <span>{isBn ? "জাতীয় রাজধানী" : "National Capital (Dhaka)"}</span>

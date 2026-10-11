@@ -15,6 +15,7 @@ import { TourismExplorer } from './components/TourismExplorer';
 import { AdvisorChat } from './components/AdvisorChat';
 import { SuitabilityModal } from './components/SuitabilityModal';
 import { ContestNoticeModal } from './components/ContestNoticeModal';
+import { DistrictIntelligenceDashboard } from './components/DistrictIntelligenceDashboard';
 
 // Sample Datasets & Types
 import { BANGLADESH_PARCELS } from './data/parcels';
@@ -31,7 +32,7 @@ import { CheckCircle2, ShieldCheck, Sparkles } from 'lucide-react';
 
 export function App() {
   const [isBn, setIsBn] = useState<boolean>(false);
-  const [theme, setTheme] = useState<"reference" | "emerald" | "atlas" | "midnight">("reference");
+  const [theme, setTheme] = useState<"light" | "reference" | "emerald" | "atlas" | "midnight">("light");
   const [activeSection, setActiveSection] = useState<string>("hero-map");
 
   // Selected Land Purpose for Deterministic Suitability Evaluation
@@ -155,9 +156,12 @@ export function App() {
 
   // Filter compared parcels from dataset
   const comparedParcels = BANGLADESH_PARCELS.filter((p) => comparedParcelIds.includes(p.id));
+  const isLight = theme === "light";
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-emerald-500 selection:text-white">
+    <div className={`min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white transition-colors duration-150 ${
+      isLight ? "bg-slate-50 text-slate-900" : "bg-slate-950 text-slate-100"
+    }`}>
       {/* ── STICKY NAVIGATION BAR ── */}
       <Navbar
         isBn={isBn}
@@ -186,8 +190,8 @@ export function App() {
         <section id="hero-map" className="relative w-full pt-6 sm:pt-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-6">
           {/* Hero Header */}
           <div className="text-center max-w-3xl mx-auto space-y-3">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
               <span>
                 {isBn
                   ? "🇧🇩 ৬৪ জেলা • ৮ বিভাগ • পূর্ণাঙ্গ ইন্টারেক্টিভ ভেক্টর মানচিত্র"
@@ -195,40 +199,40 @@ export function App() {
               </span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl font-heading font-black tracking-tight text-white leading-tight">
+            <h1 className={`text-3xl sm:text-5xl font-heading font-black tracking-tight leading-tight ${isLight ? "text-slate-900" : "text-white"}`}>
               {isBn ? (
                 <>
-                  বাংলাদেশের ইন্টারেক্টিভ <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300">ভৌগোলিক ও ভূমি মানচিত্র</span>
+                  বাংলাদেশের ইন্টারেক্টিভ <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-600 to-amber-600 dark:from-emerald-400 dark:via-teal-300 dark:to-amber-300">ভৌগোলিক ও ভূমি মানচিত্র</span>
                 </>
               ) : (
                 <>
-                  Interactive Bangladesh <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300">Spatial & Land Intelligence</span> Atlas
+                  Interactive Bangladesh <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-600 to-amber-600 dark:from-emerald-400 dark:via-teal-300 dark:to-amber-300">Spatial & Land Intelligence</span> Atlas
                 </>
               )}
             </h1>
 
-            <p className="text-xs sm:text-sm text-slate-300 font-medium max-w-2xl mx-auto leading-relaxed">
+            <p className={`text-xs sm:text-sm font-medium max-w-2xl mx-auto leading-relaxed ${isLight ? "text-slate-600" : "text-slate-300"}`}>
               {isBn
                 ? "মানচিত্রের যেকোনো অংশ (জেলা বা বিভাগ) নির্বাচন করে তাৎক্ষণিক জমি মূল্যায়ন, ক্যাডাস্ট্রাল জরিপ স্ট্যাটাস ও পর্যটন স্পট বিশ্লেষণ করুন।"
                 : "Select any district or division on the vector map to inspect real-time land valuation, cadastral zoning, infrastructure connectivity, and tourism destinations."}
             </p>
 
             {/* Quick KPI stats strip */}
-            <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 pt-2 text-xs text-slate-400">
-              <div className="flex items-center gap-1.5 bg-slate-900/60 px-3 py-1.5 rounded-xl border border-slate-800">
-                <CheckCircle2 size={13} className="text-emerald-400" />
+            <div className={`flex flex-wrap items-center justify-center gap-3 sm:gap-6 pt-2 text-xs ${isLight ? "text-slate-600" : "text-slate-400"}`}>
+              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border ${isLight ? "bg-white border-slate-200 shadow-sm" : "bg-slate-900/60 border-slate-800"}`}>
+                <CheckCircle2 size={13} className="text-emerald-500" />
                 <span><strong>64</strong> {isBn ? "জেলা ম্যাপড" : "Districts Mapped"}</span>
               </div>
-              <div className="flex items-center gap-1.5 bg-slate-900/60 px-3 py-1.5 rounded-xl border border-slate-800">
-                <CheckCircle2 size={13} className="text-emerald-400" />
+              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border ${isLight ? "bg-white border-slate-200 shadow-sm" : "bg-slate-900/60 border-slate-800"}`}>
+                <CheckCircle2 size={13} className="text-emerald-500" />
                 <span><strong>8</strong> {isBn ? "প্রশাসনিক বিভাগ" : "Divisions"}</span>
               </div>
-              <div className="flex items-center gap-1.5 bg-slate-900/60 px-3 py-1.5 rounded-xl border border-slate-800">
-                <ShieldCheck size={13} className="text-amber-400" />
+              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border ${isLight ? "bg-white border-slate-200 shadow-sm" : "bg-slate-900/60 border-slate-800"}`}>
+                <ShieldCheck size={13} className="text-amber-500" />
                 <span>{isBn ? "অফলাইন ডিটারমিনিস্টিক ইঞ্জিন" : "100% Offline Engine"}</span>
               </div>
-              <div className="flex items-center gap-1.5 bg-slate-900/60 px-3 py-1.5 rounded-xl border border-slate-800">
-                <Sparkles size={13} className="text-sky-400" />
+              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border ${isLight ? "bg-white border-slate-200 shadow-sm" : "bg-slate-900/60 border-slate-800"}`}>
+                <Sparkles size={13} className="text-sky-500" />
                 <span>{isBn ? "৫টি ব্যবহারের উপযোগীতা রেটিং" : "5 Use-Case Suitability"}</span>
               </div>
             </div>
@@ -255,12 +259,37 @@ export function App() {
             <div className="lg:col-span-5 xl:col-span-4 w-full">
               <HeroMapDossier
                 isBn={isBn}
+                theme={theme}
                 selectedDistrict={selectedDistrict}
                 selectedDivision={selectedDivision}
                 onSelectDistrictById={handleSelectDistrictById}
               />
             </div>
           </div>
+        </section>
+
+        {/* ── 2. FULL 64-DISTRICT INTELLIGENCE DASHBOARD (FEATURE B) ── */}
+        <section id="district-dashboard" className="w-full">
+          <DistrictIntelligenceDashboard
+            selectedDistrict={selectedDistrict}
+            isBn={isBn}
+            theme={theme}
+            onNavigateToFinder={() => {
+              setActiveSection('finder');
+              const el = document.getElementById('finder');
+              el?.scrollIntoView({ behavior: 'smooth' });
+            }}
+            onNavigateToTourism={() => {
+              setActiveSection('tourism');
+              const el = document.getElementById('tourism');
+              el?.scrollIntoView({ behavior: 'smooth' });
+            }}
+            onAskAdvisor={() => {
+              setActiveSection('advisor');
+              const el = document.getElementById('advisor');
+              el?.scrollIntoView({ behavior: 'smooth' });
+            }}
+          />
         </section>
 
         {/* ── 2. SMART LAND FINDER ── */}
