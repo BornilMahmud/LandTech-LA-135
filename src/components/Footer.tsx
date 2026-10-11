@@ -1,5 +1,4 @@
-import React from 'react';
-import { Compass, Github, Heart, Shield, Globe2 } from 'lucide-react';
+import { Compass, Heart, Shield, Globe2 } from 'lucide-react';
 
 interface FooterProps {
   isBn: boolean;
