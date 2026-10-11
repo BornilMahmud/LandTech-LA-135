@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-sans: 'Inter', sans-serif;
+    --font-heading: 'Outfit', sans-serif;
+    --font-bangla: 'Hind Siliguri', sans-serif;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, .font-heading {
+    font-family: var(--font-heading);
+  }
+
+  .font-bangla {
+    font-family: var(--font-bangla);
+  }
+}
+
+/* Custom Scrollbars */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 9999px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(16, 185, 129, 0.35);
+  border-radius: 9999px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(16, 185, 129, 0.65);
+}
+
+/* SVG Map Interactions */
+.district-polygon {
+  cursor: pointer;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: fill 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              stroke 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              stroke-width 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              filter 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.district-polygon:hover {
+  transform: scale(1.025);
+}
+
+.division-polygon {
+  cursor: pointer;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: fill 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              stroke 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.division-polygon:hover {
+  transform: scale(1.02);
+}
+
+/* Glassmorphism Classes */
+.glass-panel {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-panel-light {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.glass-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
