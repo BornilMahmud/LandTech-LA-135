@@ -22,9 +22,13 @@ export function convertFromDecimals(decimals: number): LandUnitConversions {
   };
 }
 
-export function convertToDecimals(value: number, unit: 'decimals' | 'katha' | 'bigha' | 'acres' | 'sqFeet'): number {
+export function convertToDecimals(
+  value: number,
+  unit: 'decimals' | 'satak' | 'katha' | 'bigha' | 'acres' | 'sqFeet' | 'sqft'
+): number {
   switch (unit) {
     case 'decimals':
+    case 'satak':
       return value;
     case 'katha':
       return value * 1.65;
@@ -33,8 +37,41 @@ export function convertToDecimals(value: number, unit: 'decimals' | 'katha' | 'b
     case 'acres':
       return value * 100.0;
     case 'sqFeet':
+    case 'sqft':
       return value / 435.6;
     default:
       return value;
   }
+}
+
+export function convertLandArea(
+  value: number,
+  fromUnit: 'decimals' | 'satak' | 'katha' | 'bigha' | 'acres' | 'sqft' | 'sqFeet',
+  toUnit: 'decimals' | 'satak' | 'katha' | 'bigha' | 'acres' | 'sqft' | 'sqFeet'
+): number {
+  const dec = convertToDecimals(value, fromUnit);
+  const conv = convertFromDecimals(dec);
+  switch (toUnit) {
+    case 'decimals':
+    case 'satak':
+      return conv.decimals;
+    case 'katha':
+      return conv.katha;
+    case 'bigha':
+      return conv.bigha;
+    case 'acres':
+      return conv.acres;
+    case 'sqft':
+    case 'sqFeet':
+      return conv.sqFeet;
+    default:
+      return dec;
+  }
+}
+
+export function formatAreaBilingual(decimals: number, isBn: boolean): string {
+  if (isBn) {
+    return `${decimals.toFixed(2)} শতাংশ (${(decimals / 1.65).toFixed(2)} কাঠা)`;
+  }
+  return `${decimals.toFixed(2)} Satak (${(decimals / 1.65).toFixed(2)} Katha)`;
 }

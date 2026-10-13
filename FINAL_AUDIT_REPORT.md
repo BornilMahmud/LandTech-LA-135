@@ -31,16 +31,18 @@ $ npm test -- --run
 
  RUN  v3.2.7 D:/Programming/Programming/projects/landtech/land
 
- ✓ src/utils/verificationEngine.test.ts (4 tests) 4ms
- ✓ src/config/carto.test.ts (5 tests) 21ms
- ✓ src/utils/districtPoiGenerator.test.ts (4 tests) 8ms
- ✓ src/utils/osrmRoutingService.test.ts (3 tests) 5ms
+ ✓ src/utils/verificationEngine.test.ts (4 tests) 5ms
+ ✓ src/data/bangladeshGeoRegistry.test.ts (6 tests) 8ms
+ ✓ src/utils/osrmRoutingService.test.ts (3 tests) 8ms
+ ✓ src/config/carto.test.ts (5 tests) 23ms
+ ✓ src/utils/documentProcessing.test.ts (5 tests) 8ms
+ ✓ src/utils/districtPoiGenerator.test.ts (4 tests) 10ms
  ✓ src/data/districtIntelligence.test.ts (4 tests) 12ms
- ✓ src/utils/suitability.test.ts (6 tests) 5ms
+ ✓ src/utils/suitability.test.ts (6 tests) 7ms
 
- Test Files  6 passed (6)
-      Tests  26 passed (26)
-   Duration  707ms
+ Test Files  8 passed (8)
+      Tests  37 passed (37)
+   Duration  900ms
 ```
 
 **Breakdown of Verified Test Assertions:**
@@ -49,22 +51,31 @@ $ npm test -- --run
    - Detects Dag number mismatch between Deed Hal Dag and Khatian Sabek Dag.
    - Computes area deficit between Deed claimed area and Khatian statutory share.
    - Detects missing mutation in seller's name as a critical legal red flag.
-2. `src/utils/districtPoiGenerator.test.ts`:
+2. `src/data/bangladeshGeoRegistry.test.ts`:
+   - Verifies complete 64-district coverage with zero missing or duplicate district IDs.
+   - Validates district-to-division mappings across all 8 administrative divisions.
+   - Asserts all centroids and bounding coordinates fall within Bangladesh WGS84 geographic boundaries.
+3. `src/utils/documentProcessing.test.ts`:
+   - Validates bilingual regex parsing for 12 key land fields in Bengali script and English.
+   - Normalizes Bengali numerals (`০-৯`) into standard Arabic digits (`0-9`) to ensure calculation parity.
+   - Tests bidirectional land area conversions across Decimals, Satak, Katha, Bigha, Acres, and Sq Ft.
+   - Handles Khatian spelling variations (`খতিয়ান` and `খতিয়ান`) without extraction loss.
+4. `src/utils/districtPoiGenerator.test.ts`:
    - Verifies deterministic POI generation per district category.
    - Checks coordinate bounds within Bangladesh geographic limits.
-3. `src/utils/osrmRoutingService.test.ts`:
+5. `src/utils/osrmRoutingService.test.ts`:
    - Parses valid OSRM response into GeoJSON coordinates, distance in km, duration in minutes, and step instructions.
    - Rejects straight lines and throws descriptive errors on OSRM API failure codes.
    - Handles network timeouts and unroutable endpoints gracefully.
-4. `src/data/districtIntelligence.test.ts`:
+6. `src/data/districtIntelligence.test.ts`:
    - Verifies coverage of all 64 districts in administrative records.
    - Validates literacy rate, area, and population bounds.
-5. `src/config/carto.test.ts`:
+7. `src/config/carto.test.ts`:
    - Validates active CARTO API Key token formatting and presence.
    - Decodes account payload (`ac_k255k21y`) and expiration timestamp.
    - Generates authenticated tile URLs across all 3 styles (Voyager, Positron, Dark Matter).
    - Validates `cartoTransformRequest` intercepts and signs requests without query duplication.
-6. `src/utils/suitability.test.ts`:
+8. `src/utils/suitability.test.ts`:
    - Evaluates multi-criteria land suitability algorithms.
    - Validates weighting logic across road connectivity, flood risk, and zoning.
 

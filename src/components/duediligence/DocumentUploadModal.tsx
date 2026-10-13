@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ExtractedLandDocument, DocumentType, SurveyEdition } from '../../types/dueDiligence';
+import { parseDocumentText } from '../../utils/documentParser';
 import {
   X,
   UploadCloud,
@@ -69,39 +70,22 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
       reader.onload = (event) => {
         try {
           const content = String(event.target?.result || '');
-          if (content.trim().startsWith('{')) {
-            const parsed = JSON.parse(content);
-            if (parsed.dagNumber || parsed.dag) setDagNumber(String(parsed.dagNumber || parsed.dag));
-            if (parsed.khatianNumber || parsed.khatian) setDocNumber(String(parsed.khatianNumber || parsed.khatian));
-            if (parsed.mouza || parsed.mouzaName) setMouzaName(String(parsed.mouza || parsed.mouzaName));
-            if (parsed.areaDecimals || parsed.landAreaDecimals || parsed.area)
-              setLandAreaDecimals(String(parsed.areaDecimals || parsed.landAreaDecimals || parsed.area));
-            if (parsed.ownerName || parsed.owner) setOwnerName(String(parsed.ownerName || parsed.owner));
-            if (parsed.docType || parsed.type) setDocType(parsed.docType || parsed.type);
-            setExtractedFeedback(
-              isBn
-                ? 'জেসন ফাইল থেকে ভূমির রেকর্ড সফলভাবে উত্তোলিত হয়েছে।'
-                : 'Extracted structured land record attributes from JSON file.'
-            );
-          } else {
-            const dagMatch = content.match(/(?:দাগ\s*নং|দাগ|dag\s*no|dag|plot\s*no)[\s:]*([০-৯0-9\/\w-]+)/i);
-            const khatianMatch = content.match(/(?:খতিয়ান\s*নং|খতিয়ান|khatian\s*no|khatian)[\s:]*([০-৯0-9\/\w-]+)/i);
-            const mouzaMatch = content.match(/(?:মৌজা|mouza)[\s:]*([^\n\r,]+)/i);
-            const areaMatch = content.match(/(?:জমির\s*পরিমাণ|পরিমাণ|area|decimals)[\s:]*([০-৯0-9\.]+)/i);
-            const ownerMatch = content.match(/(?:মালিকের\s*নাম|মালিক|owner|buyer)[\s:]*([^\n\r,]+)/i);
+          const extracted = parseDocumentText(content);
 
-            if (dagMatch) setDagNumber(dagMatch[1].trim());
-            if (khatianMatch) setDocNumber(khatianMatch[1].trim());
-            if (mouzaMatch) setMouzaName(mouzaMatch[1].trim());
-            if (areaMatch) setLandAreaDecimals(areaMatch[1].trim());
-            if (ownerMatch) setOwnerName(ownerMatch[1].trim());
+          if (extracted.dagNumber) setDagNumber(extracted.dagNumber);
+          if (extracted.khatianNumber) setDocNumber(extracted.khatianNumber);
+          if (extracted.deedNumber) setDocNumber(extracted.deedNumber);
+          if (extracted.mouza) setMouzaName(extracted.mouza);
+          if (extracted.jlNumber) setJlNumber(extracted.jlNumber);
+          if (extracted.areaDecimals !== undefined) setLandAreaDecimals(String(extracted.areaDecimals));
+          if (extracted.sellerName) setOwnerName(extracted.sellerName);
+          if (extracted.surveyEdition) setSurveyEdition(extracted.surveyEdition as any);
 
-            setExtractedFeedback(
-              isBn
-                ? 'নথি থেকে ফিল্ডগুলো লোকাল মেমরিতে প্রসেস করা হয়েছে। নিচে তথ্যগুলো যাচাই করুন।'
-                : 'Document text processed in browser memory. Review and correct extracted fields below.'
-            );
-          }
+          setExtractedFeedback(
+            isBn
+              ? 'নথি থেকে ফিল্ডগুলো লোকাল মেমরিতে প্রসেস করা হয়েছে। নিচে তথ্যগুলো যাচাই ও সংশোধন করুন।'
+              : 'Document attributes extracted into local memory. Review and correct extracted fields below.'
+          );
         } catch {
           setExtractedFeedback(
             isBn ? 'ফাইলটি লোকালভাবে লোড হয়েছে। নিচে তথ্য প্রদান করুন।' : 'File read locally. Please verify fields below.'
