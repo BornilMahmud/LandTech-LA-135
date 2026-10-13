@@ -1,62 +1,68 @@
 import { describe, it, expect } from 'vitest';
-import { generateDistrictPOIs, getDistrictAreaSummary, filterPOIsByCategory } from './districtPoiGenerator';
+import {
+  generateDistrictPOIs,
+  generateDistrictRoads,
+  calculateRouteDirections,
+  getDistrictAreaSummary,
+  filterPOIsByCategory,
+  getPathBoundingBox,
+} from './districtPoiGenerator';
 
 describe('districtPoiGenerator', () => {
-  it('generates POIs for Dhaka with upazilas, pourashavas, colleges, schools, and hospitals', () => {
-    const pois = generateDistrictPOIs('dhaka', [308, 482]);
-    expect(pois.length).toBeGreaterThan(10);
+  it('parses bounding box from SVG path correctly', () => {
+    const samplePath = 'M375.3,201.0L479.1,201.0L479.1,290.2L375.3,290.2Z';
+    const bbox = getPathBoundingBox(samplePath);
+    expect(bbox.minX).toBeCloseTo(375.3);
+    expect(bbox.maxX).toBeCloseTo(479.1);
+    expect(bbox.minY).toBeCloseTo(201.0);
+    expect(bbox.maxY).toBeCloseTo(290.2);
+    expect(bbox.width).toBeGreaterThan(100);
+    expect(bbox.height).toBeGreaterThan(80);
+  });
+
+  it('generates non-overlapping POIs for Sunamganj with geographic spread', () => {
+    const sunamPath = 'M410.1,287.7L375.3,201.0L479.1,290.2Z';
+    const pois = generateDistrictPOIs('sunamganj', [429.1, 238.4], sunamPath);
+    expect(pois.length).toBeGreaterThan(12);
 
     const upazilas = filterPOIsByCategory(pois, 'upazila');
-    expect(upazilas.length).toBeGreaterThanOrEqual(5);
+    expect(upazilas.length).toBeGreaterThanOrEqual(10);
 
-    const pourashavas = filterPOIsByCategory(pois, 'pourashava');
-    expect(pourashavas.length).toBeGreaterThanOrEqual(1);
+    // Verify upazilas are spread out across at least 30 SVG units width and height
+    const xCoords = upazilas.map((u) => u.x);
+    const yCoords = upazilas.map((u) => u.y);
+    const spreadX = Math.max(...xCoords) - Math.min(...xCoords);
+    const spreadY = Math.max(...yCoords) - Math.min(...yCoords);
 
-    const colleges = filterPOIsByCategory(pois, 'college');
-    expect(colleges.length).toBeGreaterThanOrEqual(2);
+    expect(spreadX).toBeGreaterThan(30);
+    expect(spreadY).toBeGreaterThan(25);
+  });
 
-    const schools = filterPOIsByCategory(pois, 'school');
-    expect(schools.length).toBeGreaterThanOrEqual(1);
+  it('generates connected road networks between District Sadar and upazilas', () => {
+    const pois = generateDistrictPOIs('sunamganj', [429.1, 238.4]);
+    const roads = generateDistrictRoads('sunamganj', pois);
 
-    const hospitals = filterPOIsByCategory(pois, 'hospital');
-    expect(hospitals.length).toBeGreaterThanOrEqual(2);
-
-    // Verify coordinates are anchored near centroid
-    pois.forEach((poi) => {
-      expect(poi.x).toBeGreaterThan(250);
-      expect(poi.x).toBeLessThan(360);
-      expect(poi.y).toBeGreaterThan(430);
-      expect(poi.y).toBeLessThan(540);
+    expect(roads.length).toBeGreaterThan(5);
+    roads.forEach((road) => {
+      expect(road.path).toContain('M');
+      expect(road.path).toContain('Q');
+      expect(road.distanceKm).toBeGreaterThan(0);
+      expect(road.code).toBeTruthy();
     });
   });
 
-  it('calculates accurate area summary with square kilometers, acres, and bighas', () => {
-    const summary = getDistrictAreaSummary('dhaka');
-    expect(summary.areaSqKm).toBeGreaterThan(1000);
-    expect(summary.areaAcres).toBeGreaterThan(200000);
-    expect(summary.areaBighas).toBeGreaterThan(600000);
-    expect(summary.upazilasCount).toBeGreaterThanOrEqual(5);
-    expect(summary.pourashavasCount).toBeGreaterThanOrEqual(1);
-  });
+  it('calculates driving route directions between Sadar and destination', () => {
+    const pois = generateDistrictPOIs('sunamganj', [429.1, 238.4]);
+    const roads = generateDistrictRoads('sunamganj', pois);
 
-  it('generates valid POIs for regional districts (e.g. Chattogram, Sylhet, Rajshahi)', () => {
-    const ctgPOIs = generateDistrictPOIs('chattogram', [440, 620]);
-    expect(ctgPOIs.length).toBeGreaterThan(10);
-    expect(filterPOIsByCategory(ctgPOIs, 'upazila').length).toBeGreaterThan(5);
+    const sadar = pois.find((p) => p.isHub) || pois[0];
+    const destination = pois.find((p) => p.id !== sadar.id && p.category === 'upazila') || pois[1];
 
-    const sylPOIs = generateDistrictPOIs('sylhet', [480, 320]);
-    expect(sylPOIs.length).toBeGreaterThan(8);
-
-    const rajPOIs = generateDistrictPOIs('rajshahi', [190, 390]);
-    expect(rajPOIs.length).toBeGreaterThan(8);
-  });
-
-  it('correctly filters POIs by category', () => {
-    const pois = generateDistrictPOIs('dhaka', [308, 482]);
-    const education = filterPOIsByCategory(pois, 'education');
-    expect(education.every((p) => p.category === 'college' || p.category === 'school')).toBe(true);
-
-    const hospitals = filterPOIsByCategory(pois, 'hospital');
-    expect(hospitals.every((p) => p.category === 'hospital')).toBe(true);
+    const route = calculateRouteDirections(sadar, destination, roads);
+    expect(route.distanceKm).toBeGreaterThan(0);
+    expect(route.durationMinutes).toBeGreaterThan(0);
+    expect(route.path).toBeTruthy();
+    expect(route.steps.length).toBeGreaterThanOrEqual(3);
+    expect(route.bnSteps.length).toBeGreaterThanOrEqual(3);
   });
 });

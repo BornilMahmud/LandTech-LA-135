@@ -21,6 +21,10 @@ import {
   Building,
   X,
   ExternalLink,
+  Route,
+  ArrowUpDown,
+  Clock,
+  Car,
 } from 'lucide-react';
 import districtsGeoData from '../data/bangladeshDistrictsGeo.json';
 import {
@@ -38,9 +42,13 @@ import {
 } from '../data/districtIntelligence';
 import {
   generateDistrictPOIs,
+  generateDistrictRoads,
+  calculateRouteDirections,
   getDistrictAreaSummary,
   filterPOIsByCategory,
   DistrictPOI,
+  DistrictRoad,
+  RouteDirections,
   POICategory,
 } from '../utils/districtPoiGenerator';
 
@@ -82,6 +90,11 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
   const [activeLayerFilter, setActiveLayerFilter] = useState<'all' | 'upazila' | 'pourashava' | 'college' | 'school' | 'hospital'>('all');
   const [selectedPOI, setSelectedPOI] = useState<DistrictPOI | null>(null);
   const [hoveredPOI, setHoveredPOI] = useState<DistrictPOI | null>(null);
+
+  // Route Navigation Mode states ("route soho")
+  const [isRouteMode, setIsRouteMode] = useState<boolean>(false);
+  const [routeFromId, setRouteFromId] = useState<string>('');
+  const [routeToId, setRouteToId] = useState<string>('');
 
   // Hover states
   const [hoveredDistrict, setHoveredDistrict] = useState<DistrictData | null>(null);
@@ -134,18 +147,53 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
     return getDistrictAreaSummary(selectedDistrict.id);
   }, [selectedDistrict]);
 
-  // All POIs for currently selected district
+  // All POIs for currently selected district using real boundary bounds
   const allDistrictPOIs = useMemo(() => {
     if (!selectedDistrict) return [];
     const geo = geoLookup.get(selectedDistrict.id);
     const centroid = geo ? (geo.centroid as [number, number]) : ([300, 436] as [number, number]);
-    return generateDistrictPOIs(selectedDistrict.id, centroid);
+    return generateDistrictPOIs(selectedDistrict.id, centroid, geo?.path);
   }, [selectedDistrict, geoLookup]);
 
   // Filtered POIs based on active layer tab
   const visiblePOIs = useMemo(() => {
     return filterPOIsByCategory(allDistrictPOIs, activeLayerFilter);
   }, [allDistrictPOIs, activeLayerFilter]);
+
+  // Road Network for current district
+  const districtRoads = useMemo(() => {
+    if (!selectedDistrict || allDistrictPOIs.length < 2) return [];
+    return generateDistrictRoads(selectedDistrict.id, allDistrictPOIs);
+  }, [selectedDistrict, allDistrictPOIs]);
+
+  // Auto-initialize route origin (Sadar) and destination when entering route mode
+  useEffect(() => {
+    if (isRouteMode && allDistrictPOIs.length > 1) {
+      const sadar = allDistrictPOIs.find((p) => p.isHub) || allDistrictPOIs[0];
+      const otherPOIs = allDistrictPOIs.filter((p) => p.id !== sadar.id && p.category === 'upazila');
+      const defaultDest = otherPOIs[0] || allDistrictPOIs[1];
+      if (!routeFromId) setRouteFromId(sadar.id);
+      if (!routeToId) setRouteToId(defaultDest.id);
+    }
+  }, [isRouteMode, allDistrictPOIs]);
+
+  // Active Route Calculation
+  const activeRoute = useMemo(() => {
+    if (!isRouteMode || !routeFromId || !routeToId || routeFromId === routeToId) return null;
+    const fromPOI = allDistrictPOIs.find((p) => p.id === routeFromId);
+    const toPOI = allDistrictPOIs.find((p) => p.id === routeToId);
+    if (!fromPOI || !toPOI) return null;
+    return calculateRouteDirections(fromPOI, toPOI, districtRoads);
+  }, [isRouteMode, routeFromId, routeToId, allDistrictPOIs, districtRoads]);
+
+  // Handle "Directions to here" from a POI
+  const handleDirectionsToPOI = (destPOI: DistrictPOI) => {
+    const sadar = allDistrictPOIs.find((p) => p.isHub) || allDistrictPOIs[0];
+    setRouteFromId(sadar.id);
+    setRouteToId(destPOI.id);
+    setIsRouteMode(true);
+    setSelectedPOI(null);
+  };
 
   // Smooth Zoom to District Centroid
   const zoomToDistrict = (districtId: string) => {
@@ -178,6 +226,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
     setZoomLevel(1);
     setPanOffset({ x: 0, y: 0 });
     setSelectedPOI(null);
+    setIsRouteMode(false);
   };
 
   // Theme styling definitions
@@ -608,8 +657,8 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
           <span>
             {isDistrictZoomed
               ? isBn
-                ? `${selectedDistrict?.bnName} জেলা ফোকাস্ড ভিউ`
-                : `${selectedDistrict?.name} District Focused GIS`
+                ? `${selectedDistrict?.bnName} জেলা • রোড রুট ও জিআইএস`
+                : `${selectedDistrict?.name} District • Highway GIS`
               : isBn
               ? "উচ্চ-নির্ভুল ভেক্টর মানচিত্র"
               : "High-Precision Vector GIS"}
@@ -647,7 +696,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
           </div>
         )}
 
-        {/* 2. 64-DISTRICT SELECTABLE VECTOR MAP WITH SMOOTH ZOOM & MULTI-LAYER POIS */}
+        {/* 2. 64-DISTRICT SELECTABLE VECTOR MAP WITH SMOOTH ZOOM, HIGHWAYS & MULTI-LAYER POIS */}
         {mapMode === "districts" && (
           <svg
             ref={mapSvgRef}
@@ -681,6 +730,9 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
               </filter>
               <filter id="area-badge-glow" x="-20%" y="-20%" width="140%" height="140%">
                 <feDropShadow dx="0" dy="1" stdDeviation="2" floodColor="#10B981" floodOpacity="0.7" />
+              </filter>
+              <filter id="route-glow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="1" stdDeviation="3" floodColor="#3B82F6" floodOpacity="0.8" />
               </filter>
             </defs>
 
@@ -860,17 +912,13 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                     )}
 
                     {/* District Name Label (When Nationwide) */}
-                    {showLabels && (!isDistrictZoomed || isSelected) && (
+                    {showLabels && !isDistrictZoomed && (
                       <text
                         x={geo.centroid[0]}
-                        y={geo.centroid[1] + (isDistrictZoomed ? -16 : dst.isCapital ? 9 : 4)}
+                        y={geo.centroid[1] + (dst.isCapital ? 9 : 4)}
                         textAnchor="middle"
                         fontSize={
-                          isDistrictZoomed && isSelected
-                            ? isBn
-                              ? "10"
-                              : "9.5"
-                            : dst.isCapital
+                          dst.isCapital
                             ? isBn
                               ? "8.5"
                               : "8"
@@ -882,7 +930,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                             ? "6.2"
                             : "5.8"
                         }
-                        fontWeight={isDistrictZoomed && isSelected ? "900" : dst.isCapital || dst.isDivisionHQ ? "800" : "600"}
+                        fontWeight={dst.isCapital || dst.isDivisionHQ ? "800" : "600"}
                         fill={
                           isSelected
                             ? theme === "light"
@@ -949,20 +997,138 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                 );
               })}
 
-            {/* ── DISTRICT LOCAL INFRASTRUCTURE LAYER (ZOOMED IN: UPAZILAS, POURASHAVAS, SCHOOLS, COLLEGES, HOSPITALS) ── */}
+            {/* ── HIGHWAY & ROAD NETWORK ("route soho" - GOOGLE MAPS STYLE) ── */}
+            {isDistrictZoomed && districtRoads.length > 0 && (
+              <g id="district-roads-layer" className="transition-opacity duration-500 ease-out">
+                {/* 1. Base Road Bed (Road Casing) */}
+                {districtRoads.map((road) => (
+                  <path
+                    key={`bed-${road.id}`}
+                    d={road.path}
+                    fill="none"
+                    stroke={activeRoute ? "#E2E8F0" : "#CBD5E1"}
+                    strokeWidth={road.type === 'national' ? 3.0 : 2.0}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    opacity={activeRoute ? 0.35 : 0.85}
+                  />
+                ))}
+
+                {/* 2. Arterial Road Surface (Google Maps Highway Yellow / White) */}
+                {districtRoads.map((road) => {
+                  const isNational = road.type === 'national';
+                  return (
+                    <path
+                      key={`surface-${road.id}`}
+                      d={road.path}
+                      fill="none"
+                      stroke={isNational ? "#FDE047" : "#FFFFFF"}
+                      strokeWidth={isNational ? 2.0 : 1.2}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      opacity={activeRoute ? 0.3 : 0.95}
+                    />
+                  );
+                })}
+
+                {/* 3. Highway Route Badges along road midpoints */}
+                {!activeRoute &&
+                  districtRoads.slice(0, 4).map((road) => (
+                    <g
+                      key={`badge-${road.id}`}
+                      transform={`translate(${road.midCoord[0]}, ${road.midCoord[1]})`}
+                      className="pointer-events-none select-none"
+                      filter="url(#poi-shadow)"
+                    >
+                      <rect
+                        x="-7.5"
+                        y="-3.5"
+                        width="15"
+                        height="7"
+                        rx="1.8"
+                        fill="#0F172A"
+                        stroke="#FDE047"
+                        strokeWidth="0.6"
+                      />
+                      <text
+                        x="0"
+                        y="1.3"
+                        textAnchor="middle"
+                        fontSize="2.4"
+                        fontWeight="900"
+                        fill="#FDE047"
+                        className="font-mono"
+                      >
+                        {road.code}
+                      </text>
+                    </g>
+                  ))}
+
+                {/* 4. Active Navigation Route Line (Google Maps Blue Navigation) */}
+                {activeRoute && (
+                  <g id="active-navigation-route" className="animate-in fade-in duration-300">
+                    {/* Glowing Route Casing */}
+                    <path
+                      d={activeRoute.path}
+                      fill="none"
+                      stroke="#3B82F6"
+                      strokeWidth="6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      opacity="0.4"
+                      filter="url(#route-glow)"
+                    />
+                    {/* Main Blue Polyline */}
+                    <path
+                      d={activeRoute.path}
+                      fill="none"
+                      stroke="#2563EB"
+                      strokeWidth="3.4"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    {/* Animated Moving Transit Vehicle / Dot */}
+                    <circle r="3.0" fill="#FFFFFF" stroke="#1D4ED8" strokeWidth="1.2" filter="url(#poi-shadow)">
+                      <animateMotion path={activeRoute.path} dur="3.5s" repeatCount="indefinite" />
+                    </circle>
+                    <circle r="1.4" fill="#38BDF8">
+                      <animateMotion path={activeRoute.path} dur="3.5s" repeatCount="indefinite" />
+                    </circle>
+
+                    {/* Start Point A Badge */}
+                    <g transform={`translate(${activeRoute.fromPOI.x}, ${activeRoute.fromPOI.y})`}>
+                      <circle r="4.8" fill="#10B981" stroke="#FFFFFF" strokeWidth="1" filter="url(#poi-shadow)" />
+                      <text x="0" y="1.5" textAnchor="middle" fontSize="3.2" fontWeight="900" fill="#FFFFFF">
+                        A
+                      </text>
+                    </g>
+
+                    {/* Destination Point B Badge */}
+                    <g transform={`translate(${activeRoute.toPOI.x}, ${activeRoute.toPOI.y})`}>
+                      <circle r="4.8" fill="#EF4444" stroke="#FFFFFF" strokeWidth="1" filter="url(#poi-shadow)" />
+                      <text x="0" y="1.5" textAnchor="middle" fontSize="3.2" fontWeight="900" fill="#FFFFFF">
+                        B
+                      </text>
+                    </g>
+                  </g>
+                )}
+              </g>
+            )}
+
+            {/* ── DISTRICT LOCAL INFRASTRUCTURE LAYER (ZOOMED IN: CLEAN GOOGLE MAPS PIN SPACING) ── */}
             {isDistrictZoomed && selectedDistrict && selectedGeo && (
               <g id="district-poi-layer" className="transition-opacity duration-500 ease-out">
                 {/* Centroid Area Banner badge right above the district */}
-                {districtAreaSummary && (
+                {districtAreaSummary && !activeRoute && (
                   <g
-                    transform={`translate(${selectedGeo.centroid[0]}, ${selectedGeo.centroid[1] - 8})`}
+                    transform={`translate(${selectedGeo.centroid[0]}, ${selectedGeo.centroid[1] - 12})`}
                     className="pointer-events-none select-none"
                     filter="url(#area-badge-glow)"
                   >
                     <rect
-                      x="-45"
+                      x="-48"
                       y="-5"
-                      width="90"
+                      width="96"
                       height="10"
                       rx="3.5"
                       fill={theme === "light" ? "rgba(15, 23, 42, 0.92)" : "rgba(2, 6, 23, 0.95)"}
@@ -987,8 +1153,16 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
 
                 {/* Render filtered POIs */}
                 {visiblePOIs.map((poi) => {
+                  const isUpazila = poi.category === 'upazila';
                   const isPoiHovered = hoveredPOI?.id === poi.id;
                   const isPoiSelected = selectedPOI?.id === poi.id;
+                  const isCategoryFiltered = activeLayerFilter !== 'all';
+
+                  // Only show full label pill if:
+                  // 1) It's an upazila town center, OR
+                  // 2) Hovered/Selected by user, OR
+                  // 3) Filtered by that specific layer (keeps the map uncluttered like Google Maps!)
+                  const shouldShowLabel = isUpazila || isPoiHovered || isPoiSelected || isCategoryFiltered;
 
                   // Color styling per category
                   let badgeColor = "#4F46E5"; // Upazila Indigo
@@ -1003,8 +1177,8 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                   }
 
                   const labelText = isBn ? poi.bnName : poi.name;
-                  const displayLabel = labelText.length > 22 ? labelText.slice(0, 20) + "…" : labelText;
-                  const labelW = Math.max(22, displayLabel.length * 2.2);
+                  const displayLabel = labelText.length > 20 ? labelText.slice(0, 18) + "…" : labelText;
+                  const labelW = Math.max(18, displayLabel.length * 2.1);
 
                   return (
                     <g
@@ -1013,7 +1187,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                       style={{
                         transition: "transform 0.15s ease-out",
                         transformOrigin: `${poi.x}px ${poi.y}px`,
-                        transform: isPoiHovered || isPoiSelected ? "scale(1.3)" : "scale(1)",
+                        transform: isPoiHovered || isPoiSelected ? "scale(1.35)" : "scale(1)",
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
@@ -1034,55 +1208,57 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                         />
                       )}
 
-                      {/* Marker Anchor Pin */}
+                      {/* Marker Anchor Pin Circle */}
                       <circle
                         cx={poi.x}
                         cy={poi.y}
-                        r="3.2"
+                        r={isUpazila ? 3.4 : 2.7}
                         fill={badgeColor}
                         stroke="#FFFFFF"
-                        strokeWidth="0.8"
+                        strokeWidth="0.75"
                         filter="url(#poi-shadow)"
                       />
-                      <circle cx={poi.x} cy={poi.y} r="1.2" fill="#FFFFFF" />
+                      <circle cx={poi.x} cy={poi.y} r={isUpazila ? 1.3 : 0.9} fill="#FFFFFF" />
 
-                      {/* Label Pill Box */}
-                      <g transform={`translate(${poi.x}, ${poi.y - 4.8})`}>
-                        <rect
-                          x={-labelW / 2}
-                          y="-4.2"
-                          width={labelW}
-                          height="4.8"
-                          rx="1.4"
-                          fill={
-                            isPoiSelected
-                              ? badgeColor
-                              : theme === "light"
-                              ? "rgba(255, 255, 255, 0.95)"
-                              : "rgba(15, 23, 42, 0.94)"
-                          }
-                          stroke={isPoiSelected ? "#FFFFFF" : badgeColor}
-                          strokeWidth="0.5"
-                          filter="url(#poi-shadow)"
-                        />
-                        <text
-                          x="0"
-                          y="-1"
-                          textAnchor="middle"
-                          fontSize="2.4"
-                          fontWeight={isPoiSelected ? "900" : "700"}
-                          fill={
-                            isPoiSelected
-                              ? "#FFFFFF"
-                              : theme === "light"
-                              ? "#0F172A"
-                              : "#F8FAFC"
-                          }
-                          className="pointer-events-none select-none font-sans"
-                        >
-                          {displayLabel}
-                        </text>
-                      </g>
+                      {/* Conditionally rendered label pill (clean & non-overlapping) */}
+                      {shouldShowLabel && (
+                        <g transform={`translate(${poi.x}, ${poi.y - (isUpazila ? 4.8 : 4.2)})`}>
+                          <rect
+                            x={-labelW / 2}
+                            y="-4.2"
+                            width={labelW}
+                            height="4.8"
+                            rx="1.4"
+                            fill={
+                              isPoiSelected
+                                ? badgeColor
+                                : theme === "light"
+                                ? "rgba(255, 255, 255, 0.96)"
+                                : "rgba(15, 23, 42, 0.95)"
+                            }
+                            stroke={isPoiSelected ? "#FFFFFF" : badgeColor}
+                            strokeWidth="0.5"
+                            filter="url(#poi-shadow)"
+                          />
+                          <text
+                            x="0"
+                            y="-1"
+                            textAnchor="middle"
+                            fontSize="2.4"
+                            fontWeight={isUpazila || isPoiSelected ? "800" : "600"}
+                            fill={
+                              isPoiSelected
+                                ? "#FFFFFF"
+                                : theme === "light"
+                                ? "#0F172A"
+                                : "#F8FAFC"
+                            }
+                            className="pointer-events-none select-none font-sans"
+                          >
+                            {displayLabel}
+                          </text>
+                        </g>
+                      )}
                     </g>
                   );
                 })}
@@ -1180,6 +1356,151 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
           </svg>
         )}
 
+        {/* ── GOOGLE MAPS ROUTE DIRECTIONS CARD ("route soho") ── */}
+        {isRouteMode && activeRoute && (
+          <div
+            className={`absolute top-4 left-4 sm:left-6 z-30 w-80 sm:w-96 rounded-2xl p-4 backdrop-blur-xl border shadow-2xl animate-in fade-in slide-in-from-top-4 ${
+              theme === "light"
+                ? "bg-white/95 border-blue-500/40 text-slate-900 shadow-slate-300/80"
+                : "bg-slate-900/95 border-blue-500/40 text-slate-100 shadow-black/90"
+            }`}
+          >
+            {/* Route Header */}
+            <div className="flex items-center justify-between border-b pb-2.5 mb-3">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400">
+                  <Route size={16} />
+                </div>
+                <div>
+                  <h4 className="font-heading font-black text-sm leading-none flex items-center gap-1.5">
+                    <span>{isBn ? "গুগল ম্যাপস নেভিগেশন রুট" : "Route Navigator"}</span>
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-600 dark:text-blue-400">
+                      {activeRoute.highwayCode}
+                    </span>
+                  </h4>
+                  <span className="text-[10px] text-slate-400">
+                    {isBn ? "সড়ক যোগাযোগ ও ড্রাইভ সময়সূচী" : "Direct Highway Driving Corridor"}
+                  </span>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsRouteMode(false)}
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                title="Exit Route Mode"
+              >
+                <X size={15} />
+              </button>
+            </div>
+
+            {/* Origin & Destination Selectors */}
+            <div className="space-y-2 mb-3">
+              {/* Origin (A) */}
+              <div className="flex items-center gap-2">
+                <span className="w-5 h-5 rounded-full bg-emerald-500 text-white font-black text-[10px] flex items-center justify-center shrink-0">
+                  A
+                </span>
+                <select
+                  value={routeFromId}
+                  onChange={(e) => setRouteFromId(e.target.value)}
+                  className={`flex-1 rounded-xl px-2.5 py-1.5 text-xs font-semibold border transition ${
+                    theme === "light"
+                      ? "bg-slate-50 border-slate-200 text-slate-800"
+                      : "bg-slate-800 border-slate-700 text-slate-200"
+                  }`}
+                >
+                  {allDistrictPOIs.map((p) => (
+                    <option key={`from-${p.id}`} value={p.id}>
+                      {isBn ? p.bnName : p.name} ({isBn ? p.badge : p.category})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Swap Button */}
+              <div className="flex items-center justify-center -my-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const temp = routeFromId;
+                    setRouteFromId(routeToId);
+                    setRouteToId(temp);
+                  }}
+                  className={`p-1 rounded-full border transition hover:scale-110 ${
+                    theme === "light"
+                      ? "bg-white border-slate-200 text-slate-500"
+                      : "bg-slate-800 border-slate-700 text-slate-300"
+                  }`}
+                  title="Reverse directions"
+                >
+                  <ArrowUpDown size={12} />
+                </button>
+              </div>
+
+              {/* Destination (B) */}
+              <div className="flex items-center gap-2">
+                <span className="w-5 h-5 rounded-full bg-rose-500 text-white font-black text-[10px] flex items-center justify-center shrink-0">
+                  B
+                </span>
+                <select
+                  value={routeToId}
+                  onChange={(e) => setRouteToId(e.target.value)}
+                  className={`flex-1 rounded-xl px-2.5 py-1.5 text-xs font-semibold border transition ${
+                    theme === "light"
+                      ? "bg-slate-50 border-slate-200 text-slate-800"
+                      : "bg-slate-800 border-slate-700 text-slate-200"
+                  }`}
+                >
+                  {allDistrictPOIs.map((p) => (
+                    <option key={`to-${p.id}`} value={p.id}>
+                      {isBn ? p.bnName : p.name} ({isBn ? p.badge : p.category})
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Route Stats Strip */}
+            <div
+              className={`p-2.5 rounded-xl border mb-3 flex items-center justify-between ${
+                theme === "light"
+                  ? "bg-blue-50/70 border-blue-200 text-blue-900"
+                  : "bg-blue-950/40 border-blue-800/60 text-blue-200"
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <Clock size={16} className="text-blue-500 shrink-0" />
+                <div>
+                  <div className="font-heading font-black text-sm leading-tight text-blue-600 dark:text-blue-400">
+                    {activeRoute.durationMinutes} {isBn ? "মিনিট" : "mins"}
+                  </div>
+                  <div className="text-[10px] opacity-75">
+                    {isBn ? "হাইওয়েতে দ্রুততম পথ" : "Fastest highway route"}
+                  </div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="font-mono font-black text-sm text-slate-800 dark:text-slate-100">
+                  {activeRoute.distanceKm} km
+                </div>
+                <div className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold truncate max-w-[130px]">
+                  {activeRoute.highwayCode}
+                </div>
+              </div>
+            </div>
+
+            {/* Turn-by-Turn Steps */}
+            <div className="space-y-1.5 text-[11px] max-h-32 overflow-y-auto pr-1">
+              {(isBn ? activeRoute.bnSteps : activeRoute.steps).map((step, sIdx) => (
+                <div key={sIdx} className="flex items-start gap-1.5 text-slate-600 dark:text-slate-300">
+                  <span className="text-blue-500 font-bold shrink-0">{sIdx + 1}.</span>
+                  <span className="leading-snug">{step}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* ── DYNAMIC HOVER TOOLTIP (WHEN NATIONWIDE) ── */}
         {!isDistrictZoomed && hoveredDistrict && tooltipPos && (() => {
           const intel = getDistrictIntelligence(hoveredDistrict.id);
@@ -1263,7 +1584,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                 >
                   <div className="flex items-center gap-1">
                     <Sparkles size={11} />
-                    <span>{isBn ? "স্মুথ জুম ইন ও এরিয়ার জন্য ক্লিক করুন" : "Click to Smooth Zoom & Explore"}</span>
+                    <span>{isBn ? "স্মুথ জুম ইন ও রোডের জন্য ক্লিক করুন" : "Click to Smooth Zoom & Routes"}</span>
                   </div>
                   <ArrowRight size={11} />
                 </div>
@@ -1281,7 +1602,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                 : "bg-slate-900/95 border-emerald-500/40 text-slate-100 shadow-black/80"
             }`}
           >
-            {/* Header row: District title + area + reset zoom button */}
+            {/* Header row: District title + area + route toggle + reset zoom */}
             <div className="flex items-center justify-between gap-3 border-b pb-2 mb-2.5">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold shrink-0">
@@ -1307,16 +1628,34 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                 </div>
               </div>
 
-              {/* Reset Zoom / Full Bangladesh Map Button */}
-              <button
-                type="button"
-                onClick={handleResetZoom}
-                className="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/30 transition flex items-center gap-1.5 shrink-0"
-                title="Zoom Out to Full Bangladesh Map"
-              >
-                <RotateCcw size={12} />
-                <span className="hidden sm:inline">{isBn ? "সারাদেশের মানচিত্র" : "Full Map"}</span>
-              </button>
+              {/* Action buttons: Directions & Reset Zoom */}
+              <div className="flex items-center gap-1.5 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setIsRouteMode((prev) => !prev)}
+                  className={`px-2.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
+                    isRouteMode
+                      ? "bg-blue-600 text-white shadow-md shadow-blue-600/30"
+                      : theme === "light"
+                      ? "bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200"
+                      : "bg-blue-950/60 text-blue-300 hover:bg-blue-900/60 border border-blue-800"
+                  }`}
+                  title="Toggle Route Navigator"
+                >
+                  <Route size={13} />
+                  <span className="hidden sm:inline">{isBn ? "রুট ও হাইওয়ে" : "Routes"}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleResetZoom}
+                  className="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/30 transition flex items-center gap-1.5"
+                  title="Zoom Out to Full Bangladesh Map"
+                >
+                  <RotateCcw size={12} />
+                  <span className="hidden sm:inline">{isBn ? "সারাদেশ" : "Full Map"}</span>
+                </button>
+              </div>
             </div>
 
             {/* Key Stats Strip */}
@@ -1391,7 +1730,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
         )}
 
         {/* ── SELECTED POI DETAIL CARD (FLOATING GOOGLE MAPS STYLE) ── */}
-        {selectedPOI && (
+        {selectedPOI && !isRouteMode && (
           <div
             className={`absolute top-16 left-4 sm:left-6 z-30 max-w-xs sm:max-w-sm rounded-2xl p-4 backdrop-blur-xl border shadow-2xl animate-in fade-in zoom-in-95 ${
               theme === "light"
@@ -1478,7 +1817,17 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
               )}
             </div>
 
-            <div className="mt-3 pt-2 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-[11px]">
+            {/* Directions to here button ("route soho") */}
+            <button
+              type="button"
+              onClick={() => handleDirectionsToPOI(selectedPOI)}
+              className="w-full mt-2.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-600/30 transition flex items-center justify-center gap-1.5"
+            >
+              <Route size={13} />
+              <span>{isBn ? "এখানকার ড্রাইভ রুট দেখুন" : "Get Directions to Here"}</span>
+            </button>
+
+            <div className="mt-2.5 pt-2 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-[11px]">
               <span className="text-slate-400 text-[10px]">
                 {isBn ? "উৎস: গুগল ম্যাপস ও সরকারি গেজেট" : "Source: Google Maps & BBS"}
               </span>
