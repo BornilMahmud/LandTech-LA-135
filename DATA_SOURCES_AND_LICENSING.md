@@ -8,16 +8,17 @@
 
 ## 1. Executive Summary
 
-This report establishes the factual data availability, access constraints, legal reuse boundaries, and technical architecture for integrating cadastral and geospatial information into **LandWise AI (Bangladesh Land Due-Diligence Assistant)**.
+This report establishes the factual data availability, access constraints, legal reuse boundaries, and technical architecture for integrating cadastral and geospatial information into **LandWise AI (Bangladesh Land Due-Diligence Assistant & Digital Explorer)**.
 
 LandWise AI strictly adheres to the principle that **publicly viewable does not equal open-source or freely redistributable**. Rather than scraping, caching, or distributing proprietary or official government-restricted cadastral map sheets without authorization, LandWise AI implements a **provenance-grounded, privacy-preserving, and legally compliant architecture**:
-1. Utilizing open-domain vector administrative boundaries (64 districts, 8 divisions, upazila geodata).
-2. Referencing official DLRS and Ministry of Land portals with verifiable links, guidance, and sheet lookup numbers.
-3. Supplying synthetically generated and anonymized multi-record test packages modeled strictly on authentic Bangladesh legal formats (Saf-Kabala deed, CS/SA/RS/BS Khatians, Namjari Mutation Khatian, Dakhila tax receipt).
+1. Utilizing open-domain vector administrative boundaries (64 districts, 8 divisions, upazila geodata) and MapLibre GL JS with CartoDB Voyager tiles.
+2. Integrating OpenStreetMap-derived road networks and institutional POIs with real Open Source Routing Machine (OSRM) highway navigation.
+3. Referencing official DLRS and Ministry of Land portals with verifiable links, guidance, and sheet lookup numbers.
+4. Supplying client-side document processing and synthetically generated multi-record test packages modeled strictly on authentic Bangladesh legal formats (Saf-Kabala deed, CS/SA/RS/BS Khatians, Namjari Mutation Khatian, Dakhila tax receipt).
 
 ---
 
-## 2. In-Depth Audit of Target Portals
+## 2. In-Depth Audit of Target Portals & Geographic Services
 
 ### 2.1 Bhumipedia (`https://bhumipedia.land.gov.bd/`)
 * **Operating Entity:** Ministry of Land (গণপ্রজাতন্ত্রী বাংলাদেশ সরকারের ভূমি মন্ত্রণালয়).
@@ -25,7 +26,7 @@ LandWise AI strictly adheres to the principle that **publicly viewable does not 
 * **Key Content Scraped / Indexed:**
   * **Core Statutes:** *State Acquisition and Tenancy Act, 1950 (SAT Act 1950)*; *Land Crime Prevention and Redress Act, 2023 (ভূমি অপরাধ প্রতিরোধ ও প্রতিকার আইন, ২০২৩)*; *Land Reform Act, 2023 (ভূমি সংস্কার আইন, ২০২৩)*; *Land Development Tax Act, 2023 (ভূমি উন্নয়ন কর আইন, ২০২৩)*; *Acquisition and Requisition of Immovable Property Act, 2017*.
   * **Standard Terminology:** Definitive definitions for *Khatian (খতিয়ান)*, *Dag / Plot (দাগ)*, *Mouza (মৌজা)*, *J.L. Number (জে.এল. নম্বর)*, *Namjari / Mutation (নামজারি)*, *Dakhila (দাখিলা)*, *Porcha (পর্চা)*, *Chitta (চিটা)*, *Hissya (হিস্যা / Share)*.
-* **Access & Firewall Behavior:** The portal implements aggressive rate limiting and geographic firewalling against foreign non-browser IPs (blocking basic headless bot user-agents).
+* **Access & Firewall Behavior:** The portal implements rate limiting and geographic firewalling against foreign non-browser IPs (blocking basic headless bot user-agents).
 * **Reuse Terms & Licensing:**
   * **Statutory Content:** Government laws, circulars, and official gazettes are public legal records and non-copyrightable statutes under Bangladesh law. They may be referenced, cited, and used to establish due-diligence verification rules.
   * **Proprietary Elements:** Platform UI assets, branding, and proprietary backend chatbots remain government property. LandWise AI embeds the statutory rules and definitions into its client-side validation logic while providing deep-link references to Bhumipedia.
@@ -96,6 +97,36 @@ LandWise AI strictly adheres to the principle that **publicly viewable does not 
 
 ---
 
+### 2.5 MapLibre GL JS & CartoDB Voyager Basemap Tiles
+* **Tile Service URL:** `https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png`
+* **License & Attribution:**
+  * OpenStreetMap data: `© OpenStreetMap contributors` under the Open Database License (ODbL).
+  * CartoDB Map Styles: `© CARTO` under CARTO free-tier basemap usage terms for open web applications.
+* **Technical Integration:**
+  * Rendered via MapLibre GL JS v5.15+ (BSD-3-Clause license) with GPU vector acceleration.
+  * Provides vector-sharp rendering, smooth `flyTo` camera movements, bounding-box framing (`fitBounds`), and custom GeoJSON overlay layers without requiring private proprietary API keys in client-side code.
+
+---
+
+### 2.6 OSRM (Open Source Routing Machine) Routing Engine
+* **Endpoint URL:** `https://router.project-osrm.org/route/v1/driving/{lon1},{lat1};{lon2},{lat2}?overview=full&geometries=geojson&steps=true`
+* **License & Service Terms:**
+  * OSRM software: 2-Clause BSD License.
+  * Public Demo Server: Maintained by the Project-OSRM community for demonstration and development purposes. Subject to fair-use rate limits and no SLA.
+* **Responsible Usage & Anti-Fabrication Policy:**
+  * **Zero Synthetic Lines Policy:** LandWise AI strictly renders road routes *only* when the OSRM service successfully returns an HTTP 200 response containing valid driving geometry (`LineString`).
+  * **Graceful Degradation:** If network connectivity fails, rate limits are reached, or destinations cannot be reached by road (e.g. islands without vehicle ferry connections), LandWise AI displays a transparent diagnostic notice: *"Real road route could not be calculated via OSRM. Please verify road connectivity manually. LandWise AI never fabricates straight-line paths."*
+  * **Turn-by-Turn Guidance:** When successful, step-by-step turn maneuvers, road names (e.g., N704, Kushtia-Pabna Highway), route distance (km), and driving duration (minutes) are presented to the user.
+
+---
+
+### 2.7 Turf.js Spatial Analysis Engine
+* **Package:** `@turf/turf` v7.3.4+
+* **License:** MIT License.
+* **Usage:** Client-side spatial operations: bounding-box generation (`bbox`), feature distance calculation (`distance`), centroid calculation (`centroid`), and point-in-polygon containment checks without sending geographic data to remote servers.
+
+---
+
 ## 3. Data Source Synthesis Matrix
 
 | Source | Domain | Coverage | Access Model | LandWise AI Integration Mode |
@@ -106,6 +137,9 @@ LandWise AI strictly adheres to the principle that **publicly viewable does not 
 | **Smart Bhumi Naksha** | `map.land.gov.bd` | 90+ Upazilas (Expanding) | Public Land Zoning Portal | Environmental zoning risk indicators & plot-usage alignment scoring |
 | **ePorcha (DLRS)** | `eporcha.gov.bd` | National | Gov Portal (Khatian Verification) | Verification step guidance for online Khatian search |
 | **e-Mutation** | `mutation.land.gov.bd` | National | Gov Portal (AC Land office records) | Mutation ledger checking step & Khatian chain auditing |
+| **CartoDB Voyager** | `cartocdn.com` | Global / Bangladesh | Free Web Basemap (ODbL / CARTO) | Level 1-4 MapLibre GL JS basemap visual rendering |
+| **OSRM Engine** | `router.project-osrm.org` | Bangladesh Road Network | Public Demo API (OSRM/OSM) | Real driving route calculation with turn-by-turn maneuvers |
+| **Turf.js** | Client-side Library | Local Browser Engine | Open Source (MIT) | Real-time spatial calculations & bounding-box camera framing |
 
 ---
 
@@ -113,4 +147,5 @@ LandWise AI strictly adheres to the principle that **publicly viewable does not 
 
 1. **Zero Piracy & Zero Bypassing:** No authentication bypass, scraping of protected paywalled raster tiles, or API secret exploitation.
 2. **Transparent Provenance:** All datasets used in the frontend are explicitly attributed. Synthetic documents and demonstration packages are prominently labeled as *"Simulated Demonstration Package"* with realistic fields.
-3. **Legal Disclaimer Transparency:** Prominently declare that LandWise AI is an assistive pre-purchase due-diligence tool; it does not issue certified legal opinions, establish criminal fraud, or replace official search at the Sub-Registry Office, AC (Land) office, or qualified legal counsel.
+3. **No Fabricated Road Paths:** Routes are drawn only when returned by the real OSRM routing engine along mapped roads; straight-line approximations are prohibited.
+4. **Legal Disclaimer Transparency:** Prominently declare that LandWise AI is an assistive pre-purchase due-diligence tool; it does not issue certified legal opinions, establish criminal fraud, or replace official search at the Sub-Registry Office, AC (Land) office, or qualified legal counsel.

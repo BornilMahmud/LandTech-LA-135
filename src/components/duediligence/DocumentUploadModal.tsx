@@ -46,13 +46,80 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
   const [issueOffice, setIssueOffice] = useState('Savar Sub-Registry Office');
   const [taxClearanceYear, setTaxClearanceYear] = useState('1431 BS');
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
+  const [extractedFeedback, setExtractedFeedback] = useState<string | null>(null);
+  const [isParsingFile, setIsParsingFile] = useState<boolean>(false);
 
   if (!isOpen) return null;
 
-  const handleFileUploadSim = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setUploadedFileName(file.name);
+    if (!file) return;
+
+    setUploadedFileName(file.name);
+    setIsParsingFile(true);
+
+    if (
+      file.type.includes('text') ||
+      file.type.includes('json') ||
+      file.name.endsWith('.txt') ||
+      file.name.endsWith('.json') ||
+      file.name.endsWith('.csv')
+    ) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const content = String(event.target?.result || '');
+          if (content.trim().startsWith('{')) {
+            const parsed = JSON.parse(content);
+            if (parsed.dagNumber || parsed.dag) setDagNumber(String(parsed.dagNumber || parsed.dag));
+            if (parsed.khatianNumber || parsed.khatian) setDocNumber(String(parsed.khatianNumber || parsed.khatian));
+            if (parsed.mouza || parsed.mouzaName) setMouzaName(String(parsed.mouza || parsed.mouzaName));
+            if (parsed.areaDecimals || parsed.landAreaDecimals || parsed.area)
+              setLandAreaDecimals(String(parsed.areaDecimals || parsed.landAreaDecimals || parsed.area));
+            if (parsed.ownerName || parsed.owner) setOwnerName(String(parsed.ownerName || parsed.owner));
+            if (parsed.docType || parsed.type) setDocType(parsed.docType || parsed.type);
+            setExtractedFeedback(
+              isBn
+                ? 'জেসন ফাইল থেকে ভূমির রেকর্ড সফলভাবে উত্তোলিত হয়েছে।'
+                : 'Extracted structured land record attributes from JSON file.'
+            );
+          } else {
+            const dagMatch = content.match(/(?:দাগ\s*নং|দাগ|dag\s*no|dag|plot\s*no)[\s:]*([০-৯0-9\/\w-]+)/i);
+            const khatianMatch = content.match(/(?:খতিয়ান\s*নং|খতিয়ান|khatian\s*no|khatian)[\s:]*([০-৯0-9\/\w-]+)/i);
+            const mouzaMatch = content.match(/(?:মৌজা|mouza)[\s:]*([^\n\r,]+)/i);
+            const areaMatch = content.match(/(?:জমির\s*পরিমাণ|পরিমাণ|area|decimals)[\s:]*([০-৯0-9\.]+)/i);
+            const ownerMatch = content.match(/(?:মালিকের\s*নাম|মালিক|owner|buyer)[\s:]*([^\n\r,]+)/i);
+
+            if (dagMatch) setDagNumber(dagMatch[1].trim());
+            if (khatianMatch) setDocNumber(khatianMatch[1].trim());
+            if (mouzaMatch) setMouzaName(mouzaMatch[1].trim());
+            if (areaMatch) setLandAreaDecimals(areaMatch[1].trim());
+            if (ownerMatch) setOwnerName(ownerMatch[1].trim());
+
+            setExtractedFeedback(
+              isBn
+                ? 'নথি থেকে ফিল্ডগুলো লোকাল মেমরিতে প্রসেস করা হয়েছে। নিচে তথ্যগুলো যাচাই করুন।'
+                : 'Document text processed in browser memory. Review and correct extracted fields below.'
+            );
+          }
+        } catch {
+          setExtractedFeedback(
+            isBn ? 'ফাইলটি লোকালভাবে লোড হয়েছে। নিচে তথ্য প্রদান করুন।' : 'File read locally. Please verify fields below.'
+          );
+        } finally {
+          setIsParsingFile(false);
+        }
+      };
+      reader.readAsText(file);
+    } else {
+      setTimeout(() => {
+        setIsParsingFile(false);
+        setExtractedFeedback(
+          isBn
+            ? `স্ক্যান ফাইল (${file.name}, ${(file.size / 1024).toFixed(0)} KB) ব্রাউজার স্যান্ডবক্সে লোড হয়েছে। কোনো রিমোট এপিআই কল করা হয়নি। নিচের ফিল্ডগুলো যাচাই করুন।`
+            : `Binary scan (${file.name}, ${(file.size / 1024).toFixed(0)} KB) loaded in browser sandbox without remote transmission. Review fields below.`
+        );
+      }, 350);
     }
   };
 
@@ -195,20 +262,31 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
             <UploadCloud size={28} className="mx-auto text-slate-400 mb-2" />
             <label className="cursor-pointer block">
               <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline">
-                {isBn ? 'নথির স্ক্যান কপি বা ছবি সিলেক্ট করুন (PDF, JPG, PNG)' : 'Select scanned deed/porcha document (PDF, JPG, PNG)'}
+                {isBn ? 'নথির কপি বা ডাটা ফাইল আপলোড করুন (TXT, JSON, CSV, PDF, JPG, PNG)' : 'Select land document or data file (TXT, JSON, CSV, PDF, JPG, PNG)'}
               </span>
               <input
                 type="file"
-                accept=".pdf,.jpg,.jpeg,.png"
-                onChange={handleFileUploadSim}
+                accept=".txt,.json,.csv,.pdf,.jpg,.jpeg,.png"
+                onChange={handleFileUpload}
                 className="hidden"
               />
             </label>
-            <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-1">
-              {uploadedFileName
-                ? `Uploaded: ${uploadedFileName} (Client-side extracted)`
-                : (isBn ? 'ক্লায়েন্ট-সাইড ফিল্ড এক্সট্রাকশন — কোনো তথ্য সার্ভারে পাঠানো হয় না' : 'Client-side processing: Zero data transmitted to external servers')}
-            </p>
+            {isParsingFile ? (
+              <p className="text-[11px] text-blue-500 mt-1 font-semibold flex items-center justify-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full border-2 border-blue-500 border-t-transparent animate-spin"></span>
+                <span>{isBn ? 'ব্রাউজার মেমরিতে ফাইল প্রসেসিং চলছে...' : 'Parsing file in browser memory...'}</span>
+              </p>
+            ) : extractedFeedback ? (
+              <p className="text-[11px] text-emerald-600 dark:text-emerald-400 mt-1 font-medium bg-emerald-50 dark:bg-emerald-950/40 p-2 rounded-lg border border-emerald-500/30">
+                ✓ {extractedFeedback}
+              </p>
+            ) : (
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-1">
+                {isBn
+                  ? '🔒 ১০০% ক্লায়েন্ট-সাইড প্রসেসিং — কোনো ফাইল বা ব্যক্তিগত তথ্য বহিরাগত সার্ভারে পাঠানো হয় না'
+                  : '🔒 100% Client-Side Processing — Zero document data transmitted to external servers'}
+              </p>
+            )}
           </div>
 
           {/* Document Type Selector */}

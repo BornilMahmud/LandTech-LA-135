@@ -25,6 +25,7 @@ import {
   ArrowUpDown,
   Clock,
   Car,
+  Globe2,
 } from 'lucide-react';
 import districtsGeoData from '../data/bangladeshDistrictsGeo.json';
 import {
@@ -51,6 +52,8 @@ import {
   RouteDirections,
   POICategory,
 } from '../utils/districtPoiGenerator';
+import { MapLibreDistrictExplorer } from './MapLibreDistrictExplorer';
+import { CadastralParcelGeo } from '../data/bangladeshGeoRegistry';
 
 interface BangladeshInteractiveMapProps {
   isBn: boolean;
@@ -75,7 +78,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
   searchQuery,
   setSearchQuery,
 }) => {
-  const [mapMode, setMapMode] = useState<"districts" | "atlas" | "satellite">("districts");
+  const [mapMode, setMapMode] = useState<"maplibre" | "districts" | "atlas" | "satellite">("maplibre");
   const [showLabels, setShowLabels] = useState(true);
   const [showFlows, setShowFlows] = useState(true);
   const [colorByViability, setColorByViability] = useState(false);
@@ -387,6 +390,20 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
         >
           <button
             type="button"
+            onClick={() => setMapMode("maplibre")}
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+              mapMode === "maplibre"
+                ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/30 ring-2 ring-emerald-400/50"
+                : theme === "light"
+                ? "text-slate-600 hover:text-slate-900 hover:bg-slate-200/70"
+                : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
+            }`}
+          >
+            <Compass size={13} className="text-amber-400" />
+            <span>{isBn ? "ম্যাপলিব্রে জিআইএস এক্সপ্লোরার" : "MapLibre Digital Explorer"}</span>
+          </button>
+          <button
+            type="button"
             onClick={() => setMapMode("districts")}
             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
               mapMode === "districts"
@@ -665,6 +682,24 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
           </span>
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
         </div>
+
+        {/* 0. MAPLIBRE GL JS DEEP PROGRESSIVE DIGITAL EXPLORER */}
+        {mapMode === "maplibre" && (
+          <div className="w-full h-full p-2">
+            <MapLibreDistrictExplorer
+              isBn={isBn}
+              selectedDistrictId={selectedDistrict ? selectedDistrict.id : 'dhaka'}
+              onSelectDistrictId={(id) => {
+                const dst = ALL_BANGLADESH_DISTRICTS.find((d) => d.id === id);
+                if (dst) onSelectDistrict(dst);
+              }}
+              onOpenDueDiligenceForParcel={(parcel) => {
+                const el = document.getElementById('due-diligence');
+                el?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            />
+          </div>
+        )}
 
         {/* 1. SATELLITE GOOGLE MAP VIEW */}
         {mapMode === "satellite" && (

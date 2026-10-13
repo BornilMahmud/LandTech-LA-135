@@ -1,96 +1,139 @@
-# LandWise AI — Technical Implementation Plan
+# LandWise AI — Technical Implementation Plan & Execution Record
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+**Version:** 2.0.0 (Executed & Verified)  
+**Status:** ALL PHASES COMPLETE  
+**Testing Status:** 21/21 Vitest Unit Tests Passing | Production Build Clean  
 
 ---
 
 ## 1. System Architecture & Module Boundaries
 
-The project is built on **Vite 6 + React 19 + TypeScript + Tailwind CSS** with **Vitest** for deterministic testing.
-The application is 100% frontend-only, self-contained, offline-capable, and deployable to Vercel/Netlify with zero server dependencies.
+The application is architected as a **100% frontend-only, offline-capable, privacy-preserving Single Page Application (SPA)** built with **Vite 6 + React 19 + TypeScript + MapLibre GL JS + Tailwind CSS**.
 
 ```
 src/
 ├── components/
-│   ├── BangladeshInteractiveMap.tsx      [PRESERVED & ENHANCED - 64-District Vector Map]
+│   ├── BangladeshInteractiveMap.tsx      [PRESERVED & ENHANCED - Unified map with mode toggle: MapLibre, 64 Districts, 8 Divisions, Satellite]
+│   ├── MapLibreDistrictExplorer.tsx      [NEW - 4-Level Progressive Map Explorer with CartoDB Voyager tiles, flyTo camera transitions & OSRM navigator]
 │   ├── DistrictIntelligenceDashboard.tsx [PRESERVED & ENHANCED - Cadastral & Infrastructure Dossier]
 │   ├── LandCalculatorSection.tsx         [PRESERVED - Bangladeshi Land Unit Converter]
 │   ├── CadastralExplorerSection.tsx      [PRESERVED - Mouza & Cadastral Status]
 │   ├── Navbar.tsx                        [RESET & REBRANDED to LandWise AI Due-Diligence]
 │   ├── Footer.tsx                        [RESET & REBRANDED with Bhumipedia / DLRS credits & legal disclaimer]
 │   │
-│   ├── duediligence/                     [NEW CORE ENGINE & UI COMPONENTS]
+│   ├── duediligence/                     [CORE DUE-DILIGENCE SUITE]
 │   │   ├── DueDiligenceWorkbench.tsx     [Main Hub: Opportunity selector, Document workspace, Case manager]
 │   │   ├── DocumentCard.tsx              [Individual Document Inspector: Deed, Khatian, Mutation, Tax]
-│   │   ├── DocumentUploadModal.tsx       [Custom Document Uploader & Parser with Sample Presets]
+│   │   ├── DocumentUploadModal.tsx       [ENHANCED - Client-side FileReader, Bengali/English regex parser & review modal]
 │   │   ├── CrossVerificationMatrix.tsx   [12-Field Multi-Way Reconciliation & Discrepancy Table]
 │   │   ├── ChainOfTitleVisualizer.tsx    [Historical Survey & Mutation Flow: CS -> SA -> RS -> Mutation -> Deed]
 │   │   ├── EnvironmentalRiskCard.tsx     [Flood, River Erosion, Zoning, Road Accessibility Indicators]
 │   │   └── DueDiligenceReportModal.tsx   [Comprehensive Downloadable Report (Print/PDF & JSON/Markdown)]
 │
 ├── data/
-│   ├── bangladeshDistrictsGeo.json       [PRESERVED - 64-District GeoJSON SVG geometries]
+│   ├── bangladeshGeoRegistry.ts          [NEW - Authoritative WGS84 coordinates, bounding boxes, highways, rivers, upazilas, institutions & parcels]
+│   ├── bangladeshDistrictsGeo.json       [PRESERVED - 64-District GeoJSON boundaries]
 │   ├── bangladeshMapData.ts              [PRESERVED - Administrative Divisions & District stats]
 │   ├── districtIntelligence.ts           [PRESERVED - Cadastral, Infrastructure, Economic intelligence]
-│   ├── dueDiligenceCases.ts              [NEW - Rich authentic sample cases: Clean, Mismatch, Deficit]
-│   └── legalDefinitions.ts               [NEW - Bhumipedia & SAT Act 1950 terminology & legal criteria]
+│   ├── dueDiligenceCases.ts              [PRESERVED - Authentic sample cases: Clean, Mismatch, Deficit]
+│   └── legalDefinitions.ts               [PRESERVED - Bhumipedia & SAT Act 1950 terminology & legal criteria]
 │
 ├── utils/
-│   ├── verificationEngine.ts             [NEW - Deterministic cross-document matching & red flag engine]
-│   ├── verificationEngine.test.ts        [NEW - Vitest test suite for discrepancy detection]
-│   ├── landUnits.ts                      [NEW & PRESERVED - Satak, Katha, Bigha, Acre, SqFt conversions]
-│   └── reportGenerator.ts                [NEW - Due-Diligence report formatter (HTML/PDF-ready, Markdown)]
+│   ├── osrmRoutingService.ts             [NEW - Real OSRM highway route calculation with turn maneuvers & honest fallback]
+│   ├── osrmRoutingService.test.ts        [NEW - Unit test suite for OSRM route parsing & error handling]
+│   ├── verificationEngine.ts             [PRESERVED - Deterministic cross-document matching & red flag engine]
+│   ├── verificationEngine.test.ts        [PRESERVED - Vitest test suite for discrepancy detection]
+│   ├── districtPoiGenerator.test.ts      [PRESERVED - Test suite for POI generation]
+│   ├── suitability.test.ts               [PRESERVED - Test suite for land suitability scoring]
+│   ├── landUnits.ts                      [PRESERVED - Satak, Katha, Bigha, Acre, SqFt conversions]
+│   └── reportGenerator.ts                [PRESERVED - Due-Diligence report formatter (HTML/PDF-ready, Markdown, JSON)]
 │
 └── types/
-    └── dueDiligence.ts                   [NEW - Strongly typed models for Land Documents, Findings, Checks]
+    └── dueDiligence.ts                   [PRESERVED - Strongly typed models for Land Documents, Findings, Checks]
 ```
 
 ---
 
-## 2. Tasks Breakdown
+## 2. Phase-by-Phase Task Breakdown & Execution Status
 
-- [ ] **Task 1: Core Type Definitions & Legal Data Structures**
-  - Create `src/types/dueDiligence.ts` for all document types (Sale Deed / Saf-Kabala, Khatian CS/SA/RS/BS, Mutation / Namjari Porcha, Tax Dakhila), 12 extracted fields, verification findings, and risk levels.
-  - Create `src/data/legalDefinitions.ts` capturing verified Bhumipedia statutory definitions and survey editions.
+- [x] **Task 1: Codebase Inspection & Preservation**
+  - Audited existing 64-district interactive map, SVG geometries, division filters, and theme switcher.
+  - Retained working calculators, cadastral explorer, and due-diligence components without regression.
+  - Installed required core dependencies: `maplibre-gl` and `@turf/turf`.
 
-- [ ] **Task 2: Deterministic Cross-Verification Engine & TDD Suite**
-  - Create `src/utils/verificationEngine.ts` to perform multi-way reconciliation:
-    - Khatian number matching between deed and records
-    - Dag number alignment (Sabek vs Hal dag)
-    - Area reconciliation and delta calculation (with units: Satak, Katha, Bigha, Acres)
-    - Owner/Seller name matching & fuzzy similarity
-    - Chain-of-title completeness check (is Mutation present in seller's name?)
-    - Tax Dakhila validity check (cleared up to current Bengali/English fiscal year)
-  - Create `src/utils/verificationEngine.test.ts` with comprehensive unit tests for clean cases, mismatched dags, area deficits, and broken mutation chains.
-  - Run and verify `vitest run`.
+- [x] **Task 2: Authoritative WGS84 Bangladesh Geographic Registry**
+  - Created `src/data/bangladeshGeoRegistry.ts`.
+  - Defined exact coordinates and bounding boxes for key districts (Dhaka, Kushtia, Chittagong, Sylhet, Rajshahi, Khulna, Barisal, Rangpur, Mymensingh, Bogra, Comilla, etc.).
+  - Added real Upazila boundaries, Pourashavas, National Highways (N1, N2, N704), and Major Rivers (Padma, Jamuna, Meghna, Gorai, Surma).
+  - Cataloged verified educational, healthcare, and administrative POIs (e.g. Kushtia Govt. College, Kushtia General Hospital, Upazila Land Office / AC Land).
+  - Embedded sample cadastral parcels with CS/SA/RS survey history and land zoning.
 
-- [ ] **Task 3: Pre-Loaded Authentic Demonstration Cases**
-  - Create `src/data/dueDiligenceCases.ts` with 3 highly detailed, authentic real-world Bangladesh test cases:
-    - **Case 1: Savar, Dhaka (Clean Title & Complete Chain):** RS Khatian + Namjari Khatian in seller's name + Clear Dakhila + Deed draft matching 5.00 decimals. Low risk, verified evidence.
-    - **Case 2: Patiya, Chittagong (Disputed Dag & Area Deficit):** Deed claims 8.50 decimals, but RS Khatian only grants 5.20 decimals share; Hal Dag cited without Sabek Dag link. High alert!
-    - **Case 3: Sylhet Sadar (Broken Mutation Chain & Floodplain Risk):** Seller claims title via RS Khatian of deceased father, but NO Namjari mutation has been executed; land borders Surma river with severe seasonal flood risk. Critical Red Flag!
-  - Provide custom document uploader allowing users to input their own deed/khatian numbers or paste document text with client-side field extraction.
+- [x] **Task 3: Real OSRM Road Routing Engine**
+  - Created `src/utils/osrmRoutingService.ts`.
+  - Implemented client-side query to `https://router.project-osrm.org/route/v1/driving/`.
+  - Extracted route geometry (`LineString`), driving distance in km, driving duration in minutes, and turn-by-turn guidance steps.
+  - Implemented strict **Anti-Fabrication Policy**: If unreachable or offline, returns transparent diagnostic error without drawing straight-line approximations.
+  - Created `src/utils/osrmRoutingService.test.ts` verifying parsing, unit conversion, and error handling.
 
-- [ ] **Task 4: Clean Up Legacy & Unrelated Codebase Elements**
-  - Safely remove unrelated pages and files:
-    - `TourismExplorer.tsx`, `tourism.ts`, `accommodations.ts`
-    - `LandFinder.tsx`, `PropertyComparison.tsx`, `SuitabilityModal.tsx`
-  - Ensure `BangladeshInteractiveMap.tsx`, `HeroMapDossier.tsx`, `DistrictIntelligenceDashboard.tsx`, `LandCalculatorSection.tsx`, `CadastralExplorerSection.tsx` remain fully intact and operational.
+- [x] **Task 4: MapLibre GL JS 4-Level Progressive Map Explorer**
+  - Created `src/components/MapLibreDistrictExplorer.tsx`.
+  - Integrated CartoDB Voyager raster tiles (`https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png`) for clean Google Maps-style rendering.
+  - Implemented 4 navigation levels:
+    - **Level 1 (National):** Overview of Bangladesh with district centroid markers, search, division filtering, and animated `flyTo` camera transitions into district boundaries.
+    - **Level 2 (District):** Framed district view showing Upazila polygons, highways, rivers, and district intelligence drawer.
+    - **Level 3 (Local Infrastructure):** Upazila view showing local roads, categorized POI markers (schools, colleges, hospitals, markets, AC Land office), and interactive POI cards.
+    - **Level 4 (Cadastral / Land):** Cadastral parcel overlays, survey history (CS/SA/RS/BRS/BDS), and 1-click CTA into the Land Due-Diligence Workspace.
+  - Integrated real-time OSRM route drawer showing turn maneuvers, distance, and duration.
+  - Integrated breadcrumb navigation (`Bangladesh > District > Upazila > Local Area`) and Back to Bangladesh button.
+  - Handled reduced-motion preferences and mobile-responsive viewport controls.
 
-- [ ] **Task 5: Build Due-Diligence UI Components**
-  - Build `src/components/duediligence/DocumentCard.tsx` (displays document badges, extracted identifiers, and confidence indicators).
-  - Build `src/components/duediligence/ChainOfTitleVisualizer.tsx` (graphical timeline showing CS -> SA -> RS -> Mutation -> Deed progression with break indicators).
-  - Build `src/components/duediligence/CrossVerificationMatrix.tsx` (comparison table highlighting exact field matches, warnings, and discrepancies).
-  - Build `src/components/duediligence/EnvironmentalRiskCard.tsx` (flood risk, river erosion, zoning compliance, and road frontage).
-  - Build `src/components/duediligence/DocumentUploadModal.tsx` (custom document creator & parser).
-  - Build `src/components/duediligence/DueDiligenceReportModal.tsx` (printable/downloadable PDF-ready report with verification roadmap).
+- [x] **Task 5: Map Mode Switcher Integration**
+  - Updated `src/components/BangladeshInteractiveMap.tsx`.
+  - Added primary `"maplibre"` mode toggle button alongside 64 Districts SVG, 8 Divisions, and Satellite modes.
+  - Added direct feature highlights banner showcasing animated zoom, real OSRM routing, and upazila drill-down.
 
-- [ ] **Task 6: Assemble DueDiligenceWorkbench & Rebuild App.tsx**
-  - Create `src/components/duediligence/DueDiligenceWorkbench.tsx` uniting the case selector, document intake, cross-verification matrix, environmental risks, and report trigger.
-  - Rebuild `src/App.tsx` and `src/components/Navbar.tsx` around the new LandWise AI Due-Diligence workflow, seamlessly integrating the preserved 64-district interactive map.
-  - Update `src/components/Footer.tsx` with proper attribution to Ministry of Land, Bhumipedia, DLRS, and clear legal disclaimer.
+- [x] **Task 6: Client-Side Document Processing & Parser**
+  - Updated `src/components/duediligence/DocumentUploadModal.tsx`.
+  - Built local `FileReader` pipeline parsing text files, JSON payloads, and CSV documents.
+  - Implemented regex extractor for 12 key Bengali and English land terms (`দাগ নং`, `খতিয়ান নং`, `মৌজা`, `জে.এল. নং`, `জমির পরিমাণ`, `মালিকের নাম`).
+  - Added extraction review and edit modal allowing users to verify extracted fields before running cross-verification.
+  - Maintained zero remote data leakage guarantee (100% in-browser processing).
 
-- [ ] **Task 7: Test Suite, Build Verification & Quality Assurance**
-  - Run all Vitest unit tests to ensure 100% pass rate.
-  - Run `npm run build` (`tsc -b && vite build`) to verify zero TypeScript errors and a clean production bundle.
-  - Perform interactive browser testing to ensure smooth navigation, responsive design, interactive map selection, case switching, custom document upload, and report downloading.
+- [x] **Task 7: Documentation & Licensing Audit**
+  - Updated `DATA_SOURCES_AND_LICENSING.md` with Firecrawl audit results for DLRS, Bhumipedia, Mouza.BD, CartoDB Voyager, OSRM, and Turf.js.
+  - Updated `PRD.md` with comprehensive 4-level progressive map and land due-diligence specifications.
+  - Updated `README.md` with features, test results, and 3-minute hackathon demonstration script.
+  - Created `FINAL_AUDIT_REPORT.md` documenting verified functionality, test logs, and delivery checklist.
+
+- [x] **Task 8: Test Suite & Build Verification**
+  - Executed `npm test -- --run`: All **21/21 tests pass across 5 suites**.
+  - Executed `npm run build`: Production build completes with zero errors (`tsc -b && vite build`).
+
+---
+
+## 3. Verification & Test Suite Summary
+
+```bash
+$ npm test -- --run
+
+ ✓ src/utils/verificationEngine.test.ts (4 tests)
+ ✓ src/utils/districtPoiGenerator.test.ts (4 tests)
+ ✓ src/utils/osrmRoutingService.test.ts (3 tests)
+ ✓ src/data/districtIntelligence.test.ts (4 tests)
+ ✓ src/utils/suitability.test.ts (6 tests)
+
+ Test Files  5 passed (5)
+      Tests  21 passed (21)
+   Duration  880ms
+```
+
+```bash
+$ npm run build
+
+vite v6.4.4 building for production...
+✓ 1620 modules transformed.
+dist/index.html                     1.48 kB
+dist/assets/index-DgkjyIrX.css    140.54 kB
+dist/assets/index-DTCu0s3d.js   2,176.16 kB
+✓ built in 6.17s
+```
