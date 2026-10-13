@@ -1,8 +1,8 @@
 # LandWise AI — Technical Implementation Plan & Execution Record
 
-**Version:** 2.0.0 (Executed & Verified)  
+**Version:** 2.1.0 (Executed & Verified)  
 **Status:** ALL PHASES COMPLETE  
-**Testing Status:** 21/21 Vitest Unit Tests Passing | Production Build Clean  
+**Testing Status:** 26/26 Vitest Unit Tests Passing | Production Build Clean  
 
 ---
 
@@ -37,6 +37,10 @@ src/
 │   ├── districtIntelligence.ts           [PRESERVED - Cadastral, Infrastructure, Economic intelligence]
 │   ├── dueDiligenceCases.ts              [PRESERVED - Authentic sample cases: Clean, Mismatch, Deficit]
 │   └── legalDefinitions.ts               [PRESERVED - Bhumipedia & SAT Act 1950 terminology & legal criteria]
+│
+├── config/
+│   ├── carto.ts                          [NEW - Authenticated CARTO API Key (ac_k255k21y), Voyager, Positron, Dark Matter styles & transformRequest]
+│   └── carto.test.ts                     [NEW - Unit test suite for CARTO token parsing, tile generation & transformRequest]
 │
 ├── utils/
 │   ├── osrmRoutingService.ts             [NEW - Real OSRM highway route calculation with turn maneuvers & honest fallback]
@@ -109,6 +113,16 @@ src/
   - Executed `npm test -- --run`: All **21/21 tests pass across 5 suites**.
   - Executed `npm run build`: Production build completes with zero errors (`tsc -b && vite build`).
 
+- [x] **Task 9: CARTO API Key Integration & Basemap Suite**
+  - Configured `VITE_CARTO_API_KEY` in `.env` and `.env.example` with account `ac_k255k21y`.
+  - Created `src/config/carto.ts` implementing authenticated tile URLs for 3 CARTO basemap styles:
+    - **CARTO Voyager** (Default, Google Maps aesthetic)
+    - **CARTO Positron** (Light, high-contrast cadastral surveying mode)
+    - **CARTO Dark Matter** (Executive dark mode)
+  - Implemented `cartoTransformRequest` in MapLibre GL JS to automatically sign CARTO tile and style requests.
+  - Added live basemap style switcher and authenticated account indicator badge to `MapLibreDistrictExplorer.tsx`.
+  - Created `src/config/carto.test.ts` (5 tests passing). Total tests: **26/26 passing across 6 suites**.
+
 ---
 
 ## 3. Verification & Test Suite Summary
@@ -117,23 +131,24 @@ src/
 $ npm test -- --run
 
  ✓ src/utils/verificationEngine.test.ts (4 tests)
+ ✓ src/config/carto.test.ts (5 tests)
  ✓ src/utils/districtPoiGenerator.test.ts (4 tests)
  ✓ src/utils/osrmRoutingService.test.ts (3 tests)
  ✓ src/data/districtIntelligence.test.ts (4 tests)
  ✓ src/utils/suitability.test.ts (6 tests)
 
- Test Files  5 passed (5)
-      Tests  21 passed (21)
-   Duration  880ms
+ Test Files  6 passed (6)
+      Tests  26 passed (26)
+   Duration  707ms
 ```
 
 ```bash
 $ npm run build
 
 vite v6.4.4 building for production...
-✓ 1620 modules transformed.
+✓ 1621 modules transformed.
 dist/index.html                     1.48 kB
-dist/assets/index-DgkjyIrX.css    140.54 kB
-dist/assets/index-DTCu0s3d.js   2,176.16 kB
-✓ built in 6.17s
+dist/assets/index-CiTvatt1.css    140.83 kB
+dist/assets/index-BFyrBpry.js   2,180.37 kB
+✓ built in 5.52s
 ```

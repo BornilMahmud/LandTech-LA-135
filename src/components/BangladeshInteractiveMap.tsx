@@ -400,7 +400,10 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
             }`}
           >
             <Compass size={13} className="text-amber-400" />
-            <span>{isBn ? "ম্যাপলিব্রে জিআইএস এক্সপ্লোরার" : "MapLibre Digital Explorer"}</span>
+            <span>{isBn ? "ম্যাপলিব্রে (কার্টো জিআইএস)" : "MapLibre (CARTO)"}</span>
+            <span className="text-[10px] px-1.5 py-0.2 rounded bg-amber-400/20 text-amber-300 font-mono border border-amber-400/30 hidden sm:inline">
+              CARTO Active
+            </span>
           </button>
           <button
             type="button"

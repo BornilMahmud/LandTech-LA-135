@@ -97,14 +97,19 @@ LandWise AI strictly adheres to the principle that **publicly viewable does not 
 
 ---
 
-### 2.5 MapLibre GL JS & CartoDB Voyager Basemap Tiles
-* **Tile Service URL:** `https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png`
+### 2.5 MapLibre GL JS & Authenticated CARTO Basemap Engine
+* **API Key Integration:** Authenticated CARTO Access Token (`ac_k255k21y`) configured via `VITE_CARTO_API_KEY`.
+* **Tile Endpoints:**
+  * **CARTO Voyager:** `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png?api_key=...` (Default, Google Maps aesthetic)
+  * **CARTO Positron:** `https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}@2x.png?api_key=...` (Light, high-contrast cadastral surveying mode)
+  * **CARTO Dark Matter:** `https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}@2x.png?api_key=...` (Executive dark mode)
 * **License & Attribution:**
   * OpenStreetMap data: `© OpenStreetMap contributors` under the Open Database License (ODbL).
-  * CartoDB Map Styles: `© CARTO` under CARTO free-tier basemap usage terms for open web applications.
+  * CartoDB Map Styles: `© CARTO` under CARTO API licensing terms.
 * **Technical Integration:**
   * Rendered via MapLibre GL JS v5.15+ (BSD-3-Clause license) with GPU vector acceleration.
-  * Provides vector-sharp rendering, smooth `flyTo` camera movements, bounding-box framing (`fitBounds`), and custom GeoJSON overlay layers without requiring private proprietary API keys in client-side code.
+  * Request interceptor `cartoTransformRequest` automatically signs any CARTO requests with the configured API key.
+  * Provides vector-sharp rendering, smooth `flyTo` camera movements, bounding-box framing (`fitBounds`), interactive live style switching, and custom GeoJSON overlay layers.
 
 ---
 

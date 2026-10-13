@@ -31,15 +31,16 @@ $ npm test -- --run
 
  RUN  v3.2.7 D:/Programming/Programming/projects/landtech/land
 
- ✓ src/utils/verificationEngine.test.ts (4 tests) 5ms
- ✓ src/utils/districtPoiGenerator.test.ts (4 tests) 7ms
- ✓ src/utils/osrmRoutingService.test.ts (3 tests) 6ms
- ✓ src/data/districtIntelligence.test.ts (4 tests) 7ms
+ ✓ src/utils/verificationEngine.test.ts (4 tests) 4ms
+ ✓ src/config/carto.test.ts (5 tests) 21ms
+ ✓ src/utils/districtPoiGenerator.test.ts (4 tests) 8ms
+ ✓ src/utils/osrmRoutingService.test.ts (3 tests) 5ms
+ ✓ src/data/districtIntelligence.test.ts (4 tests) 12ms
  ✓ src/utils/suitability.test.ts (6 tests) 5ms
 
- Test Files  5 passed (5)
-      Tests  21 passed (21)
-   Duration  880ms (transform 429ms, setup 0ms, collect 1.24s, tests 30ms, environment 1ms, prepare 394ms)
+ Test Files  6 passed (6)
+      Tests  26 passed (26)
+   Duration  707ms
 ```
 
 **Breakdown of Verified Test Assertions:**
@@ -58,7 +59,12 @@ $ npm test -- --run
 4. `src/data/districtIntelligence.test.ts`:
    - Verifies coverage of all 64 districts in administrative records.
    - Validates literacy rate, area, and population bounds.
-5. `src/utils/suitability.test.ts`:
+5. `src/config/carto.test.ts`:
+   - Validates active CARTO API Key token formatting and presence.
+   - Decodes account payload (`ac_k255k21y`) and expiration timestamp.
+   - Generates authenticated tile URLs across all 3 styles (Voyager, Positron, Dark Matter).
+   - Validates `cartoTransformRequest` intercepts and signs requests without query duplication.
+6. `src/utils/suitability.test.ts`:
    - Evaluates multi-criteria land suitability algorithms.
    - Validates weighting logic across road connectivity, flood risk, and zoning.
 
@@ -71,13 +77,13 @@ $ npm run build
 
 vite v6.4.4 building for production...
 transforming...
-✓ 1620 modules transformed.
+✓ 1621 modules transformed.
 rendering chunks...
 computing gzip size...
 dist/index.html                     1.48 kB │ gzip:   0.82 kB
-dist/assets/index-DgkjyIrX.css    140.54 kB │ gzip:  19.90 kB
-dist/assets/index-DTCu0s3d.js   2,176.16 kB │ gzip: 573.17 kB
-✓ built in 6.17s
+dist/assets/index-CiTvatt1.css    140.83 kB │ gzip:  19.95 kB
+dist/assets/index-BFyrBpry.js   2,180.37 kB │ gzip: 574.41 kB
+✓ built in 5.52s
 ```
 - Zero TypeScript diagnostics errors (`tsc -b` clean).
 - Zero Vite packaging errors.

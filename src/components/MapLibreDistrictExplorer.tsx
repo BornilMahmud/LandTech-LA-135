@@ -37,6 +37,13 @@ import {
   Map as MapIcon,
   Globe2
 } from 'lucide-react';
+import {
+  CARTO_STYLES,
+  CartoStyleId,
+  getCartoTileUrls,
+  getCartoAccountInfo,
+  cartoTransformRequest,
+} from '../config/carto';
 
 export type MapNavigationLevel = 'national' | 'district' | 'upazila' | 'cadastral';
 
@@ -62,8 +69,10 @@ export const MapLibreDistrictExplorer: React.FC<MapLibreDistrictExplorerProps> =
   const [selectedPlace, setSelectedPlace] = useState<LocalPlace | null>(null);
   const [selectedParcel, setSelectedParcel] = useState<CadastralParcelGeo | null>(null);
 
-  // Basemap style: Voyager (Google Maps clean aesthetic) vs Satellite/Hybrid
-  const [mapStyleType, setMapStyleType] = useState<'voyager' | 'osm' | 'satellite'>('voyager');
+  // CARTO Basemap style & API Key state
+  const [cartoStyleId, setCartoStyleId] = useState<CartoStyleId>('voyager');
+  const [isStyleMenuOpen, setIsStyleMenuOpen] = useState<boolean>(false);
+  const cartoAccount = useMemo(() => getCartoAccountInfo(), []);
 
   // Layer filters
   const [activeCategory, setActiveCategory] = useState<'all' | 'College' | 'Hospital' | 'Land Office' | 'Market'>('all');
@@ -88,31 +97,28 @@ export const MapLibreDistrictExplorer: React.FC<MapLibreDistrictExplorerProps> =
   const animationDuration = prefersReducedMotion ? 0 : 1400;
 
   /* ──────────────────────────────────────────────────────────
-     1. INITIALIZE MAPLIBRE GL JS
+     1. INITIALIZE MAPLIBRE GL JS WITH AUTHENTICATED CARTO BASEMAP
   ────────────────────────────────────────────────────────── */
   useEffect(() => {
     if (!mapContainerRef.current) return;
 
-    // Define CartoDB Voyager style (modern Google Maps style, high contrast, clean vector fonts)
+    // Define CARTO Basemap style (Voyager, Positron, Dark Matter)
     const mapStyle: maplibregl.StyleSpecification = {
       version: 8,
       sources: {
-        'voyager-tiles': {
+        'carto-tiles': {
           type: 'raster',
-          tiles: [
-            'https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
-            'https://b.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
-            'https://c.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
-          ],
+          tiles: getCartoTileUrls(cartoStyleId),
           tileSize: 256,
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
         },
       },
       layers: [
         {
-          id: 'voyager-layer',
+          id: 'carto-layer',
           type: 'raster',
-          source: 'voyager-tiles',
+          source: 'carto-tiles',
           minzoom: 0,
           maxzoom: 20,
         },
@@ -125,6 +131,7 @@ export const MapLibreDistrictExplorer: React.FC<MapLibreDistrictExplorerProps> =
       center: [currentDistrictGeo.center.lng, currentDistrictGeo.center.lat],
       zoom: 9.8,
       attributionControl: false,
+      transformRequest: (url: string) => cartoTransformRequest(url),
     });
 
     map.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right');
@@ -461,6 +468,84 @@ export const MapLibreDistrictExplorer: React.FC<MapLibreDistrictExplorerProps> =
               {currentLevel === 'upazila' && (isBn ? 'লেভেল ৩: উপজেলা ও অবকাঠামো' : 'Level 3: Infrastructure')}
               {currentLevel === 'cadastral' && (isBn ? 'লেভেল ৪: ক্যাডাস্ট্রাল প্লট' : 'Level 4: Cadastral Survey')}
             </span>
+          </div>
+
+          {/* CARTO API Key Active Status Badge */}
+          <div
+            className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-[11px] text-emerald-400 font-mono"
+            title={`CARTO API Key Active • Account: ${cartoAccount.accountId}${cartoAccount.validUntil ? ` • Exp: ${cartoAccount.validUntil}` : ''}`}
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="font-semibold text-emerald-300">CARTO:</span>
+            <span>{cartoAccount.accountId}</span>
+          </div>
+
+          {/* CARTO Basemap Style Switcher Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => setIsStyleMenuOpen(!isStyleMenuOpen)}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-slate-700 bg-slate-800 text-slate-200 hover:text-white transition-all text-xs font-semibold"
+              title="Switch CARTO Basemap Style"
+            >
+              <Layers size={13} className="text-emerald-400" />
+              <span>{CARTO_STYLES.find((s) => s.id === cartoStyleId)?.name.replace('CARTO ', '') || 'Style'}</span>
+            </button>
+
+            {isStyleMenuOpen && (
+              <div className="absolute top-full right-0 mt-1 w-56 rounded-xl bg-slate-900/95 border border-slate-700 p-2 shadow-2xl backdrop-blur-xl z-30 space-y-1">
+                <div className="text-[10px] uppercase font-bold text-slate-400 px-2 py-1 flex items-center justify-between">
+                  <span>CARTO Basemap</span>
+                  <span className="text-emerald-400 text-[9px] font-mono">Authenticated</span>
+                </div>
+                {CARTO_STYLES.map((style) => (
+                  <button
+                    key={style.id}
+                    onClick={() => {
+                      setCartoStyleId(style.id);
+                      setIsStyleMenuOpen(false);
+                      const map = mapInstanceRef.current;
+                      if (!map) return;
+                      const newTiles = getCartoTileUrls(style.id);
+                      if (map.getLayer('carto-layer')) {
+                        map.removeLayer('carto-layer');
+                      }
+                      if (map.getSource('carto-tiles')) {
+                        map.removeSource('carto-tiles');
+                      }
+                      map.addSource('carto-tiles', {
+                        type: 'raster',
+                        tiles: newTiles,
+                        tileSize: 256,
+                        attribution:
+                          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                      });
+                      const beforeId = map.getLayer('route-casing') ? 'route-casing' : undefined;
+                      map.addLayer(
+                        {
+                          id: 'carto-layer',
+                          type: 'raster',
+                          source: 'carto-tiles',
+                          minzoom: 0,
+                          maxzoom: 20,
+                        },
+                        beforeId
+                      );
+                    }}
+                    className={`w-full text-left px-2.5 py-2 rounded-lg text-xs transition-all flex flex-col ${
+                      cartoStyleId === style.id
+                        ? 'bg-emerald-600/20 border border-emerald-500/30 text-emerald-300 font-semibold'
+                        : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span>{isBn ? style.labelBangla : style.name}</span>
+                      {cartoStyleId === style.id && <span className="text-[10px] text-emerald-400">✓</span>}
+                    </div>
+                    <span className="text-[10px] text-slate-400 mt-0.5">{style.description}</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Quick Route Drawer Button */}

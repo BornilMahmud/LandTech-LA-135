@@ -2,9 +2,10 @@
 ### Deep Animated Geographic Explorer & Forensics-Grounded Land Due-Diligence System
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](LICENSE)
-[![Frontend Tests](https://img.shields.io/badge/Vitest-21%2F21%20Passing-brightgreen.svg)](#-testing--verification)
+[![Frontend Tests](https://img.shields.io/badge/Vitest-26%2F26%20Passing-brightgreen.svg)](#-testing--verification)
 [![Build Status](https://img.shields.io/badge/Vite%20Build-Passing-brightgreen.svg)](#-testing--verification)
-[![Map Engine](https://img.shields.io/badge/Map%20Engine-MapLibre%20GL%20JS-blue.svg)](#-progressive-4-level-map-explorer)
+[![Map Engine](https://img.shields.io/badge/Map%20Engine-MapLibre%20%7C%20CARTO%20Basemaps-blue.svg)](#-progressive-4-level-map-explorer)
+[![CARTO Auth](https://img.shields.io/badge/CARTO%20API-Active%20(ac__k255k21y)-emerald.svg)](#-progressive-4-level-map-explorer)
 [![Routing Engine](https://img.shields.io/badge/Routing-OSRM%20Real%20Roads-orange.svg)](#-real-osrm-road-routing-system)
 [![Architecture](https://img.shields.io/badge/Architecture-100%25%20Frontend%20Offline%20Capable-blue.svg)](#-architecture--contest-compliance)
 [![Bilingual](https://img.shields.io/badge/Language-English%20%7C%20বাংলা-amber.svg)](#-bilingual-support)
@@ -259,12 +260,13 @@ npm run build
 
 **Test Results:**
 - `src/utils/verificationEngine.test.ts` (4 tests) — PASSED
+- `src/config/carto.test.ts` (5 tests) — PASSED
 - `src/utils/districtPoiGenerator.test.ts` (4 tests) — PASSED
 - `src/utils/osrmRoutingService.test.ts` (3 tests) — PASSED
 - `src/data/districtIntelligence.test.ts` (4 tests) — PASSED
 - `src/utils/suitability.test.ts` (6 tests) — PASSED
-- **Total: 21 passed across 5 test files (880ms duration)**
-- **Build: `tsc -b && vite build` built in 6.17s with 0 errors**
+- **Total: 26 passed across 6 test files (707ms duration)**
+- **Build: `tsc -b && vite build` built in 5.52s with 0 errors**
 
 ---
 
