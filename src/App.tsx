@@ -5,58 +5,23 @@ import { HeroMapDossier } from './components/HeroMapDossier';
 import { RegionQuickGrid } from './components/RegionQuickGrid';
 import { LandCalculatorSection } from './components/LandCalculatorSection';
 import { CadastralExplorerSection } from './components/CadastralExplorerSection';
-import { SpatialFeaturesSection } from './components/SpatialFeaturesSection';
+import { DistrictIntelligenceDashboard } from './components/DistrictIntelligenceDashboard';
+import { DueDiligenceWorkbench } from './components/duediligence/DueDiligenceWorkbench';
 import { Footer } from './components/Footer';
 
-// LandWise AI Core Platform Components
-import { LandFinder } from './components/LandFinder';
-import { PropertyComparison } from './components/PropertyComparison';
-import { TourismExplorer } from './components/TourismExplorer';
-import { AdvisorChat } from './components/AdvisorChat';
-import { SuitabilityModal } from './components/SuitabilityModal';
-import { ContestNoticeModal } from './components/ContestNoticeModal';
-import { DistrictIntelligenceDashboard } from './components/DistrictIntelligenceDashboard';
-
-// Sample Datasets & Types
-import { BANGLADESH_PARCELS } from './data/parcels';
-import { BANGLADESH_DESTINATIONS } from './data/tourism';
-import { BANGLADESH_ACCOMMODATIONS } from './data/accommodations';
-import { LandParcel, SuitabilityPurpose, TourismDestination } from './types';
+// Geographic Datasets & Types
 import {
   ALL_BANGLADESH_DISTRICTS,
   BANGLADESH_DIVISIONS,
   DistrictData,
   DivisionData,
 } from './data/bangladeshMapData';
-import { CheckCircle2, ShieldCheck, Sparkles } from 'lucide-react';
+import { CheckCircle2, ShieldCheck, Sparkles, FileCheck2, Scale } from 'lucide-react';
 
 export function App() {
   const [isBn, setIsBn] = useState<boolean>(false);
   const [theme, setTheme] = useState<"light" | "reference" | "emerald" | "atlas" | "midnight">("light");
   const [activeSection, setActiveSection] = useState<string>("hero-map");
-
-  // Selected Land Purpose for Deterministic Suitability Evaluation
-  const [selectedPurpose, setSelectedPurpose] = useState<SuitabilityPurpose>('residential');
-
-  // Compared Parcels (pre-seed with 2 properties for immediate demo availability)
-  const [comparedParcelIds, setComparedParcelIds] = useState<string[]>([
-    'bd-dhk-01',
-    'bd-cxb-02'
-  ]);
-
-  // Selected Parcel for In-Depth AI Advisor / Map Focus
-  const [selectedParcel, setSelectedParcel] = useState<LandParcel | null>(BANGLADESH_PARCELS[0]);
-
-  // Selected Destination for Tourism Explorer
-  const [selectedDestination, setSelectedDestination] = useState<TourismDestination>(
-    BANGLADESH_DESTINATIONS[0]
-  );
-
-  // Suitability Evaluation Modal State
-  const [dossierParcel, setDossierParcel] = useState<LandParcel | null>(null);
-
-  // Contest Rule Notice & Provenance Modal
-  const [isContestNoticeOpen, setIsContestNoticeOpen] = useState<boolean>(false);
 
   // Default selected: Dhaka district & Dhaka division
   const [selectedDistrict, setSelectedDistrict] = useState<DistrictData | null>(
@@ -85,84 +50,13 @@ export function App() {
     if (dst) handleSelectDistrict(dst);
   };
 
-  // Compare toggling logic (supports max 3 items)
-  const handleToggleCompare = (parcel: LandParcel) => {
-    setComparedParcelIds((prev) => {
-      if (prev.includes(parcel.id)) {
-        return prev.filter((id) => id !== parcel.id);
-      }
-      if (prev.length >= 3) {
-        alert(
-          isBn
-            ? 'একসাথে সর্বোচ্চ ৩টি জমির প্লট তুলনা করা যাবে।'
-            : 'You can compare a maximum of 3 properties simultaneously.'
-        );
-        return prev;
-      }
-      return [...prev, parcel.id];
-    });
-  };
-
-  const handleRemoveCompare = (id: string) => {
-    setComparedParcelIds((prev) => prev.filter((pId) => pId !== id));
-  };
-
-  const handleClearCompare = () => {
-    setComparedParcelIds([]);
-  };
-
-  // Map & Advisor Navigation Handlers
-  const handleSelectOnMap = (parcel: LandParcel) => {
-    setSelectedParcel(parcel);
-    const normalizedDistrictName = parcel.district.toLowerCase();
-    const matchedDistrict = ALL_BANGLADESH_DISTRICTS.find(
-      (d) => d.name.toLowerCase() === normalizedDistrictName || d.id === normalizedDistrictName
-    );
-    if (matchedDistrict) {
-      handleSelectDistrict(matchedDistrict);
-    }
-    setActiveSection('hero-map');
-    const el = document.getElementById('hero-map');
-    el?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const handleSelectDestinationOnMap = (dest: TourismDestination) => {
-    setSelectedDestination(dest);
-    const normalizedDistrictName = dest.district.toLowerCase();
-    const matchedDistrict = ALL_BANGLADESH_DISTRICTS.find(
-      (d) => d.name.toLowerCase() === normalizedDistrictName || d.id === normalizedDistrictName
-    );
-    if (matchedDistrict) {
-      handleSelectDistrict(matchedDistrict);
-    }
-    setActiveSection('hero-map');
-    const el = document.getElementById('hero-map');
-    el?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const handleAskAdvisorForParcel = (parcel: LandParcel) => {
-    setSelectedParcel(parcel);
-    setActiveSection('advisor');
-    const el = document.getElementById('advisor');
-    el?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const handleAskAdvisorForDestination = (dest: TourismDestination) => {
-    setSelectedDestination(dest);
-    setActiveSection('advisor');
-    const el = document.getElementById('advisor');
-    el?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  // Filter compared parcels from dataset
-  const comparedParcels = BANGLADESH_PARCELS.filter((p) => comparedParcelIds.includes(p.id));
   const isLight = theme === "light";
 
   return (
     <div className={`min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white transition-colors duration-150 ${
       isLight ? "bg-slate-50 text-slate-900" : "bg-slate-950 text-slate-100"
     }`}>
-      {/* ── STICKY NAVIGATION BAR ── */}
+      {/* ── 1. STICKY TOP NAVIGATION BAR ── */}
       <Navbar
         isBn={isBn}
         setIsBn={setIsBn}
@@ -175,18 +69,14 @@ export function App() {
           const el = document.getElementById('quick-grid');
           el?.scrollIntoView({ behavior: 'smooth' });
         }}
-        comparedCount={comparedParcels.length}
-        selectedPurpose={selectedPurpose}
-        setSelectedPurpose={setSelectedPurpose}
-        onOpenContestModal={() => setIsContestNoticeOpen(true)}
         activeSection={activeSection}
         setActiveSection={setActiveSection}
       />
 
       {/* ── MAIN CONTENT WORKSPACE ── */}
-      <main className="flex-1 flex flex-col space-y-12 sm:space-y-16">
+      <main className="flex-1 flex flex-col space-y-16 sm:space-y-20 pb-16">
         
-        {/* ── 1. HERO BANGLADESH MAP EXPLORER ── */}
+        {/* ── 2. PRESERVED BANGLADESH 64-DISTRICT INTERACTIVE VECTOR MAP OVERVIEW ── */}
         <section id="hero-map" className="relative w-full pt-6 sm:pt-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-6">
           {/* Hero Header */}
           <div className="text-center max-w-3xl mx-auto space-y-3">
@@ -213,8 +103,8 @@ export function App() {
 
             <p className={`text-xs sm:text-sm font-medium max-w-2xl mx-auto leading-relaxed ${isLight ? "text-slate-600" : "text-slate-300"}`}>
               {isBn
-                ? "মানচিত্রের যেকোনো অংশ (জেলা বা বিভাগ) নির্বাচন করে তাৎক্ষণিক জমি মূল্যায়ন, ক্যাডাস্ট্রাল জরিপ স্ট্যাটাস ও পর্যটন স্পট বিশ্লেষণ করুন।"
-                : "Select any district or division on the vector map to inspect real-time land valuation, cadastral zoning, infrastructure connectivity, and tourism destinations."}
+                ? "মানচিত্রের যেকোনো অংশ (জেলা বা বিভাগ) নির্বাচন করে তাৎক্ষণিক জমি মূল্যায়ন, ক্যাডাস্ট্রাল জরিপ স্ট্যাটাস ও মৌজা ভিত্তিক আইনি বিশ্লেষণ অন্বেষণ করুন।"
+                : "Select any district or division on the vector map to inspect real-time land valuation, cadastral survey progress, infrastructure connectivity, and mouza intelligence."}
             </p>
 
             {/* Quick KPI stats strip */}
@@ -232,13 +122,13 @@ export function App() {
                 <span>{isBn ? "অফলাইন ডিটারমিনিস্টিক ইঞ্জিন" : "100% Offline Engine"}</span>
               </div>
               <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border ${isLight ? "bg-white border-slate-200 shadow-sm" : "bg-slate-900/60 border-slate-800"}`}>
-                <Sparkles size={13} className="text-sky-500" />
-                <span>{isBn ? "৫টি ব্যবহারের উপযোগীতা রেটিং" : "5 Use-Case Suitability"}</span>
+                <FileCheck2 size={13} className="text-sky-500" />
+                <span>{isBn ? "ডিউ-ডিলিজেন্স ক্রস-অডিট" : "Due-Diligence Cross-Audit"}</span>
               </div>
             </div>
           </div>
 
-          {/* ── HERO MAP & DOSSIER DUAL LAYOUT ── */}
+          {/* Interactive Map & Side Dossier Layout */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start pt-4">
             {/* Left 7/12 Cols: Interactive Map */}
             <div className="lg:col-span-7 xl:col-span-8 w-full">
@@ -268,90 +158,42 @@ export function App() {
           </div>
         </section>
 
-        {/* ── 2. FULL 64-DISTRICT INTELLIGENCE DASHBOARD (FEATURE B) ── */}
+        {/* ── 3. NEW PRODUCT CORE: LANDWISE AI DUE-DILIGENCE WORKBENCH ── */}
+        <section id="due-diligence" className="w-full">
+          <DueDiligenceWorkbench
+            isBn={isBn}
+            selectedDistrictId={selectedDistrict?.id}
+            onSelectDistrictById={handleSelectDistrictById}
+          />
+        </section>
+
+        {/* ── 4. FULL 64-DISTRICT CADASTRAL & ECONOMIC INTELLIGENCE DASHBOARD ── */}
         <section id="district-dashboard" className="w-full">
           <DistrictIntelligenceDashboard
             selectedDistrict={selectedDistrict}
             isBn={isBn}
             theme={theme}
-            onNavigateToFinder={() => {
-              setActiveSection('finder');
-              const el = document.getElementById('finder');
-              el?.scrollIntoView({ behavior: 'smooth' });
-            }}
-            onNavigateToTourism={() => {
-              setActiveSection('tourism');
-              const el = document.getElementById('tourism');
-              el?.scrollIntoView({ behavior: 'smooth' });
-            }}
-            onAskAdvisor={() => {
-              setActiveSection('advisor');
-              const el = document.getElementById('advisor');
-              el?.scrollIntoView({ behavior: 'smooth' });
-            }}
           />
         </section>
 
-        {/* ── 2. SMART LAND FINDER ── */}
-        <section id="finder" className="w-full">
-          <LandFinder
-            parcels={BANGLADESH_PARCELS}
-            selectedPurpose={selectedPurpose}
-            setSelectedPurpose={setSelectedPurpose}
-            language={isBn ? 'bn' : 'en'}
-            comparedParcelIds={comparedParcelIds}
-            onToggleCompare={handleToggleCompare}
-            onOpenSuitabilityModal={(parcel) => setDossierParcel(parcel)}
-            onSelectOnMap={handleSelectOnMap}
-            onAskAdvisor={handleAskAdvisorForParcel}
+        {/* ── 5. CADASTRAL EXPLORER (CS, SA, RS, BS SURVEYS & PORCHA RECORDS) ── */}
+        <section id="cadastre" className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <CadastralExplorerSection
+            isBn={isBn}
+            selectedDistrict={selectedDistrict}
           />
         </section>
 
-        {/* ── 3. PROPERTY COMPARISON MATRIX ── */}
-        <section id="compare" className="w-full">
-          <PropertyComparison
-            comparedParcels={comparedParcels}
-            selectedPurpose={selectedPurpose}
-            setSelectedPurpose={setSelectedPurpose}
-            language={isBn ? 'bn' : 'en'}
-            onRemoveCompare={handleRemoveCompare}
-            onClearCompare={handleClearCompare}
-            onGoToFinder={() => {
-              setActiveSection('finder');
-              const el = document.getElementById('finder');
-              el?.scrollIntoView({ behavior: 'smooth' });
-            }}
-            onOpenSuitabilityModal={(parcel) => setDossierParcel(parcel)}
-            onAskAdvisor={handleAskAdvisorForParcel}
+        {/* ── 6. BANGLADESHI LAND UNIT CONVERTER & REGIONAL VALUATION ── */}
+        <section id="calculator" className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <LandCalculatorSection
+            isBn={isBn}
+            selectedDistrict={selectedDistrict}
           />
         </section>
 
-        {/* ── 4. TOURISM & VERIFIED ACCOMMODATIONS ── */}
-        <section id="tourism" className="w-full">
-          <TourismExplorer
-            destinations={BANGLADESH_DESTINATIONS}
-            accommodations={BANGLADESH_ACCOMMODATIONS}
-            selectedDestination={selectedDestination}
-            setSelectedDestination={setSelectedDestination}
-            language={isBn ? 'bn' : 'en'}
-            onViewOnMap={handleSelectDestinationOnMap}
-            onAskAdvisorForDestination={handleAskAdvisorForDestination}
-          />
-        </section>
-
-        {/* ── 5. GROUNDED AI LAND ADVISOR ── */}
-        <section id="advisor" className="w-full">
-          <AdvisorChat
-            selectedParcel={selectedParcel}
-            comparedParcels={comparedParcels}
-            selectedPurpose={selectedPurpose}
-            selectedDestination={selectedDestination}
-            language={isBn ? 'bn' : 'en'}
-          />
-        </section>
-
-        {/* ── 6. QUICK DIVISION & REGION SELECTOR ── */}
-        <div id="quick-grid">
+        {/* ── 7. QUICK DIVISION & REGION SELECTOR GRID ── */}
+        <div id="quick-grid" className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <RegionQuickGrid
             isBn={isBn}
             selectedDistrict={selectedDistrict}
@@ -361,49 +203,10 @@ export function App() {
           />
         </div>
 
-        {/* ── 7. CADASTRAL EXPLORER (MOUZA & PLOTS) ── */}
-        <div id="cadastre">
-          <CadastralExplorerSection
-            isBn={isBn}
-            selectedDistrict={selectedDistrict}
-          />
-        </div>
-
-        {/* ── 8. BANGLADESHI LAND UNIT CONVERTER & VALUATION ── */}
-        <div id="calculator">
-          <LandCalculatorSection
-            isBn={isBn}
-            selectedDistrict={selectedDistrict}
-          />
-        </div>
-
-        {/* ── 9. SPATIAL CAPABILITIES ── */}
-        <SpatialFeaturesSection
-          isBn={isBn}
-        />
-
       </main>
 
-      {/* ── FOOTER ── */}
+      {/* ── FOOTER WITH OFFICIAL SOURCES & STATUTORY LEGAL DISCLAIMER ── */}
       <Footer isBn={isBn} />
-
-      {/* ── MODALS ── */}
-      {/* 1. In-Depth Suitability Assessment Modal with Configurable Factor Sliders */}
-      <SuitabilityModal
-        parcel={dossierParcel}
-        purpose={selectedPurpose}
-        onPurposeChange={setSelectedPurpose}
-        language={isBn ? 'bn' : 'en'}
-        onClose={() => setDossierParcel(null)}
-      />
-
-      {/* 2. Hackathon Compliance, Provenance & 3-Minute Demo Plan Modal */}
-      {isContestNoticeOpen && (
-        <ContestNoticeModal
-          language={isBn ? 'bn' : 'en'}
-          onClose={() => setIsContestNoticeOpen(false)}
-        />
-      )}
     </div>
   );
 }

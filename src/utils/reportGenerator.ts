@@ -1,0 +1,93 @@
+import { DueDiligenceCase, VerificationFinding } from '../types/dueDiligence';
+import { convertFromDecimals } from './landUnits';
+
+export function generateMarkdownReport(
+  caseData: DueDiligenceCase,
+  findings: VerificationFinding[]
+): string {
+  const units = convertFromDecimals(caseData.claimedAreaDecimals);
+  const now = new Date().toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+
+  const criticalFindings = findings.filter(f => f.severity === 'critical_red_flag');
+  const highWarnings = findings.filter(f => f.severity === 'high_warning');
+  const verifiedEvidence = findings.filter(f => f.severity === 'verified_evidence');
+
+  let md = `# LANDWISE AI — PRE-PURCHASE DUE-DILIGENCE DOSSIER\n\n`;
+  md += `**Case Title:** ${caseData.caseTitleEn}\n`;
+  md += `**Audit Date:** ${now}\n`;
+  md += `**Jurisdiction:** Mouza: ${caseData.mouzaName} (J.L. No. ${caseData.jlNumber}), Upazila: ${caseData.upazilaName}, District: ${caseData.districtName}\n`;
+  md += `**Claimed Area:** ${caseData.claimedAreaDecimals} Decimals (${units.katha} Katha / ${units.sqFeet} Sq.Ft.)\n`;
+  md += `**Proposed Consideration:** BDT ${caseData.proposedSellingPriceBdt.toLocaleString('en-IN')}\n`;
+  md += `**Overall Risk Verdict:** **${caseData.overallVerdict.toUpperCase().replace(/_/g, ' ')}** (Hazard Index: ${caseData.riskScore}/100)\n\n`;
+
+  md += `> **MANDATORY LEGAL DISCLAIMER:**\n`;
+  md += `> This dossier is an algorithmic, evidence-grounded pre-purchase screening analysis based on submitted document records and official public survey indices. It DOES NOT certify legal title, establish criminal fraud, or replace formal searches at the Sub-Registry Office, AC (Land) Office, or DLRS Record Rooms. Prospective purchasers MUST retain a licensed Advocate / Legal Professional prior to financial settlement.\n\n`;
+
+  md += `## 1. Executive Summary & Critical Findings\n\n`;
+  if (criticalFindings.length > 0) {
+    md += `### 🔴 Critical Red Flags (${criticalFindings.length})\n`;
+    criticalFindings.forEach((f, idx) => {
+      md += `${idx + 1}. **${f.titleEn}**\n`;
+      md += `   - **Finding:** ${f.descriptionEn}\n`;
+      if (f.evidenceSnippet) md += `   - **Evidence:** \`${f.evidenceSnippet}\`\n`;
+      md += `   - **Mandatory Action:** ${f.recommendedActionEn}\n\n`;
+    });
+  } else {
+    md += `*No critical chain-of-title red flags detected.* All submitted documents exhibit direct succession or valid mutation.\n\n`;
+  }
+
+  if (highWarnings.length > 0) {
+    md += `### 🟠 High Warnings (${highWarnings.length})\n`;
+    highWarnings.forEach((f, idx) => {
+      md += `${idx + 1}. **${f.titleEn}**\n`;
+      md += `   - **Finding:** ${f.descriptionEn}\n`;
+      md += `   - **Action Required:** ${f.recommendedActionEn}\n\n`;
+    });
+  }
+
+  md += `### 🟢 Verified Concordance Evidence (${verifiedEvidence.length})\n`;
+  verifiedEvidence.forEach((f, idx) => {
+    md += `${idx + 1}. **${f.titleEn}**: ${f.descriptionEn}\n`;
+  });
+  md += `\n`;
+
+  md += `## 2. Document Inventory\n\n`;
+  md += `| Document Type | Number / Serial | Office of Issue | Stated Area (Dec) | Stated Owner / Seller |\n`;
+  md += `|---|---|---|---|---|\n`;
+  caseData.documents.forEach(doc => {
+    md += `| ${doc.titleEn} | ${doc.documentNumber} | ${doc.issueOffice} | ${doc.landAreaDecimals} | ${doc.primaryOwnerName} |\n`;
+  });
+  md += `\n`;
+
+  md += `## 3. Environmental, Spatial & Zoning Context\n\n`;
+  md += `- **Zoning Classification:** ${caseData.spatialRisk.zoningClassification.toUpperCase()}\n`;
+  md += `- **Flood Vulnerability:** ${caseData.spatialRisk.floodRiskLevel.toUpperCase()} — ${caseData.spatialRisk.floodRiskDescriptionEn}\n`;
+  md += `- **Riverbank Erosion Risk:** ${caseData.spatialRisk.riverErosionRisk.toUpperCase()} — ${caseData.spatialRisk.riverErosionDescriptionEn}\n`;
+  md += `- **Road Frontage:** ${caseData.spatialRisk.roadAccessWidthFeet} Feet (${caseData.spatialRisk.roadType}) — ${caseData.spatialRisk.roadAccessDescriptionEn}\n`;
+  md += `- **Khash / Acquisition Proximity:** ${caseData.spatialRisk.khashOrGovernmentProximityEn}\n\n`;
+
+  md += `## 4. Official 4-Step Pre-Purchase Verification Roadmap\n\n`;
+  md += `1. **ePorcha Verification (\`eporcha.gov.bd\`):** Search Khatian numbers across the Upazila and District to confirm digitised Record Room entry.\n`;
+  md += `2. **AC (Land) Office Register IX Inspection:** Visit the local Upazila Land Office to review Register IX (নামজারি রেজিস্টার ৯) and DCR receipt authenticity.\n`;
+  md += `3. **Sub-Registry Index II Search (তল্লাশি):** Conduct a formal 12–25 year deed search at the Sub-Registry Office to uncover any undisclosed mortgages or duplicate deeds.\n`;
+  md += `4. **DLRS Certified Mouza Map Order (\`map.settlement.gov.bd\`):** Procure the official certified Mouza map sheet (CS/RS) and commission a licensed Amin / Surveyor to physically verify plot boundary cornerstones.\n\n`;
+
+  md += `---\n*Generated by LandWise AI — Bangladesh Land Due-Diligence Assistant*\n`;
+  return md;
+}
+
+export function downloadFile(content: string, filename: string, mimeType: string) {
+  const blob = new Blob([content], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
