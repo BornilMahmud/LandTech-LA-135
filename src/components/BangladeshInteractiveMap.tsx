@@ -1330,31 +1330,39 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                   )}
 
                   {/* Division Name Label */}
-                  <text
-                    x={div.center.x * 2}
-                    y={div.center.y * 2}
-                    textAnchor="middle"
-                    fontSize="28"
-                    fontWeight="900"
-                    fill="#0F172A"
-                    className="pointer-events-none select-none font-bold"
-                    style={{
-                      fontFamily: isBn ? "'Hind Siliguri', sans-serif" : "inherit",
-                    }}
-                  >
-                    {isBn ? div.bnName : div.name}
-                  </text>
-                  <text
-                    x={div.center.x * 2}
-                    y={div.center.y * 2 + 26}
-                    textAnchor="middle"
-                    fontSize="18"
-                    fontWeight="700"
-                    fill="#15803D"
-                    className="pointer-events-none select-none"
-                  >
-                    {div.districtsCount} {isBn ? "জেলা" : "Districts"}
-                  </text>
+                  <g className="pointer-events-none select-none">
+                    <text
+                      x={div.center.x}
+                      y={div.center.y}
+                      textAnchor="middle"
+                      fontSize="24"
+                      fontWeight="800"
+                      fill={theme === "light" ? "#0F172A" : "#FFFFFF"}
+                      stroke={theme === "light" ? "rgba(255,255,255,0.9)" : "rgba(15,23,42,0.9)"}
+                      strokeWidth="4"
+                      paintOrder="stroke fill"
+                      strokeLinejoin="round"
+                      style={{
+                        fontFamily: isBn ? "'Hind Siliguri', sans-serif" : "inherit",
+                      }}
+                    >
+                      {isBn ? div.bnName : div.name}
+                    </text>
+                    <text
+                      x={div.center.x}
+                      y={div.center.y + 24}
+                      textAnchor="middle"
+                      fontSize="15"
+                      fontWeight="700"
+                      fill={isSelected ? (theme === "light" ? "#78350F" : "#FEF3C7") : (theme === "light" ? "#166534" : "#86EFAC")}
+                      stroke={theme === "light" ? "rgba(255,255,255,0.9)" : "rgba(15,23,42,0.9)"}
+                      strokeWidth="3"
+                      paintOrder="stroke fill"
+                      strokeLinejoin="round"
+                    >
+                      {div.districtsCount} {isBn ? "জেলা" : "Districts"}
+                    </text>
+                  </g>
                 </g>
               );
             })}
