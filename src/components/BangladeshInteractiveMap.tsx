@@ -1686,60 +1686,104 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
             theme === "light" ? "bg-white border-zinc-200" : "bg-[#121215] border-zinc-800"
           }`}
         >
-          <div className="flex items-start justify-between gap-3 mb-2.5">
+          {/* Top Row: District Title, Division Pill, and Action Buttons */}
+          <div className="flex items-center justify-between gap-2.5 mb-3">
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold shrink-0 border border-emerald-500/20">
+              <div
+                className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold shrink-0 border transition-colors ${
+                  theme === "light"
+                    ? "bg-emerald-50 border-emerald-200 text-emerald-700 shadow-2xs"
+                    : "bg-emerald-950/60 border-emerald-800 text-emerald-400"
+                }`}
+              >
                 <MapPin size={18} />
               </div>
+
               <div className="min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h3 className="font-heading font-extrabold text-base sm:text-lg leading-tight truncate">
+                  <h3 className="font-heading font-extrabold text-base sm:text-lg leading-tight tracking-tight text-zinc-950 dark:text-white truncate">
                     {isBn ? activeDistrict.bnName : activeDistrict.name} {isBn ? "জেলা" : "District"}
                   </h3>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 shrink-0">
+                  <span
+                    className={`text-[10px] font-bold px-2 py-0.5 rounded-full border shrink-0 transition-colors ${
+                      theme === "light"
+                        ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                        : "bg-emerald-950/50 text-emerald-300 border-emerald-800/80"
+                    }`}
+                  >
                     {isBn ? activeDistrict.bnDivisionName : activeDistrict.divisionName} {isBn ? "বিভাগ" : "Div"}
                   </span>
-                </div>
-                <div className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5 mt-1 flex-wrap">
-                  <span className="flex items-center gap-1">
-                    <span>📐 {isBn ? "আয়তন:" : "Area:"}</span>
-                    <strong>{activeAreaSummary.areaSqKm} {isBn ? "বর্গ কিমি" : "sq km"}</strong>
-                  </span>
-                  <span className="text-zinc-400">•</span>
-                  <span>{activeAreaSummary.areaAcres.toLocaleString()} {isBn ? "একর" : "acres"}</span>
-                  <span className="text-zinc-400">•</span>
-                  <span>{activeAreaSummary.areaBighas.toLocaleString()} {isBn ? "বিঘা" : "bighas"}</span>
                 </div>
               </div>
             </div>
 
-            {/* Action buttons: Routes & Full Map */}
+            {/* Quick Action Controls: Routes & Full Map */}
             <div className="flex items-center gap-1.5 shrink-0">
               <button
                 type="button"
                 onClick={() => setIsRouteMode((prev) => !prev)}
-                className={`px-2.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
+                className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer border ${
                   isRouteMode
-                    ? "bg-blue-600 text-white shadow-md shadow-blue-600/30"
+                    ? "bg-blue-600 border-blue-600 text-white shadow-xs"
                     : theme === "light"
-                    ? "bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200"
-                    : "bg-blue-950/60 text-blue-300 hover:bg-blue-900/60 border border-blue-800"
+                    ? "bg-zinc-50 hover:bg-blue-50 text-zinc-700 hover:text-blue-700 border-zinc-200 hover:border-blue-300 shadow-2xs"
+                    : "bg-[#18181F] hover:bg-blue-950/50 text-zinc-300 hover:text-blue-300 border-zinc-800 hover:border-blue-800 shadow-2xs"
                 }`}
                 title="Toggle Route Navigator"
               >
-                <Route size={13} />
+                <Route size={13} className={isRouteMode ? "text-white" : "text-blue-500"} />
                 <span>{isBn ? "রুট" : "Routes"}</span>
               </button>
 
               <button
                 type="button"
                 onClick={handleResetZoom}
-                className="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/30 transition flex items-center gap-1.5"
+                className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer border ${
+                  theme === "light"
+                    ? "bg-zinc-50 hover:bg-emerald-50 text-zinc-700 hover:text-emerald-800 border-zinc-200 hover:border-emerald-300 shadow-2xs"
+                    : "bg-[#18181F] hover:bg-emerald-950/50 text-zinc-300 hover:text-emerald-300 border-zinc-800 hover:border-emerald-800 shadow-2xs"
+                }`}
                 title="Reset to Full Bangladesh Map"
               >
-                <RotateCcw size={12} />
+                <RotateCcw size={12} className="text-emerald-600 dark:text-emerald-400" />
                 <span>{isBn ? "সারাদেশ" : "Full Map"}</span>
               </button>
+            </div>
+          </div>
+
+          {/* District Area Metrics Bar: Clean 3-Segment Ribbon */}
+          <div
+            className={`grid grid-cols-3 gap-1 p-1.5 rounded-xl border text-center transition-colors mb-3 ${
+              theme === "light"
+                ? "bg-[#F8F9FA] border-zinc-200/90 text-zinc-700 shadow-2xs"
+                : "bg-[#16161B] border-zinc-800/90 text-zinc-300"
+            }`}
+          >
+            <div className="px-1.5 py-1">
+              <span className="text-[10px] text-zinc-400 block font-medium">
+                {isBn ? "বর্গ কিমি" : "Sq Km"}
+              </span>
+              <strong className="text-xs font-black text-zinc-900 dark:text-zinc-100 font-mono">
+                {activeAreaSummary.areaSqKm.toLocaleString()}
+              </strong>
+            </div>
+
+            <div className="px-1.5 py-1 border-x border-zinc-200/80 dark:border-zinc-800/80">
+              <span className="text-[10px] text-zinc-400 block font-medium">
+                {isBn ? "একর" : "Acres"}
+              </span>
+              <strong className="text-xs font-black text-zinc-900 dark:text-zinc-100 font-mono">
+                {activeAreaSummary.areaAcres.toLocaleString()}
+              </strong>
+            </div>
+
+            <div className="px-1.5 py-1">
+              <span className="text-[10px] text-zinc-400 block font-medium">
+                {isBn ? "বিঘা" : "Bighas"}
+              </span>
+              <strong className="text-xs font-black text-zinc-900 dark:text-zinc-100 font-mono">
+                {activeAreaSummary.areaBighas.toLocaleString()}
+              </strong>
             </div>
           </div>
 
