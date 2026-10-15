@@ -156,13 +156,18 @@ const UPAZILA_BEARINGS: Record<string, [number, number]> = {
   'shantiganj': [0.1, 0.3],
 
   // Dhaka
-  'dhakasouthcity': [0.1, 0.15],
-  'dhakanorthcity': [0.2, -0.2],
-  'savar': [-0.15, -0.55],
-  'dhamrai': [-0.65, -0.6],
-  'keraniganj': [-0.05, 0.45],
-  'nawabganj': [-0.55, 0.35],
-  'dohar': [-0.45, 0.7],
+  'dhakasouthcity': [0.15, 0.15],
+  'dhakanorthcity': [0.15, -0.2],
+  'savar': [-0.15, -0.45],
+  'dhamrai': [-0.6, -0.55],
+  'keraniganj': [-0.05, 0.4],
+  'nawabganj': [-0.55, 0.45],
+  'dohar': [-0.45, 0.75],
+  'mirpur': [0.05, -0.15],
+  'uttara': [0.18, -0.4],
+  'gulshan': [0.22, -0.05],
+  'motijheel': [0.15, 0.1],
+  'dhanmondi': [0.05, 0.05],
 
   // Chattogram
   'chattogramsadar': [0.0, 0.0],
@@ -226,8 +231,12 @@ export function generateDistrictPOIs(
     let ux: number;
     let uy: number;
 
-    if (UPAZILA_BEARINGS[key]) {
-      const [dirX, dirY] = UPAZILA_BEARINGS[key];
+    const bearingKey = UPAZILA_BEARINGS[key]
+      ? key
+      : Object.keys(UPAZILA_BEARINGS).find((k) => key.startsWith(k) || key.includes(k));
+
+    if (bearingKey && UPAZILA_BEARINGS[bearingKey]) {
+      const [dirX, dirY] = UPAZILA_BEARINGS[bearingKey];
       ux = cx + dirX * spreadX;
       uy = cy + dirY * spreadY;
     } else if (isSadar) {

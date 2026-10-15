@@ -47,6 +47,7 @@ import {
   calculateRouteDirections,
   getDistrictAreaSummary,
   filterPOIsByCategory,
+  getPathBoundingBox,
   DistrictPOI,
   DistrictRoad,
   RouteDirections,
@@ -203,14 +204,25 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
     setSelectedPOI(null);
   };
 
-  // Smooth Zoom to District Centroid
+  // Smooth Zoom to District Centroid & auto-fit district bounding box
   const zoomToDistrict = (districtId: string) => {
     const geo = geoLookup.get(districtId);
     if (!geo) return;
     const [cx, cy] = geo.centroid;
     const containerH = mapSvgRef.current?.parentElement?.clientHeight || 620;
     const svgScale = Math.min(containerH, 660) / 872;
-    const targetZoom = 3.25;
+    
+    let targetZoom = 6.8; // default punchy zoom
+    if (geo.path) {
+      const bbox = getPathBoundingBox(geo.path);
+      if (bbox.width > 0 && bbox.height > 0) {
+        // Fit district bounding box into comfortable ~65% of viewport
+        const fitScaleX = 260 / bbox.width;
+        const fitScaleY = 320 / bbox.height;
+        targetZoom = Math.max(5.5, Math.min(10.5, Math.min(fitScaleX, fitScaleY) * 0.85));
+      }
+    }
+    targetZoom = Number(targetZoom.toFixed(2));
 
     // Center [cx, cy] in the viewport
     const targetPanX = (300 - cx) * svgScale * targetZoom;
@@ -260,11 +272,6 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
       onSelectDistrict(activeDistrict);
     }
 
-    // If in SVG vector map mode, zoom into district
-    if (mapMode === 'districts') {
-      zoomToDistrict(activeDistrict.id);
-    }
-
     // Match or create POI for detail inspection card
     const matchPOI = allDistrictPOIs.find(
       (p) =>
@@ -273,6 +280,21 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
         p.id === upz.id ||
         (p.upazila && p.upazila.toLowerCase().includes(upz.name.toLowerCase()))
     );
+
+    // Deep zoom directly into the selected Upazila coordinates on SVG map
+    if (mapMode === 'districts') {
+      const containerH = mapSvgRef.current?.parentElement?.clientHeight || 620;
+      const svgScale = Math.min(containerH, 660) / 872;
+      const targetZoom = 11.5; // Deep zoom into the upazila hub
+      if (matchPOI) {
+        const targetPanX = (300 - matchPOI.x) * svgScale * targetZoom;
+        const targetPanY = (436 - matchPOI.y) * svgScale * targetZoom;
+        setZoomLevel(targetZoom);
+        setPanOffset({ x: targetPanX, y: targetPanY });
+      } else {
+        zoomToDistrict(activeDistrict.id);
+      }
+    }
 
     if (matchPOI) {
       setSelectedPOI(matchPOI);
@@ -387,8 +409,8 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
   const handleWheel = (e: React.WheelEvent) => {
     if (mapMode === "satellite") return;
     e.preventDefault();
-    const delta = e.deltaY < 0 ? 0.35 : -0.35;
-    setZoomLevel((prev) => Math.max(0.75, Math.min(4.5, Number((prev + delta).toFixed(2)))));
+    const delta = e.deltaY < 0 ? 0.6 : -0.6;
+    setZoomLevel((prev) => Math.max(0.75, Math.min(16.0, Number((prev + delta).toFixed(2)))));
   };
 
   // Google Maps Satellite URL for Bangladesh center or active district
@@ -647,10 +669,10 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
           style={{ backgroundColor: themeStyles.bg }}
           onWheel={handleWheel}
         >
-          {/* Floating Zoom Controls (Only for SVG Map) */}
+          {/* Floating Zoom Controls (Only for SVG Map: High Zoom up to 1600%) */}
           {mapMode !== "satellite" && mapMode !== "maplibre" && (
             <div
-              className={`absolute top-4 right-4 z-20 flex flex-col gap-1.5 p-1.5 rounded-xl border backdrop-blur-md shadow-xl ${
+              className={`absolute top-4 right-4 z-20 flex flex-col items-center gap-1.5 p-1.5 rounded-xl border backdrop-blur-md shadow-xl ${
                 theme === "light"
                   ? "bg-white/95 border-zinc-200 shadow-zinc-200/60"
                   : "bg-[#121215] border-zinc-800"
@@ -658,20 +680,31 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
             >
               <button
                 type="button"
-                onClick={() => setZoomLevel((z) => Math.min(z + 0.4, 4.2))}
+                onClick={() => setZoomLevel((z) => Math.min(Number((z + 1.0).toFixed(1)), 16.0))}
                 className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold transition-all ${
                   theme === "light"
                     ? "bg-zinc-100 hover:bg-zinc-200 text-zinc-700"
                     : "bg-[#18181B] hover:bg-zinc-800 active:bg-zinc-700 text-zinc-200"
                 }`}
                 aria-label="Zoom In"
-                title="Zoom In"
+                title="Zoom In (up to 16x)"
               >
                 <ZoomIn size={15} />
               </button>
+
+              {/* Live Zoom Percentage Badge */}
+              <div
+                className={`text-[9px] font-mono font-bold px-1 py-0.5 text-center select-none w-full ${
+                  theme === "light" ? "text-zinc-600" : "text-zinc-400"
+                }`}
+                title="Current Map Zoom Level"
+              >
+                {Math.round(zoomLevel * 100)}%
+              </div>
+
               <button
                 type="button"
-                onClick={() => setZoomLevel((z) => Math.max(z - 0.4, 0.75))}
+                onClick={() => setZoomLevel((z) => Math.max(Number((z - 1.0).toFixed(1)), 0.75))}
                 className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold transition-all ${
                   theme === "light"
                     ? "bg-zinc-100 hover:bg-zinc-200 text-zinc-700"
@@ -682,19 +715,45 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
               >
                 <ZoomOut size={15} />
               </button>
-              <button
-                type="button"
-                onClick={handleResetZoom}
-                className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold transition-all ${
-                  theme === "light"
-                    ? "bg-zinc-100 hover:bg-zinc-200 text-zinc-700"
-                    : "bg-[#18181B] hover:bg-zinc-800 active:bg-zinc-700 text-zinc-200"
-                }`}
-                aria-label="Reset Zoom"
-                title="Reset View to Full Bangladesh Map"
-              >
-                <RotateCcw size={13} />
-              </button>
+
+              {/* Quick Preset Zoom Levels (1x / 6x / 12x) */}
+              <div className="w-full pt-1 border-t border-zinc-200 dark:border-zinc-800 flex flex-col gap-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (zoomLevel < 4.0) {
+                      if (selectedDistrict) zoomToDistrict(selectedDistrict.id);
+                      else setZoomLevel(6.5);
+                    } else if (zoomLevel < 9.0) {
+                      setZoomLevel(12.0);
+                    } else {
+                      handleResetZoom();
+                    }
+                  }}
+                  className={`w-8 h-6 rounded text-[9px] font-mono font-bold flex items-center justify-center transition-colors ${
+                    theme === "light"
+                      ? "bg-zinc-100 hover:bg-emerald-50 text-emerald-700 hover:border-emerald-300 border border-transparent"
+                      : "bg-[#18181B] hover:bg-emerald-950/60 text-emerald-400 hover:border-emerald-800 border border-transparent"
+                  }`}
+                  title="Cycle Quick Zoom (1x → 6x → 12x)"
+                >
+                  {zoomLevel < 4.0 ? '6x' : zoomLevel < 9.0 ? '12x' : '1x'}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleResetZoom}
+                  className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold transition-all ${
+                    theme === "light"
+                      ? "bg-zinc-100 hover:bg-zinc-200 text-zinc-700"
+                      : "bg-[#18181B] hover:bg-zinc-800 active:bg-zinc-700 text-zinc-200"
+                  }`}
+                  aria-label="Reset Zoom"
+                  title="Reset View to Full Bangladesh Map"
+                >
+                  <RotateCcw size={13} />
+                </button>
+              </div>
             </div>
           )}
 
@@ -1169,54 +1228,24 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
               </g>
             )}
 
-            {/* ── DISTRICT LOCAL INFRASTRUCTURE LAYER (ZOOMED IN: CLEAN GOOGLE MAPS PIN SPACING) ── */}
+            {/* ── DISTRICT LOCAL INFRASTRUCTURE LAYER (ZOOMED IN: CLEAN PIN SPACING) ── */}
             {isDistrictZoomed && selectedDistrict && selectedGeo && (
               <g id="district-poi-layer" className="transition-opacity duration-500 ease-out">
-                {/* Centroid Area Banner badge right above the district */}
-                {districtAreaSummary && !activeRoute && (
-                  <g
-                    transform={`translate(${selectedGeo.centroid[0]}, ${selectedGeo.centroid[1] - 12})`}
-                    className="pointer-events-none select-none"
-                    filter="url(#area-badge-glow)"
-                  >
-                    <rect
-                      x="-48"
-                      y="-5"
-                      width="96"
-                      height="10"
-                      rx="3.5"
-                      fill={theme === "light" ? "rgba(15, 23, 42, 0.92)" : "rgba(2, 6, 23, 0.95)"}
-                      stroke="#10B981"
-                      strokeWidth="0.6"
-                    />
-                    <text
-                      x="0"
-                      y="1.8"
-                      textAnchor="middle"
-                      fontSize="3.1"
-                      fontWeight="800"
-                      fill="#34D399"
-                      className="font-mono"
-                    >
-                      {isBn
-                        ? `📐 আয়তন: ${districtAreaSummary.areaSqKm} কিমি² (${districtAreaSummary.areaAcres.toLocaleString()} একর)`
-                        : `📐 Area: ${districtAreaSummary.areaSqKm} km² (${districtAreaSummary.areaAcres.toLocaleString()} acres)`}
-                    </text>
-                  </g>
-                )}
-
-                {/* Render filtered POIs */}
+                {/* Render filtered POIs without overlapping centroid banner */}
                 {visiblePOIs.map((poi) => {
                   const isUpazila = poi.category === 'upazila';
                   const isPoiHovered = hoveredPOI?.id === poi.id;
                   const isPoiSelected = selectedPOI?.id === poi.id;
-                  const isCategoryFiltered = activeLayerFilter !== 'all';
+                  const isUpazilaSelected = selectedUpazilaId === poi.id;
 
-                  // Only show full label pill if:
-                  // 1) It's an upazila town center, OR
-                  // 2) Hovered/Selected by user, OR
-                  // 3) Filtered by that specific layer (keeps the map uncluttered like Google Maps!)
-                  const shouldShowLabel = isUpazila || isPoiHovered || isPoiSelected || isCategoryFiltered;
+                  // Clean UX: Only show full label pill on hover or selection to prevent overlap clusters
+                  const shouldShowLabel = isPoiHovered || isPoiSelected;
+
+                  // Dynamic pin scaling: pins stay delicate and sharp at high zoom levels
+                  const pinScale = Math.max(0.6, Math.min(1.0, 3.8 / Math.sqrt(zoomLevel)));
+                  const outerR = (isUpazila ? 3.0 : 2.4) * pinScale;
+                  const innerR = (isUpazila ? 1.1 : 0.8) * pinScale;
+                  const strokeW = 0.65 * pinScale;
 
                   // Color styling per category
                   let badgeColor = "#4F46E5"; // Upazila Indigo
@@ -1255,7 +1284,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                         <circle
                           cx={poi.x}
                           cy={poi.y}
-                          r="6.5"
+                          r={outerR * 2.2}
                           fill={badgeColor}
                           opacity="0.35"
                           className="animate-ping"
@@ -1266,13 +1295,13 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                       <circle
                         cx={poi.x}
                         cy={poi.y}
-                        r={isUpazila ? 3.4 : 2.7}
+                        r={outerR}
                         fill={badgeColor}
                         stroke="#FFFFFF"
-                        strokeWidth="0.75"
+                        strokeWidth={strokeW}
                         filter="url(#poi-shadow)"
                       />
-                      <circle cx={poi.x} cy={poi.y} r={isUpazila ? 1.3 : 0.9} fill="#FFFFFF" />
+                      <circle cx={poi.x} cy={poi.y} r={innerR} fill="#FFFFFF" />
 
                       {/* Conditionally rendered label pill (clean & non-overlapping) */}
                       {shouldShowLabel && (
@@ -1668,6 +1697,55 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
               <span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
               <span>{isBn ? "নির্বাচিত এলাকা" : "Selected Area"}</span>
             </div>
+          </div>
+        )}
+
+        {/* ── DISTRICT DATA RIBBON (OUTSIDE THE SELECTED MAP: BOTTOM HUD) ── */}
+        {isDistrictZoomed && selectedDistrict && (
+          <div
+            className={`absolute bottom-3 left-3 right-3 sm:right-auto z-20 flex flex-wrap items-center gap-2 sm:gap-3 rounded-xl px-3.5 py-2 backdrop-blur-md text-xs border shadow-md animate-in fade-in slide-in-from-bottom-2 ${
+              theme === "light"
+                ? "bg-white/95 border-emerald-500/30 text-zinc-800 shadow-zinc-200/80"
+                : "bg-[#121215]/95 border-emerald-500/30 text-zinc-200 shadow-black/80"
+            }`}
+          >
+            <div className="flex items-center gap-1.5 font-bold">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span className="text-emerald-700 dark:text-emerald-400 font-heading">
+                {isBn ? activeDistrict.bnName : activeDistrict.name} {isBn ? "জেলা" : "District"}
+              </span>
+            </div>
+            <span className="text-zinc-300 dark:text-zinc-700">|</span>
+            <div className="flex items-center gap-1 font-mono text-[11px]">
+              <span className="text-zinc-400">{isBn ? "আয়তন:" : "Area:"}</span>
+              <strong className="text-zinc-900 dark:text-zinc-100">
+                {activeAreaSummary.areaSqKm.toLocaleString()} km²
+              </strong>
+              <span className="text-zinc-400 hidden md:inline">
+                ({activeAreaSummary.areaAcres.toLocaleString()} {isBn ? "একর" : "acres"} • {activeAreaSummary.areaBighas.toLocaleString()} {isBn ? "বিঘা" : "bighas"})
+              </span>
+            </div>
+            <span className="text-zinc-300 dark:text-zinc-700 hidden sm:inline">|</span>
+            <div className="hidden sm:flex items-center gap-1.5 text-[11px]">
+              <span className="px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 font-bold">
+                {activeAreaSummary.upazilasCount} {isBn ? "উপজেলা" : "Upazilas"}
+              </span>
+              <span className="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-700 dark:text-amber-400 font-bold">
+                {activeAreaSummary.pourashavasCount} {isBn ? "পৌরসভা" : "Pourashavas"}
+              </span>
+              <span className="px-1.5 py-0.5 rounded bg-sky-500/10 text-sky-700 dark:text-sky-400 font-bold">
+                {allDistrictPOIs.length} {isBn ? "পয়েন্ট" : "POIs"}
+              </span>
+            </div>
+            {selectedPOI && (
+              <>
+                <span className="text-zinc-300 dark:text-zinc-700">|</span>
+                <div className="flex items-center gap-1 text-[11px] text-emerald-600 dark:text-emerald-400 font-bold">
+                  <span>🎯</span>
+                  <span>{isBn ? selectedPOI.bnName : selectedPOI.name}</span>
+                </div>
+              </>
+            )}
           </div>
         )}
       </div>
