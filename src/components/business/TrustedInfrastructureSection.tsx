@@ -1,9 +1,82 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 
 interface TrustedInfrastructureSectionProps {
   isBn: boolean;
   theme: 'dark' | 'light';
 }
+
+export const STRATEGIC_PILLARS = [
+  {
+    id: 'gov',
+    num: '01',
+    labelEn: '1. Government Impact',
+    labelBn: '১. সরকারি প্রয়োগ ও প্রশাসন',
+    descEn: 'AC Land, Sub-Registry & Khatian Audit',
+    descBn: 'সহকারী কমিশনার (ভূমি) ও বালাম ডিজিটাইজেশন',
+    icon: 'bx-government',
+    tag: 'GovTech',
+  },
+  {
+    id: 'business',
+    num: '02',
+    labelEn: '2. Commercial Markets',
+    labelBn: '২. ব্যবসায়িক বাজার ও ক্লায়েন্ট',
+    descEn: 'Banks, NBFI Mortgages & Developers',
+    descBn: 'ব্যাংক মর্টগেজ ঝুঁকি ও ডেভেলপার ল্যান্ড অডিট',
+    icon: 'bx-briefcase-alt-2',
+    tag: 'B2B SaaS',
+  },
+  {
+    id: 'revenue',
+    num: '03',
+    labelEn: '3. Revenue Model',
+    labelBn: '৩. বাণিজ্যিক রাজস্ব প্যাকেজ',
+    descEn: 'SaaS Tiers, Pay-Per-Query & API Packages',
+    descBn: 'সাবস্ক্রিপশন, প্রতি কোয়েরি চার্জ ও এন্টারপ্রাইজ',
+    icon: 'bx-dollar-circle',
+    tag: 'Monetization',
+  },
+  {
+    id: 'roi',
+    num: '04',
+    labelEn: '4. Impact & ROI Calculator',
+    labelBn: '৪. কর্মক্ষমতা ও আরওআই ক্যালকুলেটর',
+    descEn: 'Interactive Staff Time & Cost Savings',
+    descBn: 'ইন্টারেক্টিভ সময় সাশ্রয় ও বিনিয়োগ ফেরত',
+    icon: 'bx-calculator',
+    tag: 'Interactive ROI',
+  },
+  {
+    id: 'architecture',
+    num: '05',
+    labelEn: '5. Future Architecture',
+    labelBn: '৫. প্রযুক্তিগত স্থাপত্য ও ঝুঁকি',
+    descEn: 'Modular Microservices & Scalability Path',
+    descBn: 'ক্লাউড মাইক্রোসার্ভিস, এআই পাইপলাইন ও ক্যাশিং',
+    icon: 'bx-server',
+    tag: 'Cloud & AI',
+  },
+  {
+    id: 'pilot',
+    num: '06',
+    labelEn: '6. Pilot & Judge Pitch',
+    labelBn: '৬. পাইলট পরিকল্পনা ও জাজ পিচ',
+    descEn: '90-Day Upazila Pilot & Pitch Blueprint',
+    descBn: '৯০ দিনের উপজেলা পাইলট ও হ্যাকাথন পিচ',
+    icon: 'bx-target-lock',
+    tag: 'Hackathon Win',
+  },
+  {
+    id: 'trust',
+    num: '07',
+    labelEn: '7. Trust & Compliance',
+    labelBn: '৭. সাইবার নিরাপত্তা ও আইন',
+    descEn: 'Data Privacy, Audit Trails & Encryption',
+    descBn: 'তথ্য নিরাপত্তা, অডিট ট্রেইল ও আইনগত সীমানা',
+    icon: 'bx-lock-alt',
+    tag: 'Security & Legal',
+  },
+] as const;
 
 export const TrustedInfrastructureSection: React.FC<TrustedInfrastructureSectionProps> = ({
   isBn,
@@ -13,6 +86,10 @@ export const TrustedInfrastructureSection: React.FC<TrustedInfrastructureSection
 
   // Active view tab for the section
   const [activeTab, setActiveTab] = useState<'gov' | 'business' | 'revenue' | 'roi' | 'architecture' | 'pilot' | 'trust'>('gov');
+  const contentBoxRef = useRef<HTMLDivElement | null>(null);
+
+  const currentPillarIndex = STRATEGIC_PILLARS.findIndex((p) => p.id === activeTab);
+  const currentPillar = STRATEGIC_PILLARS[currentPillarIndex] || STRATEGIC_PILLARS[0];
 
   // ─────────────────────────────────────────────────────────────
   // INTERACTIVE ROI SCENARIO CALCULATOR STATE
@@ -45,7 +122,7 @@ export const TrustedInfrastructureSection: React.FC<TrustedInfrastructureSection
   }, [monthlyApps, baselineHours, timeReductionPct, hourlyCostBdt, monthlyPlatformCostBdt]);
 
   return (
-    <section id="trusted-infrastructure" className="w-full max-w-[1180px] mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+    <section id="trusted-infrastructure" className="w-full max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
       
       {/* ── SECTION HEADER & VALUE PROPOSITION ── */}
       <div className="text-center max-w-3xl mx-auto space-y-3.5">
@@ -93,35 +170,185 @@ export const TrustedInfrastructureSection: React.FC<TrustedInfrastructureSection
         </div>
       </div>
 
-      {/* ── STRATEGIC NAVIGATION TABS ── */}
-      <div className="flex items-center justify-start sm:justify-center overflow-x-auto gap-2 p-1.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-100/60 dark:bg-[#141418] scrollbar-thin">
-        {[
-          { id: 'gov', labelEn: '1. Government Impact', labelBn: '১. সরকারি প্রয়োগ ও প্রশাসন', icon: 'bx-government' },
-          { id: 'business', labelEn: '2. Commercial Markets', labelBn: '২. ব্যবসায়িক বাজার ও ক্লায়েন্ট', icon: 'bx-briefcase-alt-2' },
-          { id: 'revenue', labelEn: '3. Revenue Model', labelBn: '৩. বাণিজ্যিক রাজস্ব প্যাকেজ', icon: 'bx-dollar-circle' },
-          { id: 'roi', labelEn: '4. Impact & ROI Calculator', labelBn: '৪. কর্মক্ষমতা ও আরওআই ক্যালকুলেটর', icon: 'bx-calculator' },
-          { id: 'architecture', labelEn: '5. Future Architecture', labelBn: '৫. প্রযুক্তিগত স্থাপত্য ও ঝুঁকি', icon: 'bx-server' },
-          { id: 'pilot', labelEn: '6. Pilot & Judge Pitch', labelBn: '৬. পাইলট পরিকল্পনা ও জাজ পিচ', icon: 'bx-target-lock' },
-          { id: 'trust', labelEn: '7. Trust & Compliance', labelBn: '৭. সাইবার নিরাপত্তা ও আইন', icon: 'bx-lock-alt' },
-        ].map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
-            className={`px-3.5 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 shrink-0 ${
-              activeTab === tab.id
-                ? isLight
-                  ? 'bg-white text-zinc-950 border border-zinc-300 shadow-sm'
-                  : 'bg-emerald-950/40 text-emerald-300 border border-emerald-500/40 shadow-sm'
-                : isLight
-                ? 'text-zinc-600 hover:text-zinc-950 hover:bg-white/60'
-                : 'text-zinc-400 hover:text-white hover:bg-zinc-800/60'
+      {/* ── 2-COLUMN SPLIT: 7 POINTS ON LEFT + DOWNWARD SCROLLING DETAILS BOX ON RIGHT ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start pt-2">
+        
+        {/* ── LEFT SIDE: 7 POINTS VERTICAL SELECTION RAIL ── */}
+        <aside className="lg:col-span-4 xl:col-span-4 space-y-2 lg:sticky lg:top-24">
+          <div className="flex items-center justify-between px-2 py-1 mb-1.5">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 flex items-center gap-1.5">
+              <i className="bx bx-list-check text-sm text-emerald-500" />
+              <span>{isBn ? "৭টি কৌশলগত স্তম্ভ" : "7 Strategic Pillars"}</span>
+            </span>
+            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+              {currentPillarIndex + 1} / {STRATEGIC_PILLARS.length}
+            </span>
+          </div>
+
+          <div className="space-y-2">
+            {STRATEGIC_PILLARS.map((pillar) => {
+              const isActive = activeTab === pillar.id;
+              return (
+                <button
+                  key={pillar.id}
+                  type="button"
+                  onClick={() => {
+                    setActiveTab(pillar.id as any);
+                    contentBoxRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className={`w-full text-left p-3 sm:p-3.5 rounded-xl border transition-all flex items-start gap-3 cursor-pointer group relative overflow-hidden ${
+                    isActive
+                      ? isLight
+                        ? "bg-white border-emerald-500 shadow-md text-zinc-950 ring-1 ring-emerald-500/20"
+                        : "bg-[#18181D] border-emerald-500/60 shadow-lg text-white ring-1 ring-emerald-500/30"
+                      : isLight
+                      ? "bg-zinc-50/90 hover:bg-white border-zinc-200/90 hover:border-zinc-300 text-zinc-700"
+                      : "bg-[#131317] hover:bg-[#18181D] border-zinc-800 hover:border-zinc-700 text-zinc-400 hover:text-zinc-200"
+                  }`}
+                >
+                  {/* Left Active Accent Bar */}
+                  {isActive && (
+                    <span className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-500 rounded-r" />
+                  )}
+
+                  {/* Icon Badge */}
+                  <div
+                    className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border text-base transition-colors ${
+                      isActive
+                        ? "bg-emerald-500 text-white border-emerald-600 shadow-xs"
+                        : isLight
+                        ? "bg-white border-zinc-200 text-zinc-600 group-hover:text-emerald-600 group-hover:border-emerald-200"
+                        : "bg-zinc-800/80 border-zinc-700 text-zinc-300 group-hover:text-emerald-400 group-hover:border-zinc-600"
+                    }`}
+                  >
+                    <i className={`bx ${pillar.icon}`} aria-hidden="true" />
+                  </div>
+
+                  {/* Text Details */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-1.5 mb-0.5">
+                      <span className="text-[10px] font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                        {pillar.num}
+                      </span>
+                      <span
+                        className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
+                          isActive
+                            ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300"
+                            : isLight
+                            ? "bg-zinc-200/70 text-zinc-600"
+                            : "bg-zinc-800 text-zinc-400"
+                        }`}
+                      >
+                        {pillar.tag}
+                      </span>
+                    </div>
+                    <h4
+                      className={`text-xs sm:text-[13px] font-bold leading-tight truncate ${
+                        isActive
+                          ? "text-zinc-950 dark:text-white"
+                          : "text-zinc-800 dark:text-zinc-200"
+                      }`}
+                    >
+                      {isBn ? pillar.labelBn : pillar.labelEn}
+                    </h4>
+                    <p className="text-[11px] text-zinc-400 dark:text-zinc-500 truncate mt-1">
+                      {isBn ? pillar.descBn : pillar.descEn}
+                    </p>
+                  </div>
+
+                  <i
+                    className={`bx bx-chevron-right text-lg shrink-0 self-center transition-transform ${
+                      isActive
+                        ? "text-emerald-500 translate-x-0.5"
+                        : "text-zinc-300 dark:text-zinc-600 group-hover:translate-x-0.5"
+                    }`}
+                  />
+                </button>
+              );
+            })}
+          </div>
+        </aside>
+
+        {/* ── RIGHT SIDE: SCROLLING DETAILS BOX (DOWNWARD SCROLL) ── */}
+        <div className="lg:col-span-8 xl:col-span-8 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#111114] shadow-sm overflow-hidden flex flex-col">
+          {/* Header of Details Box */}
+          <div
+            className={`p-4 sm:p-5 border-b flex flex-wrap items-center justify-between gap-3 shrink-0 ${
+              isLight ? "bg-zinc-50/80 border-zinc-200" : "bg-[#15151A] border-zinc-800"
             }`}
           >
-            <i className={`bx ${tab.icon} text-sm`} aria-hidden="true" />
-            <span>{isBn ? tab.labelBn : tab.labelEn}</span>
-          </button>
-        ))}
-      </div>
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 text-xl shadow-2xs">
+                <i className={`bx ${currentPillar.icon}`} />
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 font-mono">
+                    {isBn ? `পয়েন্ট ${currentPillar.num} / ০৭` : `Point ${currentPillar.num} of 07`}
+                  </span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 font-medium">
+                    {currentPillar.tag}
+                  </span>
+                </div>
+                <h3 className="text-sm sm:text-base font-heading font-extrabold text-zinc-950 dark:text-white truncate">
+                  {isBn ? currentPillar.labelBn : currentPillar.labelEn}
+                </h3>
+              </div>
+            </div>
+
+            {/* Quick Prev / Next Navigator */}
+            <div className="flex items-center gap-1.5 shrink-0">
+              <button
+                type="button"
+                disabled={currentPillarIndex === 0}
+                onClick={() => {
+                  const prev = STRATEGIC_PILLARS[currentPillarIndex - 1];
+                  if (prev) {
+                    setActiveTab(prev.id as any);
+                    contentBoxRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+                  }
+                }}
+                className={`p-1.5 px-2.5 rounded-lg text-xs font-semibold border flex items-center gap-1 transition ${
+                  currentPillarIndex === 0
+                    ? "opacity-35 cursor-not-allowed bg-transparent border-transparent text-zinc-400"
+                    : isLight
+                    ? "bg-white hover:bg-zinc-100 border-zinc-200 text-zinc-700 shadow-2xs"
+                    : "bg-[#18181D] hover:bg-zinc-800 border-zinc-700 text-zinc-200"
+                }`}
+                title="Previous Strategic Point"
+              >
+                <i className="bx bx-chevron-left text-sm" />
+                <span className="hidden sm:inline">{isBn ? "পূর্ববর্তী" : "Prev"}</span>
+              </button>
+
+              <button
+                type="button"
+                disabled={currentPillarIndex === STRATEGIC_PILLARS.length - 1}
+                onClick={() => {
+                  const next = STRATEGIC_PILLARS[currentPillarIndex + 1];
+                  if (next) {
+                    setActiveTab(next.id as any);
+                    contentBoxRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+                  }
+                }}
+                className={`p-1.5 px-2.5 rounded-lg text-xs font-semibold border flex items-center gap-1 transition ${
+                  currentPillarIndex === STRATEGIC_PILLARS.length - 1
+                    ? "opacity-35 cursor-not-allowed bg-transparent border-transparent text-zinc-400"
+                    : "bg-emerald-600 hover:bg-emerald-500 text-white border-emerald-600 shadow-2xs font-bold"
+                }`}
+                title="Next Strategic Point"
+              >
+                <span className="hidden sm:inline">{isBn ? "পরবর্তী" : "Next"}</span>
+                <i className="bx bx-chevron-right text-sm" />
+              </button>
+            </div>
+          </div>
+
+          {/* Scrollable Body: Scrolling Downwards with scrollbar-thin */}
+          <div
+            ref={contentBoxRef}
+            className="p-4 sm:p-6 lg:p-7 overflow-y-auto max-h-[720px] lg:max-h-[820px] scrollbar-thin space-y-6"
+          >
 
       {/* ─────────────────────────────────────────────────────────────
           TAB 1: GOVERNMENT APPLICATIONS & IMPACT
@@ -1256,6 +1483,10 @@ export const TrustedInfrastructureSection: React.FC<TrustedInfrastructureSection
 
         </div>
       )}
+
+          </div>
+        </div>
+      </div>
 
     </section>
   );
