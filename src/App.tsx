@@ -122,7 +122,7 @@ export function App() {
         {/* ── 2. PRESERVED BANGLADESH 64-DISTRICT INTERACTIVE VECTOR MAP OVERVIEW ── */}
         <section id="hero-map" className="relative w-full pt-6 sm:pt-8 px-4 sm:px-6 lg:px-8 max-w-[1180px] mx-auto space-y-6">
           {/* Hero Header */}
-          <div className="text-center max-w-3xl mx-auto space-y-3.5">
+          <div className="text-center max-w-4xl mx-auto space-y-3.5">
             <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-semibold tracking-tight transition-all ${
               isLight 
                 ? "bg-[#FAFAFA] border-[#E4E4E7] text-[#52525B]" 
@@ -136,16 +136,10 @@ export function App() {
               </span>
             </div>
 
-            <h1 className={`text-3xl sm:text-5xl font-heading font-extrabold tracking-tight leading-[1.12] ${isLight ? "text-[#09090B]" : "text-[#FAFAFA]"}`}>
-              {isBn ? (
-                <>
-                  বাংলাদেশের স্মার্ট <span className="underline decoration-[#E4E4E7] dark:decoration-[#27272A] decoration-wavy decoration-1 underline-offset-8">ভূমি ও ক্যাডাস্ট্রাল তথ্যচিত্র</span>
-                </>
-              ) : (
-                <>
-                  Bangladesh Land & <span className="underline decoration-[#E4E4E7] dark:decoration-[#27272A] decoration-wavy decoration-1 underline-offset-8">Cadastral Intelligence</span>
-                </>
-              )}
+            <h1 className={`text-2xl sm:text-3xl md:text-4xl lg:text-[44px] xl:text-5xl font-heading font-extrabold tracking-tight leading-tight sm:whitespace-nowrap ${isLight ? "text-[#09090B]" : "text-[#FAFAFA]"}`}>
+              {isBn
+                ? "বাংলাদেশের স্মার্ট ভূমি ও ক্যাডাস্ট্রাল তথ্যচিত্র"
+                : "Bangladesh Land & Cadastral Intelligence"}
             </h1>
 
             <p className={`text-sm sm:text-[15px] max-w-2xl mx-auto leading-relaxed ${isLight ? "text-[#52525B]" : "text-[#A1A1AA]"}`}>
