@@ -31,7 +31,6 @@ import districtsGeoData from '../data/bangladeshDistrictsGeo.json';
 import {
   BANGLADESH_DIVISIONS,
   ALL_BANGLADESH_DISTRICTS,
-  BANGLADESH_FLOWS,
   DivisionData,
   DistrictData,
 } from '../data/bangladeshMapData';
@@ -85,7 +84,6 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
 }) => {
   const [mapMode, setMapMode] = useState<"maplibre" | "districts" | "atlas" | "satellite">("maplibre");
   const [showLabels, setShowLabels] = useState(true);
-  const [showFlows, setShowFlows] = useState(true);
   const [colorByViability, setColorByViability] = useState(false);
 
   // Zoom & Pan
@@ -110,18 +108,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
   const [hoveredDivision, setHoveredDivision] = useState<DivisionData | null>(null);
   const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number } | null>(null);
 
-  // Corridor Animation
-  const [activeFlowIdx, setActiveFlowIdx] = useState(0);
-
   const mapSvgRef = useRef<SVGSVGElement | null>(null);
-
-  // Flow animation ticker
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActiveFlowIdx((prev) => (prev + 1) % BANGLADESH_FLOWS.length);
-    }, 3000);
-    return () => clearInterval(timer);
-  }, []);
 
   // Quick lookup table for district GEO shapes
   const geoLookup = useMemo(() => {
@@ -636,25 +623,6 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                 title="Color code by Land Viability Score"
               >
                 <i className="bx bx-slider-alt text-xs" aria-hidden="true" />
-                <span className="hidden sm:inline">{isBn ? "মূল্যায়ন হিটম্যাপ" : "Viability Index"}</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setShowFlows((prev) => !prev)}
-                className={`px-2.5 py-1.5 rounded-xl text-xs font-semibold border transition-all flex items-center gap-1.5 ${
-                  showFlows
-                    ? theme === "light"
-                      ? "bg-teal-50 border-teal-500 text-teal-700 font-bold"
-                      : "bg-[#18181B] border-teal-500/40 text-teal-400"
-                    : theme === "light"
-                    ? "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-50"
-                    : "bg-[#09090B] border-zinc-800 text-zinc-400"
-                }`}
-                title="Toggle Economic Corridors"
-              >
-                <i className="bx bx-git-commit text-xs" aria-hidden="true" />
-                <span className="hidden sm:inline">{isBn ? "অর্থনৈতিক প্রবাহ" : "Corridors"}</span>
               </button>
             </>
           )}
@@ -1071,45 +1039,6 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
               })}
             </g>
 
-            {/* ── Active Economic Corridors & Transport Flows ── */}
-            {showFlows &&
-              !isDistrictZoomed &&
-              BANGLADESH_FLOWS.map((f, idx) => {
-                const fromGeo = geoLookup.get(f.fromDistrictId);
-                const toGeo = geoLookup.get(f.toDistrictId);
-                if (!fromGeo || !toGeo) return null;
-                const isActive = idx === activeFlowIdx;
-                const x1 = fromGeo.centroid[0];
-                const y1 = fromGeo.centroid[1];
-                const x2 = toGeo.centroid[0];
-                const y2 = toGeo.centroid[1];
-                const mx = (x1 + x2) / 2;
-                const my = (y1 + y2) / 2 - 25;
-                const color = isActive ? "#10B981" : "#38BDF8";
-
-                return (
-                  <g key={f.id} className="pointer-events-none">
-                    <path
-                      d={`M ${x1} ${y1} Q ${mx} ${my} ${x2} ${y2}`}
-                      fill="none"
-                      stroke={color}
-                      strokeWidth={isActive ? 3 : 1.2}
-                      strokeDasharray={isActive ? "none" : "3 3"}
-                      opacity={isActive ? 0.95 : 0.4}
-                    />
-                    {isActive && (
-                      <circle r="4" fill="#F59E0B">
-                        <animateMotion
-                          path={`M ${x1} ${y1} Q ${mx} ${my} ${x2} ${y2}`}
-                          dur="2s"
-                          repeatCount="indefinite"
-                        />
-                      </circle>
-                    )}
-                  </g>
-                );
-              })}
-
             {/* ── HIGHWAY & ROAD NETWORK ("route soho" - GOOGLE MAPS STYLE) ── */}
             {isDistrictZoomed && districtRoads.length > 0 && (
               <g id="district-roads-layer" className="transition-opacity duration-500 ease-out">
@@ -1200,13 +1129,6 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     />
-                    {/* Animated Moving Transit Vehicle / Dot */}
-                    <circle r="3.0" fill="#FFFFFF" stroke="#1D4ED8" strokeWidth="1.2" filter="url(#poi-shadow)">
-                      <animateMotion path={activeRoute.path} dur="3.5s" repeatCount="indefinite" />
-                    </circle>
-                    <circle r="1.4" fill="#38BDF8">
-                      <animateMotion path={activeRoute.path} dur="3.5s" repeatCount="indefinite" />
-                    </circle>
 
                     {/* Start Point A Badge */}
                     <g transform={`translate(${activeRoute.fromPOI.x}, ${activeRoute.fromPOI.y})`}>
