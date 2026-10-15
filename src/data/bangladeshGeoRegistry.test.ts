@@ -84,6 +84,13 @@ describe('Bangladesh Geographic Registry & Geo-Bounds Validation', () => {
     expect(unknown.localPlaces.length).toBeGreaterThan(0);
   });
 
+  it('checks bogura geo data center and places', () => {
+    const bogura = getDistrictGeoData('bogura');
+    expect(bogura.center.lat).toBeCloseTo(24.8465, 2);
+    expect(bogura.center.lng).toBeCloseTo(89.3777, 2);
+    expect(bogura.localPlaces.length).toBeGreaterThanOrEqual(5);
+  });
+
   it('validates cadastral parcels carry survey history and zoning tags', () => {
     const kushtia = BANGLADESH_GEO_DISTRICTS['kushtia'];
     expect(kushtia.cadastralParcels.length).toBeGreaterThan(0);

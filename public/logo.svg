@@ -1,0 +1,54 @@
+<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Base Slate-Black Squircle -->
+  <rect width="48" height="48" rx="11" fill="#141413" />
+  <rect x="0.5" y="0.5" width="47" height="47" rx="10.5" stroke="#2E2D2B" stroke-width="1" />
+
+  <!-- Cadastral Mouza Grid Blueprint Guidelines -->
+  <path d="M12 16H36M12 24H36M12 32H36" stroke="#252422" stroke-width="0.8" stroke-dasharray="1.5 1.5" />
+  <path d="M16 12V36M24 12V36M32 12V36" stroke="#252422" stroke-width="0.8" stroke-dasharray="1.5 1.5" />
+
+  <!-- Foundation Pillar Left: Sub-Registry / Ministry of Law -->
+  <rect x="10.5" y="22" width="5.5" height="13" rx="1.2" fill="#FAF9F5" fill-opacity="0.88" />
+  <line x1="13.25" y1="23.5" x2="13.25" y2="33.5" stroke="#141413" stroke-width="0.8" stroke-dasharray="1 1" />
+
+  <!-- Foundation Pillar Right: AC Land / Ministry of Land -->
+  <rect x="32" y="22" width="5.5" height="13" rx="1.2" fill="#FAF9F5" fill-opacity="0.88" />
+  <line x1="34.75" y1="23.5" x2="34.75" y2="33.5" stroke="#141413" stroke-width="0.8" stroke-dasharray="1 1" />
+
+  <!-- The Institutional "Setu" (Bridge) Arch connecting the two ministries -->
+  <path
+    d="M13.25 24C13.25 15.5 34.75 15.5 34.75 24"
+    stroke="#CC5A2B"
+    stroke-width="2.6"
+    stroke-linecap="round"
+  />
+
+  <!-- Secondary Tension Cable / Cadastral Boundary Line -->
+  <path
+    d="M16 28C18.5 21 29.5 21 32 28"
+    stroke="#FAF9F5"
+    stroke-width="1.2"
+    stroke-linecap="round"
+    stroke-opacity="0.6"
+  />
+
+  <!-- Central Keystone: Cadastral Land Parcel / Cryptographic Diamond -->
+  <polygon
+    points="24,12 28.5,18 24,24 19.5,18"
+    fill="#CC5A2B"
+    stroke="#FAF9F5"
+    stroke-width="1.4"
+  />
+
+  <!-- Inner Consensus Node (SHA-256 Verification Core) -->
+  <circle cx="24" cy="18" r="2" fill="#FAF9F5" />
+  <circle cx="24" cy="18" r="0.8" fill="#141413" />
+
+  <!-- Ground Baseline (Cadastral Datum Line) -->
+  <rect x="8.5" y="34.5" width="31" height="2" rx="1" fill="#706E6B" fill-opacity="0.8" />
+  <rect x="13.5" y="36.5" width="21" height="1" rx="0.5" fill="#42403D" />
+
+  <!-- Live Consensus Pulse Ring (Subtle Terracotta Accent) -->
+  <circle cx="39" cy="9" r="2.5" fill="#CC5A2B" />
+  <circle cx="39" cy="9" r="1" fill="#FAF9F5" />
+</svg>

@@ -19,7 +19,6 @@ export const HeroMapDossier: React.FC<HeroMapDossierProps> = ({
   theme = "light",
   selectedDistrict,
   selectedDivision,
-  onSelectDistrictById,
 }) => {
   const [calcKatha, setCalcKatha] = useState<number>(5);
   const [activeTab, setActiveTab] = useState<'intelligence' | 'calculator'>('intelligence');
@@ -27,16 +26,16 @@ export const HeroMapDossier: React.FC<HeroMapDossierProps> = ({
 
   if (!selectedDistrict && !selectedDivision) {
     return (
-      <div className={`w-full min-h-[380px] rounded-2xl p-8 flex flex-col items-center justify-center text-center border shadow-xs transition-colors ${
-        isLight ? "bg-white border-[#E4E4E7] text-[#09090B]" : "bg-[#121215] border-[#27272A] text-[#FAFAFA]"
+      <div className={`w-full min-h-[380px] rounded-[6px] p-8 flex flex-col items-center justify-center text-center border shadow-subtle transition-colors ${
+        isLight ? "bg-white border-[#E8E3DA] text-[#191817]" : "bg-[#1E1E1C] border-[#2B2A27] text-[#FAF9F5]"
       }`}>
-        <div className="w-12 h-12 rounded-xl bg-[#F4F4F5] dark:bg-[#18181B] border border-[#E4E4E7] dark:border-[#27272A] flex items-center justify-center text-[#09090B] dark:text-[#FAFAFA] mb-3">
-          <i className="bx bx-map-pin text-2xl" aria-hidden="true" />
+        <div className="w-10 h-10 rounded-[4px] bg-[#F3EFE8] dark:bg-[#141413] border border-[#E8E3DA] dark:border-[#2B2A27] flex items-center justify-center text-[#CC5A2B] mb-3">
+          <i className="bx bx-map-pin text-xl" aria-hidden="true" />
         </div>
-        <h3 className={`font-heading font-bold text-base sm:text-lg ${isLight ? "text-[#09090B]" : "text-white"}`}>
+        <h3 className={`font-serif text-lg sm:text-xl font-semibold ${isLight ? "text-[#191817]" : "text-white"}`}>
           {isBn ? "মানচিত্রে যেকোনো এলাকা নির্বাচন করুন" : "Select Any Area on the Map"}
         </h3>
-        <p className={`text-xs max-w-sm mt-1.5 leading-relaxed ${isLight ? "text-[#52525B]" : "text-[#A1A1AA]"}`}>
+        <p className={`text-xs max-w-sm mt-1.5 leading-relaxed ${isLight ? "text-[#706E6B]" : "text-[#9E9B95]"}`}>
           {isBn
             ? "৬৪টি জেলা বা ৮টি বিভাগের যেকোনো অংশে ক্লিক করে তাৎক্ষণিক ক্যাডাস্ট্রাল ও জমি মূল্যের বিশ্লেষণ দেখুন।"
             : "Click on any of the 64 districts or 8 divisions to inspect live cadastral, zoning, and valuation intelligence."}
@@ -48,7 +47,6 @@ export const HeroMapDossier: React.FC<HeroMapDossierProps> = ({
   // Active district metadata
   const district = selectedDistrict;
   const landMeta = district ? getDistrictLandData(district.id) : null;
-  const divisionMeta = selectedDivision ? DIVISION_LAND_DATA[selectedDivision.id] : null;
 
   // Valuation calculation
   const unitRateBDT = landMeta ? landMeta.avgPricePerKathaBDT : 2500000;
@@ -59,47 +57,47 @@ export const HeroMapDossier: React.FC<HeroMapDossierProps> = ({
       : `৳${(totalValuationBDT / 100000).toFixed(1)} ${isBn ? "লাখ" : "Lakh"}`;
 
   return (
-    <div className={`w-full rounded-2xl border shadow-card p-5 sm:p-6 flex flex-col transition-all ${
-      isLight ? "bg-white border-[#E4E4E7] text-[#09090B]" : "bg-[#121215] border-[#27272A] text-[#FAFAFA]"
+    <div className={`w-full rounded-[6px] border shadow-subtle p-5 sm:p-6 flex flex-col transition-all ${
+      isLight ? "bg-white border-[#E8E3DA] text-[#191817]" : "bg-[#1E1E1C] border-[#2B2A27] text-[#FAF9F5]"
     }`}>
       <div>
         
-        {/* Top Header & Badges — BMS horizontal layout */}
-        <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b ${isLight ? "border-[#E4E4E7]" : "border-[#27272A]"}`}>
+        {/* Top Header & Badges */}
+        <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b ${isLight ? "border-[#E8E3DA]" : "border-[#2B2A27]"}`}>
           <div>
             <div className="flex items-center gap-2">
-              <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border ${
-                isLight ? "bg-[#FAFAFA] border-[#E4E4E7] text-[#52525B]" : "bg-[#18181B] border-[#27272A] text-[#A1A1AA]"
+              <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[4px] text-[11px] font-mono border ${
+                isLight ? "bg-[#F3EFE8] border-[#E8E3DA] text-[#706E6B]" : "bg-[#141413] border-[#2B2A27] text-[#9E9B95]"
               }`}>
                 <span className="bms-live-dot"></span>
                 {isBn ? "লাইভ ক্যাডাস্ট্রাল প্রোফাইল" : "Live Land Dossier"}
               </span>
-              <span className={`text-xs font-medium ${isLight ? "text-[#71717A]" : "text-[#71717A]"}`}>
+              <span className={`text-xs font-mono ${isLight ? "text-[#706E6B]" : "text-[#9E9B95]"}`}>
                 {district?.divisionName || selectedDivision?.name}
               </span>
             </div>
 
-            <h2 className={`text-xl sm:text-2xl font-heading font-extrabold mt-1.5 tracking-tight ${isLight ? "text-[#09090B]" : "text-[#FAFAFA]"}`}>
+            <h2 className={`text-xl sm:text-2xl font-serif font-semibold mt-1.5 tracking-tight ${isLight ? "text-[#191817]" : "text-[#FAF9F5]"}`}>
               {district
                 ? (isBn ? district.bnName : district.name)
                 : (isBn ? selectedDivision?.bnName : selectedDivision?.name)}
             </h2>
 
-            <p className={`text-xs mt-0.5 ${isLight ? "text-[#71717A]" : "text-[#A1A1AA]"}`}>
+            <p className={`text-xs mt-0.5 ${isLight ? "text-[#706E6B]" : "text-[#9E9B95]"}`}>
               {district
                 ? (isBn ? `${district.bnDivisionName} বিভাগীয় প্রশাসনিক অঞ্চল` : `${district.divisionName} Division Administrative Region`)
                 : (isBn ? "বিভাগীয় সদর ও আঞ্চলিক তথ্য" : "Administrative Division Overview")}
             </p>
           </div>
 
-          {/* Viability Pill — BMS Pill */}
+          {/* Viability Pill */}
           {landMeta && (
             <div className="text-left sm:text-right shrink-0">
-              <span className="text-[10px] uppercase font-bold text-[#71717A] block tracking-wider">
+              <span className="text-[10px] uppercase font-mono font-bold text-[#706E6B] dark:text-[#9E9B95] block tracking-wider">
                 {isBn ? "ভূমি সূচক" : "Viability Index"}
               </span>
-              <span className={`inline-block mt-1 text-xs font-bold px-3 py-1 rounded-lg ${
-                isLight ? "bg-[#09090B] text-white" : "bg-[#FAFAFA] text-[#09090B]"
+              <span className={`inline-block mt-1 text-xs font-mono font-bold px-2.5 py-0.5 rounded-[4px] ${
+                isLight ? "bg-[#191817] text-[#FAF9F5]" : "bg-[#FAF9F5] text-[#191817]"
               }`}>
                 {landMeta.viabilityScore} / 100
               </span>
@@ -107,128 +105,128 @@ export const HeroMapDossier: React.FC<HeroMapDossierProps> = ({
           )}
         </div>
 
-        {/* Tab switchers: BMS segmented control */}
-        <div className={`flex items-center gap-1 my-4 p-1 rounded-xl border ${
-          isLight ? "bg-[#F4F4F5] border-[#E4E4E7]" : "bg-[#18181B] border-[#27272A]"
+        {/* Tab switchers: Editorial Segmented Control */}
+        <div className={`flex items-center gap-1 my-4 p-1 rounded-[4px] border ${
+          isLight ? "bg-[#F3EFE8] border-[#E8E3DA]" : "bg-[#141413] border-[#2B2A27]"
         }`}>
           <button
             type="button"
             onClick={() => setActiveTab('intelligence')}
-            className={`flex-1 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center justify-center gap-1.5 ${
+            className={`flex-1 py-1 rounded-[3px] text-xs font-medium transition-all flex items-center justify-center gap-1.5 ${
               activeTab === 'intelligence'
                 ? isLight
-                  ? 'bg-white text-[#09090B] shadow-xs border border-[#E4E4E7] font-semibold'
-                  : 'bg-[#09090B] text-white shadow-xs border border-[#27272A] font-semibold'
-                : isLight ? 'text-[#52525B] hover:text-[#09090B]' : 'text-[#A1A1AA] hover:text-white'
+                  ? 'bg-[#FAF9F5] text-[#191817] shadow-xs border border-[#E8E3DA] font-semibold'
+                  : 'bg-[#1E1E1C] text-[#FAF9F5] shadow-xs border border-[#2B2A27] font-semibold'
+                : isLight ? 'text-[#706E6B] hover:text-[#191817]' : 'text-[#9E9B95] hover:text-white'
             }`}
           >
-            <i className="bx bx-analyse text-sm text-[#16A34A] dark:text-[#4ADE80]" aria-hidden="true" />
+            <i className="bx bx-analyse text-sm text-[#CC5A2B]" aria-hidden="true" />
             <span>{isBn ? "আঞ্চলিক উপাত্ত" : "Spatial Metrics"}</span>
           </button>
           <button
             type="button"
             onClick={() => setActiveTab('calculator')}
-            className={`flex-1 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center justify-center gap-1.5 ${
+            className={`flex-1 py-1 rounded-[3px] text-xs font-medium transition-all flex items-center justify-center gap-1.5 ${
               activeTab === 'calculator'
                 ? isLight
-                  ? 'bg-white text-[#09090B] shadow-xs border border-[#E4E4E7] font-semibold'
-                  : 'bg-[#09090B] text-white shadow-xs border border-[#27272A] font-semibold'
-                : isLight ? 'text-[#52525B] hover:text-[#09090B]' : 'text-[#A1A1AA] hover:text-white'
+                  ? 'bg-[#FAF9F5] text-[#191817] shadow-xs border border-[#E8E3DA] font-semibold'
+                  : 'bg-[#1E1E1C] text-[#FAF9F5] shadow-xs border border-[#2B2A27] font-semibold'
+                : isLight ? 'text-[#706E6B] hover:text-[#191817]' : 'text-[#9E9B95] hover:text-white'
             }`}
           >
-            <i className="bx bx-calculator text-sm text-[#2563EB] dark:text-[#60A5FA]" aria-hidden="true" />
+            <i className="bx bx-calculator text-sm text-[#CC5A2B]" aria-hidden="true" />
             <span>{isBn ? "প্লট মূল্যায়ন" : "Valuation Calc"}</span>
           </button>
         </div>
 
         {/* TAB 1: INTELLIGENCE METRICS */}
         {activeTab === 'intelligence' && (
-          <div className="space-y-3.5">
+          <div className="space-y-3">
             {/* Stats grid — 4 cols on md+ */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 text-xs">
-              <div className={`bms-pill-box p-3.5 ${
-                isLight ? "bg-[#FAFAFA] border-[#E4E4E7]" : "bg-[#18181B] border-[#27272A]"
+              <div className={`p-3 rounded-[4px] border ${
+                isLight ? "bg-[#FAF9F5] border-[#E8E3DA]" : "bg-[#141413] border-[#2B2A27]"
               }`}>
-                <span className={`text-[10px] block font-bold uppercase tracking-wider ${isLight ? "text-[#71717A]" : "text-[#71717A]"}`}>
+                <span className={`text-[10px] block font-mono font-medium uppercase tracking-wider ${isLight ? "text-[#706E6B]" : "text-[#9E9B95]"}`}>
                   {isBn ? "গড় মূল্য (প্রতি কাঠা)" : "Avg Rate / Katha"}
                 </span>
-                <span className="text-base font-black text-[#D97706] dark:text-[#FBBF24] block mt-0.5">
+                <span className="text-base font-mono font-bold text-[#CC5A2B] block mt-0.5">
                   ৳{landMeta ? (landMeta.avgPricePerKathaBDT / 100000).toFixed(1) : 0}L
                 </span>
-                <span className="text-[10px] text-[#16A34A] dark:text-[#4ADE80] font-semibold flex items-center gap-1 mt-0.5">
+                <span className="text-[10px] text-[#3D5A4C] dark:text-[#4ADE80] font-mono font-medium flex items-center gap-1 mt-0.5">
                   <i className="bx bx-trending-up text-xs" aria-hidden="true" />
                   <span>+{landMeta?.growthRateYoY || 12}% YoY</span>
                 </span>
               </div>
 
-              <div className={`bms-pill-box p-3.5 ${
-                isLight ? "bg-[#FAFAFA] border-[#E4E4E7]" : "bg-[#18181B] border-[#27272A]"
+              <div className={`p-3 rounded-[4px] border ${
+                isLight ? "bg-[#FAF9F5] border-[#E8E3DA]" : "bg-[#141413] border-[#2B2A27]"
               }`}>
-                <span className={`text-[10px] block font-bold uppercase tracking-wider ${isLight ? "text-[#71717A]" : "text-[#71717A]"}`}>
+                <span className={`text-[10px] block font-mono font-medium uppercase tracking-wider ${isLight ? "text-[#706E6B]" : "text-[#9E9B95]"}`}>
                   {isBn ? "জরিপ ও ক্যাডাস্ট্রে" : "Cadastral Survey"}
                 </span>
-                <span className={`text-xs sm:text-sm font-bold block mt-0.5 truncate ${isLight ? "text-[#09090B]" : "text-white"}`}>
+                <span className={`text-xs sm:text-sm font-semibold block mt-0.5 truncate ${isLight ? "text-[#191817]" : "text-white"}`}>
                   {landMeta?.cadastralSurvey || "Digital Verified"}
                 </span>
-                <span className={`text-[10px] font-medium block mt-0.5 ${isLight ? "text-[#71717A]" : "text-[#A1A1AA]"}`}>
+                <span className={`text-[10px] font-mono block mt-0.5 ${isLight ? "text-[#706E6B]" : "text-[#9E9B95]"}`}>
                   {isBn ? "ই-মিউটেশন সমর্থিত" : "e-Mutation Enabled"}
                 </span>
               </div>
 
-              <div className={`bms-pill-box p-3.5 ${
-                isLight ? "bg-[#FAFAFA] border-[#E4E4E7]" : "bg-[#18181B] border-[#27272A]"
+              <div className={`p-3 rounded-[4px] border ${
+                isLight ? "bg-[#FAF9F5] border-[#E8E3DA]" : "bg-[#141413] border-[#2B2A27]"
               }`}>
-                <span className={`text-[10px] block font-bold uppercase tracking-wider ${isLight ? "text-[#71717A]" : "text-[#71717A]"}`}>
+                <span className={`text-[10px] block font-mono font-medium uppercase tracking-wider ${isLight ? "text-[#706E6B]" : "text-[#9E9B95]"}`}>
                   {isBn ? "জোনিং শ্রেণিবিভাগ" : "Primary Zoning"}
                 </span>
-                <span className="text-xs sm:text-sm font-bold text-[#2563EB] dark:text-[#60A5FA] block mt-0.5">
+                <span className={`text-xs sm:text-sm font-semibold block mt-0.5 ${isLight ? "text-[#191817]" : "text-white"}`}>
                   {landMeta?.zoning || "Mixed Commercial"}
                 </span>
-                <span className={`text-[10px] font-medium block mt-0.5 ${isLight ? "text-[#71717A]" : "text-[#A1A1AA]"}`}>
+                <span className={`text-[10px] font-mono block mt-0.5 ${isLight ? "text-[#706E6B]" : "text-[#9E9B95]"}`}>
                   {isBn ? "মাস্টারপ্ল্যান অনুবর্তী" : "Masterplan Compliant"}
                 </span>
               </div>
 
-              <div className={`bms-pill-box p-3.5 ${
-                isLight ? "bg-[#FAFAFA] border-[#E4E4E7]" : "bg-[#18181B] border-[#27272A]"
+              <div className={`p-3 rounded-[4px] border ${
+                isLight ? "bg-[#FAF9F5] border-[#E8E3DA]" : "bg-[#141413] border-[#2B2A27]"
               }`}>
-                <span className={`text-[10px] block font-bold uppercase tracking-wider ${isLight ? "text-[#71717A]" : "text-[#71717A]"}`}>
+                <span className={`text-[10px] block font-mono font-medium uppercase tracking-wider ${isLight ? "text-[#706E6B]" : "text-[#9E9B95]"}`}>
                   {isBn ? "বন্যা ও পরিবেশ ঝুঁকি" : "Flood Vulnerability"}
                 </span>
-                <span className="text-xs sm:text-sm font-bold text-[#16A34A] dark:text-[#4ADE80] block mt-0.5">
+                <span className="text-xs sm:text-sm font-semibold text-[#3D5A4C] dark:text-[#4ADE80] block mt-0.5">
                   {landMeta?.floodRisk || "Minimal (Zone 1)"}
                 </span>
-                <span className={`text-[10px] font-medium block mt-0.5 ${isLight ? "text-[#71717A]" : "text-[#A1A1AA]"}`}>
+                <span className={`text-[10px] font-mono block mt-0.5 ${isLight ? "text-[#706E6B]" : "text-[#9E9B95]"}`}>
                   {isBn ? "উঁচু ভূপ্রকৃতি" : "Elevated Plain"}
                 </span>
               </div>
             </div>
 
             {/* Key Infrastructure & Megaprojects */}
-            <div className={`bms-pill-box p-4 text-xs ${
-              isLight ? "bg-[#FAFAFA] border-[#E4E4E7]" : "bg-[#18181B] border-[#27272A]"
+            <div className={`p-3.5 rounded-[4px] border text-xs ${
+              isLight ? "bg-[#FAF9F5] border-[#E8E3DA]" : "bg-[#141413] border-[#2B2A27]"
             }`}>
-              <span className={`text-[10px] font-bold uppercase tracking-wider block mb-1.5 flex items-center gap-1.5 ${
-                isLight ? "text-[#52525B]" : "text-[#A1A1AA]"
+              <span className={`text-[10px] font-mono font-semibold uppercase tracking-wider block mb-1 flex items-center gap-1.5 ${
+                isLight ? "text-[#706E6B]" : "text-[#9E9B95]"
               }`}>
-                <i className="bx bx-buildings text-[#16A34A] dark:text-[#4ADE80] text-sm" aria-hidden="true" />
+                <i className="bx bx-buildings text-[#CC5A2B] text-sm" aria-hidden="true" />
                 <span>{isBn ? "প্রধান অবকাঠামো ও মেগা সংযোগ" : "Key Infrastructure Corridors"}</span>
               </span>
-              <p className={`text-xs font-medium leading-relaxed ${isLight ? "text-[#09090B]" : "text-[#FAFAFA]"}`}>
+              <p className={`text-xs font-normal leading-relaxed ${isLight ? "text-[#191817]" : "text-[#FAF9F5]"}`}>
                 {isBn ? landMeta?.bnKeyInfra : landMeta?.keyInfra}
               </p>
             </div>
 
             {/* Anomaly / Local Characteristic Alert */}
             {district && (
-              <div className={`p-3.5 rounded-xl text-xs flex items-start gap-2.5 border ${
+              <div className={`p-3 rounded-[4px] text-xs flex items-start gap-2.5 border ${
                 isLight 
-                  ? "bg-[#FEFCE8] border-[#FEF08A] text-[#713F12]" 
-                  : "bg-[#18181B] border-[#3F3F46] text-[#FDE047]"
+                  ? "bg-[#FAF0EB] border-[#F3D5C6] text-[#CC5A2B]" 
+                  : "bg-[#1E1E1C] border-[#383632] text-[#FAF9F5]"
               }`}>
-                <i className="bx bx-info-circle text-base shrink-0 mt-0.5 text-[#D97706] dark:text-[#FBBF24]" aria-hidden="true" />
+                <i className="bx bx-info-circle text-base shrink-0 mt-0.5 text-[#CC5A2B]" aria-hidden="true" />
                 <div className="text-[11px] leading-relaxed">
-                  <span className="font-bold">
+                  <span className="font-semibold">
                     {isBn ? "আঞ্চলিক বৈশিষ্ট্য: " : "Regional Intelligence: "}
                   </span>
                   <span>{isBn ? district.bnAnomaly : district.anomaly}</span>
@@ -240,12 +238,12 @@ export const HeroMapDossier: React.FC<HeroMapDossierProps> = ({
 
         {/* TAB 2: PLOT VALUATION CALCULATOR */}
         {activeTab === 'calculator' && (
-          <div className="space-y-3.5">
-            <div className={`bms-pill-box p-4 text-xs space-y-3.5 ${
-              isLight ? "bg-[#FAFAFA] border-[#E4E4E7]" : "bg-[#18181B] border-[#27272A]"
+          <div className="space-y-3">
+            <div className={`p-4 rounded-[4px] border text-xs space-y-3 ${
+              isLight ? "bg-[#FAF9F5] border-[#E8E3DA]" : "bg-[#141413] border-[#2B2A27]"
             }`}>
               <div>
-                <label className={`text-[10px] uppercase font-bold tracking-wider block mb-1.5 ${isLight ? "text-[#52525B]" : "text-[#A1A1AA]"}`}>
+                <label className={`text-[10px] uppercase font-mono font-medium tracking-wider block mb-1.5 ${isLight ? "text-[#706E6B]" : "text-[#9E9B95]"}`}>
                   {isBn ? "জমির পরিমাণ (কাঠা):" : "Plot Size in Katha:"}
                 </label>
                 <div className="flex items-center gap-2">
@@ -256,11 +254,11 @@ export const HeroMapDossier: React.FC<HeroMapDossierProps> = ({
                     step="0.5"
                     value={calcKatha}
                     onChange={(e) => setCalcKatha(Math.max(0.1, Number(e.target.value)))}
-                    className={`flex-1 rounded-lg px-3 py-2 font-bold text-sm focus:outline-none focus:ring-2 focus:ring-[#09090B] dark:focus:ring-[#FAFAFA] shadow-xs ${
-                      isLight ? "bg-white border border-[#E4E4E7] text-[#09090B]" : "bg-[#09090B] border border-[#27272A] text-white"
+                    className={`flex-1 rounded-[4px] px-3 py-1.5 font-mono font-semibold text-sm focus:outline-none focus:border-[#CC5A2B] focus:ring-1 focus:ring-[#CC5A2B]/20 border ${
+                      isLight ? "bg-white border-[#E8E3DA] text-[#191817]" : "bg-[#1E1E1C] border-[#2B2A27] text-white"
                     }`}
                   />
-                  <span className={`text-xs font-semibold ${isLight ? "text-[#52525B]" : "text-[#A1A1AA]"}`}>
+                  <span className={`text-xs font-medium ${isLight ? "text-[#706E6B]" : "text-[#9E9B95]"}`}>
                     {isBn ? "কাঠা" : "Katha"}
                   </span>
                 </div>
@@ -273,12 +271,12 @@ export const HeroMapDossier: React.FC<HeroMapDossierProps> = ({
                     key={k}
                     type="button"
                     onClick={() => setCalcKatha(k)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
+                    className={`px-3 py-1 rounded-[4px] text-xs font-mono font-medium border transition-all ${
                       calcKatha === k
-                        ? "bg-[#09090B] dark:bg-[#FAFAFA] border-transparent text-white dark:text-[#09090B] shadow-xs"
+                        ? "bg-[#191817] dark:bg-[#FAF9F5] border-transparent text-[#FAF9F5] dark:text-[#191817] shadow-xs"
                         : isLight
-                        ? "bg-white border-[#E4E4E7] text-[#09090B] hover:bg-[#F4F4F5]"
-                        : "bg-[#09090B] border-[#27272A] text-[#FAFAFA] hover:bg-[#18181B]"
+                        ? "bg-white border-[#E8E3DA] text-[#191817] hover:bg-[#F3EFE8]"
+                        : "bg-[#1E1E1C] border-[#2B2A27] text-[#FAF9F5] hover:bg-[#2B2A27]"
                     }`}
                   >
                     {k} {isBn ? "কাঠা" : "Katha"}
@@ -287,16 +285,16 @@ export const HeroMapDossier: React.FC<HeroMapDossierProps> = ({
               </div>
 
               {/* Calculated Result Card */}
-              <div className={`p-4 rounded-xl border ${
-                isLight ? "bg-[#F0FDF4] border-[#BBF7D0]" : "bg-[#18181B] border-[#27272A]"
+              <div className={`p-4 rounded-[4px] border ${
+                isLight ? "bg-[#FAF0EB] border-[#F3D5C6]" : "bg-[#1E1E1C] border-[#2B2A27]"
               }`}>
-                <span className="text-[10px] text-[#16A34A] dark:text-[#4ADE80] uppercase font-bold tracking-wider block">
+                <span className="text-[10px] text-[#CC5A2B] uppercase font-mono font-medium tracking-wider block">
                   {isBn ? "আনুমানিক বাজার দর" : "Estimated Market Valuation"}
                 </span>
-                <span className={`text-2xl font-black block mt-0.5 ${isLight ? "text-[#09090B]" : "text-[#FAFAFA]"}`}>
+                <span className={`text-2xl font-serif font-semibold block mt-0.5 ${isLight ? "text-[#191817]" : "text-[#FAF9F5]"}`}>
                   {formattedValuation}
                 </span>
-                <span className={`text-[10px] block mt-0.5 ${isLight ? "text-[#52525B]" : "text-[#A1A1AA]"}`}>
+                <span className={`text-[10px] font-mono block mt-0.5 ${isLight ? "text-[#706E6B]" : "text-[#9E9B95]"}`}>
                   {isBn
                     ? `প্রতি কাঠা গড় ৳${(unitRateBDT / 100000).toFixed(1)} লাখ হারে গণনাকৃত`
                     : `Based on ৳${(unitRateBDT / 100000).toFixed(1)} Lakh/Katha prevailing index`}
@@ -308,8 +306,8 @@ export const HeroMapDossier: React.FC<HeroMapDossierProps> = ({
 
       </div>
 
-      {/* ── ACTION BUTTONS — BMS Buttons ── */}
-      <div className={`pt-4 mt-4 border-t flex flex-col sm:flex-row gap-2.5 ${isLight ? "border-[#E4E4E7]" : "border-[#27272A]"}`}>
+      {/* ── ACTION BUTTONS ── */}
+      <div className={`pt-4 mt-4 border-t flex flex-col sm:flex-row gap-2.5 ${isLight ? "border-[#E8E3DA]" : "border-[#2B2A27]"}`}>
         <a
           href="#district-dashboard"
           className="flex-1 btn-bms-primary text-xs"

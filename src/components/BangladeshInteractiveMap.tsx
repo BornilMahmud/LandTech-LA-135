@@ -367,42 +367,42 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
   const themeStyles = useMemo(() => {
     if (theme === "light") {
       return {
-        bg: "#FAFAFA",
-        border: "#E4E4E7",
-        landDefault: "#E4E4E7",
-        landHover: "#16A34A",
-        landSelected: "#09090B",
-        stroke: "#D4D4D8",
-        selectedStroke: "#09090B",
-        waterColor: "#F4F4F5",
-        waterText: "#71717A",
+        bg: "#FAF9F5",
+        border: "#E8E3DA",
+        landDefault: "#F3EFE8",
+        landHover: "#CC5A2B",
+        landSelected: "#191817",
+        stroke: "#E8E3DA",
+        selectedStroke: "#191817",
+        waterColor: "#EDE7DD",
+        waterText: "#706E6B",
       };
     }
     // dark theme
     return {
-      bg: "#09090B",
-      border: "#27272A",
-      landDefault: "#18181B",
-      landHover: "#22C55E",
-      landSelected: "#FAFAFA",
-      stroke: "#27272A",
-      selectedStroke: "#FAFAFA",
-      waterColor: "#121215",
-      waterText: "#71717A",
+      bg: "#141413",
+      border: "#2B2A27",
+      landDefault: "#1E1E1C",
+      landHover: "#CC5A2B",
+      landSelected: "#FAF9F5",
+      stroke: "#2B2A27",
+      selectedStroke: "#CC5A2B",
+      waterColor: "#181817",
+      waterText: "#706E6B",
     };
   }, [theme]);
 
   // Color mapping helper for 8 Divisions in Atlas mode
   const getAtlasDivColor = (divId: string) => {
     const map: Record<string, string> = {
-      rangpur: "#86EFAC",
-      rajshahi: "#6EE7B7",
-      mymensingh: "#93C5FD",
-      sylhet: "#FDE047",
-      dhaka: "#FDBA74",
-      khulna: "#A7F3D0",
-      barishal: "#FCA5A5",
-      chittagong: "#C4B5FD",
+      rangpur: "#E8D8C8",
+      rajshahi: "#DFD2BF",
+      mymensingh: "#EDE1D1",
+      sylhet: "#D9C9B4",
+      dhaka: "#FAF0EB",
+      khulna: "#E2D9CC",
+      barishal: "#F5DDD3",
+      chittagong: "#D5CEC2",
     };
     return map[divId] || "#D4C2A5";
   };
@@ -462,49 +462,49 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
 
   return (
     <div
-      className={`relative w-full rounded-2xl border shadow-card overflow-hidden flex flex-col transition-colors duration-200 ${
+      className={`relative w-full rounded-[6px] border shadow-card overflow-hidden flex flex-col transition-colors duration-200 ${
         theme === "light"
           ? "bg-white border-[#E4E4E7] text-[#09090B]"
-          : "bg-[#121215] border-[#27272A] text-[#FAFAFA]"
+          : "bg-[#141413] border-[#2B2A27] text-[#FAF9F5]"
       }`}
     >
       {/* ── TOP CONTROL BAR ── */}
       <div
         className={`flex flex-wrap items-center justify-between p-3.5 sm:p-4 border-b gap-3 z-10 transition-colors ${
           theme === "light"
-            ? "bg-[#FAFAFA] border-[#E4E4E7] text-[#09090B]"
-            : "bg-[#121215] border-[#27272A] text-[#FAFAFA]"
+            ? "bg-[#FAF9F5] border-[#E8E3DA] text-[#191817]"
+            : "bg-[#141413] border-[#2B2A27] text-[#FAF9F5]"
         }`}
       >
         {/* Left: Map Layer Mode Toggles */}
         <div
-          className={`flex items-center gap-1 p-1 rounded-xl border ${
-            theme === "light" ? "bg-[#F4F4F5] border-[#E4E4E7]" : "bg-[#18181B] border-[#27272A]"
+          className={`flex items-center gap-1 p-1 rounded-[4px] border ${
+            theme === "light" ? "bg-[#F3EFE8] border-[#E8E3DA]" : "bg-[#1E1E1C] border-[#2B2A27]"
           }`}
         >
           <button
             type="button"
             onClick={() => setMapMode("maplibre")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-[4px] text-xs font-semibold transition-all flex items-center gap-1.5 ${
               mapMode === "maplibre"
-                ? "bg-[#09090B] text-white dark:bg-[#FAFAFA] dark:text-[#09090B] shadow-xs"
+                ? "bg-[#191817] text-[#FAF9F5] dark:bg-[#FAF9F5] dark:text-[#191817] shadow-xs"
                 : theme === "light"
                 ? "text-[#52525B] hover:text-[#09090B] hover:bg-white/60"
                 : "text-[#A1A1AA] hover:text-white hover:bg-[#27272A]"
             }`}
           >
-            <i className="bx bx-map-alt text-sm text-[#16A34A] dark:text-[#4ADE80]" aria-hidden="true" />
+            <i className="bx bx-map-alt text-sm text-[#CC5A2B] dark:text-[#CC5A2B]" aria-hidden="true" />
             <span>{isBn ? "ভেক্টর জিআইএস ম্যাপ" : "Vector GIS Map"}</span>
-            <span className="text-[10px] px-1.5 py-0.2 rounded bg-[#16A34A]/10 text-[#16A34A] dark:text-[#4ADE80] font-mono border border-[#16A34A]/20 hidden sm:inline">
+            <span className="text-[10px] px-1.5 py-0.2 rounded bg-[#16A34A]/10 text-[#CC5A2B] dark:text-[#CC5A2B] font-mono border border-[#16A34A]/20 hidden sm:inline">
               Live
             </span>
           </button>
           <button
             type="button"
             onClick={() => setMapMode("districts")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-[4px] text-xs font-semibold transition-all flex items-center gap-1.5 ${
               mapMode === "districts"
-                ? "bg-[#09090B] text-white dark:bg-[#FAFAFA] dark:text-[#09090B] shadow-xs"
+                ? "bg-[#191817] text-[#FAF9F5] dark:bg-[#FAF9F5] dark:text-[#191817] shadow-xs"
                 : theme === "light"
                 ? "text-[#52525B] hover:text-[#09090B] hover:bg-white/60"
                 : "text-[#A1A1AA] hover:text-white hover:bg-[#27272A]"
@@ -516,9 +516,9 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
           <button
             type="button"
             onClick={() => setMapMode("atlas")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-[4px] text-xs font-semibold transition-all flex items-center gap-1.5 ${
               mapMode === "atlas"
-                ? "bg-[#09090B] text-white dark:bg-[#FAFAFA] dark:text-[#09090B] shadow-xs"
+                ? "bg-[#191817] text-[#FAF9F5] dark:bg-[#FAF9F5] dark:text-[#191817] shadow-xs"
                 : theme === "light"
                 ? "text-[#52525B] hover:text-[#09090B] hover:bg-white/60"
                 : "text-[#A1A1AA] hover:text-white hover:bg-[#27272A]"
@@ -530,15 +530,15 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
           <button
             type="button"
             onClick={() => setMapMode("satellite")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-[4px] text-xs font-semibold transition-all flex items-center gap-1.5 ${
               mapMode === "satellite"
-                ? "bg-[#09090B] text-white dark:bg-[#FAFAFA] dark:text-[#09090B] shadow-xs"
+                ? "bg-[#191817] text-[#FAF9F5] dark:bg-[#FAF9F5] dark:text-[#191817] shadow-xs"
                 : theme === "light"
                 ? "text-[#52525B] hover:text-[#09090B] hover:bg-white/60"
                 : "text-[#A1A1AA] hover:text-white hover:bg-[#27272A]"
             }`}
           >
-            <i className="bx bx-planet text-xs text-[#16A34A] dark:text-[#4ADE80]" aria-hidden="true" />
+            <i className="bx bx-planet text-xs text-[#CC5A2B] dark:text-[#CC5A2B]" aria-hidden="true" />
             <span>{isBn ? "স্যাটেলাইট ভিউ" : "Satellite"}</span>
           </button>
         </div>
@@ -560,7 +560,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
             placeholder={
               isBn ? "জেলা, উপজেলা, শিক্ষাপ্রতিষ্ঠান খুঁজুন..." : "Search 64 districts, upazila, POI..."
             }
-            className={`w-full rounded-xl pl-8 pr-3 py-1.5 text-xs transition-colors focus:outline-none focus:border-[#09090B] dark:focus:border-white ${
+            className={`w-full rounded-[4px] pl-8 pr-3 py-1.5 text-xs transition-colors focus:outline-none focus:border-[#09090B] dark:focus:border-white ${
               theme === "light"
                 ? "bg-white border border-[#E4E4E7] text-[#09090B] placeholder-[#A1A1AA] shadow-xs"
                 : "bg-[#18181B] border border-[#27272A] text-white placeholder-[#71717A]"
@@ -570,7 +570,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
           {/* Unified Intelligence Search Dropdown */}
           {isSearchFocused && searchResults.length > 0 && (
             <div
-              className={`absolute top-full left-0 right-0 mt-1 rounded-xl border shadow-2xl p-1 z-50 max-h-72 overflow-y-auto ${
+              className={`absolute top-full left-0 right-0 mt-1 rounded-[4px] border shadow-2xl p-1 z-50 max-h-72 overflow-y-auto ${
                 theme === "light"
                   ? "bg-white border-zinc-200 text-zinc-800"
                   : "bg-[#121215] border-zinc-800 text-zinc-100"
@@ -601,7 +601,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                         setSearchQuery("");
                       }
                     }}
-                    className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs flex items-center justify-between gap-2 transition ${
+                    className={`w-full text-left px-2.5 py-1.5 rounded-[4px] text-xs flex items-center justify-between gap-2 transition ${
                       theme === "light" ? "hover:bg-zinc-100" : "hover:bg-[#18181B]"
                     }`}
                   >
@@ -647,11 +647,11 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
               <button
                 type="button"
                 onClick={() => setShowLabels((prev) => !prev)}
-                className={`px-2.5 py-1.5 rounded-xl text-xs font-semibold border transition-all flex items-center gap-1.5 ${
+                className={`px-2.5 py-1.5 rounded-[4px] text-xs font-semibold border transition-all flex items-center gap-1.5 ${
                   showLabels
                     ? theme === "light"
-                      ? "bg-emerald-50 border-emerald-500 text-emerald-700 font-bold"
-                      : "bg-[#18181B] border-emerald-500/40 text-emerald-400"
+                      ? "bg-[#FAF0EB] border-[#CC5A2B] text-[#CC5A2B] font-bold"
+                      : "bg-[#18181B] border-[#CC5A2B]/40 text-[#E89E78]"
                     : theme === "light"
                     ? "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-50"
                     : "bg-[#09090B] border-zinc-800 text-zinc-400"
@@ -665,7 +665,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
               <button
                 type="button"
                 onClick={() => setColorByViability((prev) => !prev)}
-                className={`px-2.5 py-1.5 rounded-xl text-xs font-semibold border transition-all flex items-center gap-1.5 ${
+                className={`px-2.5 py-1.5 rounded-[4px] text-xs font-semibold border transition-all flex items-center gap-1.5 ${
                   colorByViability
                     ? theme === "light"
                       ? "bg-amber-50 border-amber-500 text-amber-700 font-bold"
@@ -694,7 +694,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
           {/* Floating Zoom Controls (Only for SVG Map: High Zoom up to 1600%) */}
           {mapMode !== "satellite" && mapMode !== "maplibre" && (
             <div
-              className={`absolute top-4 right-4 z-20 flex flex-col items-center gap-1.5 p-1.5 rounded-xl border backdrop-blur-md shadow-xl ${
+              className={`absolute top-4 right-4 z-20 flex flex-col items-center gap-1.5 p-1.5 rounded-[4px] border backdrop-blur-md shadow-xl ${
                 theme === "light"
                   ? "bg-white/95 border-zinc-200 shadow-zinc-200/60"
                   : "bg-[#121215] border-zinc-800"
@@ -703,7 +703,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
               <button
                 type="button"
                 onClick={() => setZoomLevel((z) => Math.min(Number((z + 1.0).toFixed(1)), 16.0))}
-                className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold transition-all ${
+                className={`w-8 h-8 rounded-[4px] flex items-center justify-center font-bold transition-all ${
                   theme === "light"
                     ? "bg-zinc-100 hover:bg-zinc-200 text-zinc-700"
                     : "bg-[#18181B] hover:bg-zinc-800 active:bg-zinc-700 text-zinc-200"
@@ -727,7 +727,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
               <button
                 type="button"
                 onClick={() => setZoomLevel((z) => Math.max(Number((z - 1.0).toFixed(1)), 0.75))}
-                className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold transition-all ${
+                className={`w-8 h-8 rounded-[4px] flex items-center justify-center font-bold transition-all ${
                   theme === "light"
                     ? "bg-zinc-100 hover:bg-zinc-200 text-zinc-700"
                     : "bg-[#18181B] hover:bg-zinc-800 active:bg-zinc-700 text-zinc-200"
@@ -765,7 +765,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                 <button
                   type="button"
                   onClick={handleResetZoom}
-                  className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold transition-all ${
+                  className={`w-8 h-8 rounded-[4px] flex items-center justify-center font-bold transition-all ${
                     theme === "light"
                       ? "bg-zinc-100 hover:bg-zinc-200 text-zinc-700"
                       : "bg-[#18181B] hover:bg-zinc-800 active:bg-zinc-700 text-zinc-200"
@@ -782,7 +782,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
           {/* Floating Compass Badge (Only for SVG Map) */}
           {mapMode !== "satellite" && mapMode !== "maplibre" && (
             <div
-              className={`absolute top-4 left-4 z-20 pointer-events-none flex items-center gap-2 px-3 py-1.5 rounded-xl border backdrop-blur-md text-[11px] ${
+              className={`absolute top-4 left-4 z-20 pointer-events-none flex items-center gap-2 px-3 py-1.5 rounded-[4px] border backdrop-blur-md text-[11px] ${
                 theme === "light"
                   ? "bg-white/95 border-zinc-200 text-zinc-700 shadow-sm"
                   : "bg-[#121215] border-zinc-800 text-zinc-300"
@@ -835,7 +835,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
               loading="lazy"
             />
             <div
-              className={`absolute bottom-4 left-4 z-20 px-3 py-2 rounded-xl border text-xs backdrop-blur-md ${
+              className={`absolute bottom-4 left-4 z-20 px-3 py-2 rounded-[4px] border text-xs backdrop-blur-md ${
                 theme === "light"
                   ? "bg-white/95 border-zinc-200 text-zinc-700 shadow-md"
                   : "bg-[#121215] border-zinc-800 text-zinc-300"
@@ -1428,7 +1428,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
         {/* ── GOOGLE MAPS ROUTE DIRECTIONS CARD ("route soho") ── */}
         {isRouteMode && activeRoute && (
           <div
-            className={`absolute top-4 left-4 sm:left-6 z-30 w-[calc(100%-2rem)] sm:w-96 max-w-sm sm:max-w-md rounded-2xl p-4 backdrop-blur-xl border shadow-2xl animate-in fade-in slide-in-from-top-4 overflow-hidden ${
+            className={`absolute top-4 left-4 sm:left-6 z-30 w-[calc(100%-2rem)] sm:w-96 max-w-sm sm:max-w-md rounded-[6px] p-4 backdrop-blur-xl border shadow-2xl animate-in fade-in slide-in-from-top-4 overflow-hidden ${
               theme === "light"
                 ? "bg-white/95 border-blue-500/40 text-zinc-950 shadow-zinc-300/80"
                 : "bg-[#121215] border-blue-500/40 text-zinc-100 shadow-black/90"
@@ -1437,7 +1437,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
             {/* Route Header */}
             <div className="flex items-center justify-between border-b pb-2.5 mb-3">
               <div className="flex items-center gap-2">
-                <div className="p-1.5 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400">
+                <div className="p-1.5 rounded-[4px] bg-blue-500/10 text-blue-600 dark:text-blue-400">
                   <Route size={16} />
                 </div>
                 <div>
@@ -1455,7 +1455,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
               <button
                 type="button"
                 onClick={() => setIsRouteMode(false)}
-                className="p-1 rounded-lg text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-[#18181B] transition"
+                className="p-1 rounded-[4px] text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-[#18181B] transition"
                 title="Exit Route Mode"
               >
                 <X size={15} />
@@ -1472,7 +1472,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                 <select
                   value={routeFromId}
                   onChange={(e) => setRouteFromId(e.target.value)}
-                  className={`flex-1 min-w-0 w-full truncate rounded-xl px-2.5 py-1.5 text-xs font-semibold border transition cursor-pointer ${
+                  className={`flex-1 min-w-0 w-full truncate rounded-[4px] px-2.5 py-1.5 text-xs font-semibold border transition cursor-pointer ${
                     theme === "light"
                       ? "bg-zinc-50 border-zinc-200 text-zinc-800"
                       : "bg-[#18181B] border-zinc-800 text-zinc-200"
@@ -1514,7 +1514,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                 <select
                   value={routeToId}
                   onChange={(e) => setRouteToId(e.target.value)}
-                  className={`flex-1 min-w-0 w-full truncate rounded-xl px-2.5 py-1.5 text-xs font-semibold border transition cursor-pointer ${
+                  className={`flex-1 min-w-0 w-full truncate rounded-[4px] px-2.5 py-1.5 text-xs font-semibold border transition cursor-pointer ${
                     theme === "light"
                       ? "bg-zinc-50 border-zinc-200 text-zinc-800"
                       : "bg-[#18181B] border-zinc-800 text-zinc-200"
@@ -1531,7 +1531,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
 
             {/* Route Stats Strip */}
             <div
-              className={`p-2.5 rounded-xl border mb-3 flex items-center justify-between ${
+              className={`p-2.5 rounded-[4px] border mb-3 flex items-center justify-between ${
                 theme === "light"
                   ? "bg-blue-50/70 border-blue-200 text-blue-900"
                   : "bg-blue-950/40 border-blue-800/60 text-blue-200"
@@ -1583,7 +1583,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
               }}
             >
               <div
-                className={`rounded-2xl p-3.5 shadow-2xl backdrop-blur-md min-w-[250px] max-w-[290px] text-xs border transition-all ${
+                className={`rounded-[6px] p-3.5 shadow-2xl backdrop-blur-md min-w-[250px] max-w-[290px] text-xs border transition-all ${
                   theme === "light"
                     ? "bg-white/95 border-emerald-500/40 text-zinc-800 shadow-zinc-300/40"
                     : "bg-[#121215] border-emerald-500/50 text-zinc-200"
@@ -1665,7 +1665,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
         {/* ── MAP LEGEND (BOTTOM-LEFT WHEN NATIONWIDE) ── */}
         {!isDistrictZoomed && (
           <div
-            className={`absolute bottom-3 left-3 z-20 hidden sm:flex items-center gap-3 rounded-xl px-3 py-2 backdrop-blur-md text-[11px] border ${
+            className={`absolute bottom-3 left-3 z-20 hidden sm:flex items-center gap-3 rounded-[4px] px-3 py-2 backdrop-blur-md text-[11px] border ${
               theme === "light"
                 ? "bg-white/95 border-zinc-200 text-zinc-700 shadow-md"
                 : "bg-[#121215] border-zinc-800 text-zinc-300"
@@ -1689,7 +1689,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
         {/* ── DISTRICT DATA RIBBON (OUTSIDE THE SELECTED MAP: BOTTOM HUD) ── */}
         {isDistrictZoomed && selectedDistrict && (
           <div
-            className={`absolute bottom-3 left-3 right-3 sm:right-auto z-20 flex flex-wrap items-center gap-2 sm:gap-3 rounded-xl px-3.5 py-2 backdrop-blur-md text-xs border shadow-md animate-in fade-in slide-in-from-bottom-2 ${
+            className={`absolute bottom-3 left-3 right-3 sm:right-auto z-20 flex flex-wrap items-center gap-2 sm:gap-3 rounded-[4px] px-3.5 py-2 backdrop-blur-md text-xs border shadow-md animate-in fade-in slide-in-from-bottom-2 ${
               theme === "light"
                 ? "bg-white/95 border-emerald-500/30 text-zinc-800 shadow-zinc-200/80"
                 : "bg-[#121215]/95 border-emerald-500/30 text-zinc-200 shadow-black/80"
@@ -1753,10 +1753,10 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
           {/* Top Row: District Title & Division Pill (Full Width, Zero Truncation!) */}
           <div className="flex items-center gap-2.5 mb-2.5">
             <div
-              className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold shrink-0 border transition-colors ${
+              className={`w-9 h-9 rounded-[4px] flex items-center justify-center font-bold shrink-0 border transition-colors ${
                 theme === "light"
-                  ? "bg-emerald-50 border-emerald-200 text-emerald-700 shadow-2xs"
-                  : "bg-emerald-950/60 border-emerald-800 text-emerald-400"
+                  ? "bg-[#FAF0EB] border-[#F3D5C6] text-[#CC5A2B] shadow-2xs"
+                  : "bg-[#1E1E1C] border-[#2B2A27] text-[#D4A373]"
               }`}
             >
               <MapPin size={18} />
@@ -1770,8 +1770,8 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                 <span
                   className={`text-[10px] font-bold px-2 py-0.5 rounded-full border shrink-0 transition-colors ${
                     theme === "light"
-                      ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-                      : "bg-emerald-950/50 text-emerald-300 border-emerald-800/80"
+                      ? "bg-[#FAF0EB] text-[#CC5A2B] border-[#F3D5C6]"
+                      : "bg-[#1E1E1C] text-[#D4A373] border-[#2B2A27]"
                   }`}
                 >
                   {isBn ? activeDistrict.bnDivisionName : activeDistrict.divisionName} {isBn ? "বিভাগ" : "Div"}
@@ -1785,7 +1785,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
             <button
               type="button"
               onClick={handleToggleRoutes}
-              className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer border ${
+              className={`flex-1 py-1.5 px-3 rounded-[4px] text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer border ${
                 isRouteMode
                   ? "bg-blue-600 border-blue-600 text-white shadow-xs"
                   : theme === "light"
@@ -1801,7 +1801,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
             <button
               type="button"
               onClick={handleResetZoom}
-              className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer border ${
+              className={`flex-1 py-1.5 px-3 rounded-[4px] text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer border ${
                 theme === "light"
                   ? "bg-zinc-50 hover:bg-zinc-100 text-zinc-700 hover:text-zinc-900 border-zinc-200 shadow-2xs"
                   : "bg-[#18181F] hover:bg-[#202028] text-zinc-300 hover:text-white border-zinc-800 shadow-2xs"
@@ -1815,7 +1815,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
 
           {/* District Area Metrics Bar: Clean 3-Segment Ribbon */}
           <div
-            className={`grid grid-cols-3 gap-1 p-1.5 rounded-xl border text-center transition-colors mb-3 ${
+            className={`grid grid-cols-3 gap-1 p-1.5 rounded-[4px] border text-center transition-colors mb-3 ${
               theme === "light"
                 ? "bg-[#F8F9FA] border-zinc-200/90 text-zinc-700 shadow-2xs"
                 : "bg-[#16161B] border-zinc-800/90 text-zinc-300"
@@ -1852,7 +1852,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
           {/* Key Stats Strip (4 Metric Cards) */}
           <div className="grid grid-cols-4 gap-1.5 sm:gap-2 mb-3 text-center text-[10px]">
             <div
-              className={`p-2 rounded-xl border ${
+              className={`p-2 rounded-[4px] border ${
                 theme === "light" ? "bg-zinc-50 border-zinc-200" : "bg-[#18181B] border-zinc-800"
               }`}
             >
@@ -1860,7 +1860,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
               <div className="font-extrabold text-sm text-indigo-500 mt-0.5">{activeAreaSummary.upazilasCount}</div>
             </div>
             <div
-              className={`p-2 rounded-xl border ${
+              className={`p-2 rounded-[4px] border ${
                 theme === "light" ? "bg-zinc-50 border-zinc-200" : "bg-[#18181B] border-zinc-800"
               }`}
             >
@@ -1868,7 +1868,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
               <div className="font-extrabold text-sm text-amber-500 mt-0.5">{activeAreaSummary.pourashavasCount}</div>
             </div>
             <div
-              className={`p-2 rounded-xl border ${
+              className={`p-2 rounded-[4px] border ${
                 theme === "light" ? "bg-zinc-50 border-zinc-200" : "bg-[#18181B] border-zinc-800"
               }`}
             >
@@ -1878,7 +1878,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
               </div>
             </div>
             <div
-              className={`p-2 rounded-xl border ${
+              className={`p-2 rounded-[4px] border ${
                 theme === "light" ? "bg-zinc-50 border-zinc-200" : "bg-[#18181B] border-zinc-800"
               }`}
             >
@@ -1913,9 +1913,9 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                     key={tab.id}
                     type="button"
                     onClick={() => setActiveLayerFilter(tab.id as any)}
-                    className={`py-1.5 px-2 rounded-lg text-[11px] font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer border text-center ${
+                    className={`py-1.5 px-2 rounded-[4px] text-[11px] font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer border text-center ${
                       isActive
-                        ? "bg-emerald-600 border-emerald-600 text-white shadow-xs"
+                        ? "bg-[#CC5A2B] border-[#CC5A2B] text-white shadow-xs"
                         : theme === "light"
                         ? "bg-[#F4F4F5] hover:bg-[#E4E4E7] text-zinc-800 border-zinc-200/90 hover:border-zinc-300"
                         : "bg-[#18181D] hover:bg-[#23232A] text-zinc-300 border-zinc-800"
@@ -1938,7 +1938,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
             {/* If a POI is currently selected, show the active inspection card */}
             {selectedPOI && (
               <div
-                className={`rounded-2xl p-4 border transition-all shrink-0 ${
+                className={`rounded-[6px] p-4 border transition-all shrink-0 ${
                   theme === "light"
                     ? "bg-white border-zinc-200 shadow-sm"
                     : "bg-[#151518] border-zinc-800"
@@ -1982,7 +1982,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                       setSelectedPOI(null);
                       setSelectedUpazilaId(null);
                     }}
-                    className="p-1 rounded-lg text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition cursor-pointer"
+                    className="p-1 rounded-[4px] text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition cursor-pointer"
                     aria-label="Clear selection"
                     title={isBn ? "তালিকা দেখুন" : "Clear selection"}
                   >
@@ -2029,7 +2029,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                 <button
                   type="button"
                   onClick={() => handleDirectionsToPOI(selectedPOI)}
-                  className="w-full px-3 py-1.5 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-600/30 transition flex items-center justify-center gap-1.5 cursor-pointer"
+                  className="w-full px-3 py-1.5 rounded-[4px] text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-600/30 transition flex items-center justify-center gap-1.5 cursor-pointer"
                 >
                   <Route size={13} />
                   <span>{isBn ? "এখানকার ড্রাইভ রুট দেখুন" : "Get Directions to Here"}</span>
@@ -2101,7 +2101,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
 
                   {/* The Data List: Interactive cards showing the items of the clicked category */}
                   {visiblePOIs.length === 0 ? (
-                    <div className="p-4 text-center rounded-xl border border-dashed border-zinc-300 dark:border-zinc-800 text-xs text-zinc-400">
+                    <div className="p-4 text-center rounded-[4px] border border-dashed border-zinc-300 dark:border-zinc-800 text-xs text-zinc-400">
                       {isBn ? "এই ক্যাটাগরিতে কোনো পয়েন্ট পাওয়া যায়নি" : "No items found in this category"}
                     </div>
                   ) : (
@@ -2137,7 +2137,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                           <div
                             key={poi.id}
                             onClick={() => handleSelectPOI(poi)}
-                            className={`p-2.5 sm:p-3 rounded-xl border transition-all cursor-pointer flex items-start gap-2.5 text-left group ${
+                            className={`p-2.5 sm:p-3 rounded-[4px] border transition-all cursor-pointer flex items-start gap-2.5 text-left group ${
                               isSelected
                                 ? "bg-emerald-50/90 dark:bg-emerald-950/40 border-emerald-500 shadow-sm ring-1 ring-emerald-500/50"
                                 : theme === "light"

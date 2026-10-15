@@ -96,7 +96,7 @@ export const CadastralExplorerSection: React.FC<CadastralExplorerSectionProps> =
     <section
       id="cadastral"
       className={`w-full py-16 border-t transition-colors ${
-        isLight ? "bg-[#FAFAFA] border-[#E4E4E7] text-[#09090B]" : "bg-[#09090B] border-[#27272A] text-[#FAFAFA]"
+        isLight ? "bg-[#FAF9F5] border-[#E8E3DA] text-[#191817]" : "bg-[#141413] border-[#2B2A27] text-[#FAF9F5]"
       }`}
     >
       <div className="max-w-[1180px] mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
@@ -104,18 +104,18 @@ export const CadastralExplorerSection: React.FC<CadastralExplorerSectionProps> =
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border mb-2 ${
-              isLight ? "bg-white border-[#E4E4E7] text-[#52525B]" : "bg-[#18181B] border-[#27272A] text-[#A1A1AA]"
+            <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-[4px] text-xs font-semibold border mb-2 ${
+              isLight ? "bg-white border-[#E8E3DA] text-[#706E6B]" : "bg-[#18181B] border-[#2B2A27] text-[#A1A1AA]"
             }`}>
               <span className="bms-live-dot"></span>
               <span>{isBn ? "ডিজিটাল ক্যাডাস্ট্রে ও দাগ খতিয়ান" : "Digital Cadastre & Land Registry"}</span>
             </div>
-            <h2 className={`text-2xl sm:text-3xl font-heading font-black mt-1 ${isLight ? "text-[#09090B]" : "text-white"}`}>
+            <h2 className={`text-2xl sm:text-3xl font-serif font-semibold mt-1 ${isLight ? "text-[#191817]" : "text-white"}`}>
               {isBn
                 ? `${bnDistrictName} জেলার ক্যাডাস্ট্রাল মৌজা ও প্লট রেকর্ডস`
                 : `${districtName} Cadastral Parcels & Mouza Records`}
             </h2>
-            <p className={`text-xs sm:text-sm mt-1 max-w-xl leading-relaxed ${isLight ? "text-[#52525B]" : "text-[#A1A1AA]"}`}>
+            <p className={`text-xs sm:text-sm mt-1 max-w-xl leading-relaxed ${isLight ? "text-[#706E6B]" : "text-[#A1A1AA]"}`}>
               {isBn
                 ? "সিএস, এসএ, আরএস এবং বিআরএস ডিজিটাল নকশার সাথে সমন্বিত স্বয়ংক্রিয় মিউটেশন ও স্বত্ব যাচাইকরণ।"
                 : "Synchronized with Survey of Bangladesh (CS, SA, RS, BRS) cadastral sheets for automated title and spatial graph reconciliation."}
@@ -131,10 +131,10 @@ export const CadastralExplorerSection: React.FC<CadastralExplorerSectionProps> =
                 placeholder={isBn ? "দাগ বা খতিয়ান নম্বর..." : "Search Dag/Khatian #..."}
                 value={searchKhatian}
                 onChange={(e) => setSearchKhatian(e.target.value)}
-                className={`rounded-xl pl-8 pr-3 py-1.5 text-xs transition-colors focus:outline-none focus:border-[#09090B] dark:focus:border-white ${
+                className={`rounded-[4px] pl-8 pr-3 py-1.5 text-xs transition-colors focus:outline-none focus:border-[#09090B] dark:focus:border-white ${
                   isLight
-                    ? "bg-white border border-[#E4E4E7] text-[#09090B] placeholder-[#A1A1AA] shadow-xs"
-                    : "bg-[#121215] border border-[#27272A] text-white placeholder-[#71717A]"
+                    ? "bg-white border border-[#E8E3DA] text-[#191817] placeholder-[#A1A1AA] shadow-xs"
+                    : "bg-[#121215] border border-[#2B2A27] text-white placeholder-[#71717A]"
                 }`}
               />
             </div>
@@ -142,10 +142,10 @@ export const CadastralExplorerSection: React.FC<CadastralExplorerSectionProps> =
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className={`rounded-xl px-3 py-1.5 text-xs font-semibold transition-colors focus:outline-none focus:border-[#09090B] dark:focus:border-white ${
+              className={`rounded-[4px] px-3 py-1.5 text-xs font-semibold transition-colors focus:outline-none focus:border-[#09090B] dark:focus:border-white ${
                 isLight
-                  ? "bg-white border border-[#E4E4E7] text-[#09090B] shadow-xs"
-                  : "bg-[#121215] border border-[#27272A] text-white"
+                  ? "bg-white border border-[#E8E3DA] text-[#191817] shadow-xs"
+                  : "bg-[#121215] border border-[#2B2A27] text-white"
               }`}
             >
               <option value="all">{isBn ? "সকল স্ট্যাটাস" : "All Status"}</option>
@@ -158,12 +158,12 @@ export const CadastralExplorerSection: React.FC<CadastralExplorerSectionProps> =
 
         {/* Parcels Table Card — BMS card */}
         <div className={`bms-card overflow-hidden ${
-          isLight ? "bg-white border-[#E4E4E7]" : "bg-[#121215] border-[#27272A]"
+          isLight ? "bg-white border-[#E8E3DA]" : "bg-[#121215] border-[#2B2A27]"
         }`}>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead className={`uppercase text-[10px] tracking-wider border-b ${
-                isLight ? "bg-[#FAFAFA] text-[#71717A] border-[#E4E4E7]" : "bg-[#18181B] text-[#71717A] border-[#27272A]"
+                isLight ? "bg-[#FAFAFA] text-[#71717A] border-[#E8E3DA]" : "bg-[#18181B] text-[#71717A] border-[#2B2A27]"
               }`}>
                 <tr>
                   <th className="py-3 px-4">{isBn ? "প্লট / দাগ নং" : "Plot / Dag #"}</th>
@@ -184,20 +184,20 @@ export const CadastralExplorerSection: React.FC<CadastralExplorerSectionProps> =
                       isLight ? "hover:bg-[#FAFAFA]" : "hover:bg-[#18181B]/80"
                     }`}
                   >
-                    <td className={`py-3.5 px-4 font-bold ${isLight ? "text-[#09090B]" : "text-white"}`}>
+                    <td className={`py-3.5 px-4 font-bold ${isLight ? "text-[#191817]" : "text-white"}`}>
                       {parcel.dagNumber}
                     </td>
-                    <td className={`py-3.5 px-4 font-semibold ${isLight ? "text-[#52525B]" : "text-[#A1A1AA]"}`}>
+                    <td className={`py-3.5 px-4 font-semibold ${isLight ? "text-[#706E6B]" : "text-[#A1A1AA]"}`}>
                       {parcel.khatianNumber}
                     </td>
-                    <td className={`py-3.5 px-4 ${isLight ? "text-[#52525B]" : "text-[#A1A1AA]"}`}>
+                    <td className={`py-3.5 px-4 ${isLight ? "text-[#706E6B]" : "text-[#A1A1AA]"}`}>
                       {isBn ? parcel.bnMouza : parcel.mouza}
                     </td>
                     <td className="py-3.5 px-4">
                       <span className={`px-2 py-0.5 rounded text-[10px] font-semibold border ${
                         isLight
-                          ? "bg-[#F4F4F5] text-[#09090B] border-[#E4E4E7]"
-                          : "bg-[#18181B] text-[#FAFAFA] border-[#27272A]"
+                          ? "bg-[#F4F4F5] text-[#191817] border-[#E8E3DA]"
+                          : "bg-[#18181B] text-[#FAFAFA] border-[#2B2A27]"
                       }`}>
                         {isBn ? parcel.bnLandType : parcel.landType}
                       </span>
@@ -206,7 +206,7 @@ export const CadastralExplorerSection: React.FC<CadastralExplorerSectionProps> =
                       {parcel.areaKatha} {isBn ? "কাঠা" : "Katha"}
                     </td>
                     <td className="py-3.5 px-4">
-                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[4px] text-[10px] font-bold ${
                         parcel.status === "Verified"
                           ? "bg-[#F0FDF4] text-[#16A34A] dark:bg-[#16A34A]/10 dark:text-[#4ADE80] border border-[#BBF7D0] dark:border-[#16A34A]/25"
                           : parcel.status === "Dispute-Free"
@@ -233,10 +233,10 @@ export const CadastralExplorerSection: React.FC<CadastralExplorerSectionProps> =
                       <button
                         type="button"
                         onClick={() => alert(`Inspecting Title Deed for Dag #${parcel.dagNumber}, Khatian #${parcel.khatianNumber} in ${districtName}. LandWise digital cadastral record is verified.`)}
-                        className={`w-7 h-7 rounded-lg transition-all inline-flex items-center justify-center border ${
+                        className={`w-7 h-7 rounded-[4px] transition-all inline-flex items-center justify-center border ${
                           isLight
-                            ? "bg-[#FAFAFA] border-[#E4E4E7] text-[#09090B] hover:bg-[#09090B] hover:text-white"
-                            : "bg-[#18181B] border-[#27272A] text-white hover:bg-white hover:text-[#09090B]"
+                            ? "bg-[#FAF9F5] border-[#E8E3DA] text-[#191817] hover:bg-[#09090B] hover:text-white"
+                            : "bg-[#18181B] border-[#2B2A27] text-white hover:bg-white hover:text-[#191817]"
                         }`}
                         title="View Deed & Title Verification"
                       >
