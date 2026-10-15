@@ -1012,7 +1012,7 @@ export const MapLibreDistrictExplorer: React.FC<MapLibreDistrictExplorerProps> =
                     if (routingDestination) calculateRealRoute(place, routingDestination);
                   }
                 }}
-                className={`w-full p-2 rounded-xl border focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium ${
+                className={`w-full min-w-0 truncate p-2 rounded-xl border focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium ${
                   isLight
                     ? "bg-white border-zinc-300 text-zinc-900"
                     : "bg-[#18181B] border-zinc-800 text-white"
@@ -1039,7 +1039,7 @@ export const MapLibreDistrictExplorer: React.FC<MapLibreDistrictExplorerProps> =
                     if (routingOrigin) calculateRealRoute(routingOrigin, place);
                   }
                 }}
-                className={`w-full p-2 rounded-xl border focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium ${
+                className={`w-full min-w-0 truncate p-2 rounded-xl border focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium ${
                   isLight
                     ? "bg-white border-zinc-300 text-zinc-900"
                     : "bg-[#18181B] border-zinc-800 text-white"

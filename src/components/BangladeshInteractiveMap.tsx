@@ -1406,7 +1406,7 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
         {/* ── GOOGLE MAPS ROUTE DIRECTIONS CARD ("route soho") ── */}
         {isRouteMode && activeRoute && (
           <div
-            className={`absolute top-4 left-4 sm:left-6 z-30 w-80 sm:w-96 rounded-2xl p-4 backdrop-blur-xl border shadow-2xl animate-in fade-in slide-in-from-top-4 ${
+            className={`absolute top-4 left-4 sm:left-6 z-30 w-[calc(100%-2rem)] sm:w-96 max-w-sm sm:max-w-md rounded-2xl p-4 backdrop-blur-xl border shadow-2xl animate-in fade-in slide-in-from-top-4 overflow-hidden ${
               theme === "light"
                 ? "bg-white/95 border-blue-500/40 text-zinc-950 shadow-zinc-300/80"
                 : "bg-[#121215] border-blue-500/40 text-zinc-100 shadow-black/90"
@@ -1443,14 +1443,14 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
             {/* Origin & Destination Selectors */}
             <div className="space-y-2 mb-3">
               {/* Origin (A) */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 min-w-0 w-full">
                 <span className="w-5 h-5 rounded-full bg-emerald-500 text-white font-black text-[10px] flex items-center justify-center shrink-0">
                   A
                 </span>
                 <select
                   value={routeFromId}
                   onChange={(e) => setRouteFromId(e.target.value)}
-                  className={`flex-1 rounded-xl px-2.5 py-1.5 text-xs font-semibold border transition ${
+                  className={`flex-1 min-w-0 w-full truncate rounded-xl px-2.5 py-1.5 text-xs font-semibold border transition cursor-pointer ${
                     theme === "light"
                       ? "bg-zinc-50 border-zinc-200 text-zinc-800"
                       : "bg-[#18181B] border-zinc-800 text-zinc-200"
@@ -1485,14 +1485,14 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
               </div>
 
               {/* Destination (B) */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 min-w-0 w-full">
                 <span className="w-5 h-5 rounded-full bg-rose-500 text-white font-black text-[10px] flex items-center justify-center shrink-0">
                   B
                 </span>
                 <select
                   value={routeToId}
                   onChange={(e) => setRouteToId(e.target.value)}
-                  className={`flex-1 rounded-xl px-2.5 py-1.5 text-xs font-semibold border transition ${
+                  className={`flex-1 min-w-0 w-full truncate rounded-xl px-2.5 py-1.5 text-xs font-semibold border transition cursor-pointer ${
                     theme === "light"
                       ? "bg-zinc-50 border-zinc-200 text-zinc-800"
                       : "bg-[#18181B] border-zinc-800 text-zinc-200"
