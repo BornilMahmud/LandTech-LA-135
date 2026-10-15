@@ -74,6 +74,7 @@ export const MapLibreDistrictExplorer: React.FC<MapLibreDistrictExplorerProps> =
   const [selectedUpazila, setSelectedUpazila] = useState<UpazilaGeo | null>(null);
   const [selectedPlace, setSelectedPlace] = useState<LocalPlace | null>(null);
   const [selectedParcel, setSelectedParcel] = useState<CadastralParcelGeo | null>(null);
+  const markersRef = useRef<maplibregl.Marker[]>([]);
 
   // Basemap style state (Clean unwatermarked tiles)
   const [basemapStyleId, setBasemapStyleId] = useState<BasemapStyleId>('osm');
@@ -226,6 +227,8 @@ export const MapLibreDistrictExplorer: React.FC<MapLibreDistrictExplorerProps> =
     mapInstanceRef.current = map;
 
     return () => {
+      markersRef.current.forEach((m) => m.remove());
+      markersRef.current = [];
       map.remove();
       mapInstanceRef.current = null;
     };
@@ -402,8 +405,114 @@ export const MapLibreDistrictExplorer: React.FC<MapLibreDistrictExplorerProps> =
   // Filtered places
   const displayedPlaces = useMemo(() => {
     if (activeCategory === 'all') return currentDistrictGeo.localPlaces;
+    if (activeCategory === 'Land Office') {
+      return currentDistrictGeo.localPlaces.filter((p) => p.category === 'Land Office' || p.category === 'Sub-Registry');
+    }
     return currentDistrictGeo.localPlaces.filter((p) => p.category === activeCategory);
   }, [currentDistrictGeo, activeCategory]);
+
+  /* ──────────────────────────────────────────────────────────
+     2B. SYNCHRONIZE MAPLIBRE POI MARKERS WITH ACTIVE CATEGORY FILTER
+  ────────────────────────────────────────────────────────── */
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!map) return;
+
+    // Clean up old markers
+    markersRef.current.forEach((marker) => marker.remove());
+    markersRef.current = [];
+
+    // Create marker for each place in displayedPlaces
+    displayedPlaces.forEach((place) => {
+      const el = document.createElement('div');
+      el.className = 'landwise-poi-marker-pin';
+      el.style.cursor = 'pointer';
+
+      let bg = '#10B981';
+      let icon = '📍';
+
+      if (place.category === 'Hospital') {
+        bg = '#059669'; // Emerald-600 matching Hospitals filter
+        icon = '🩺';
+      } else if (place.category === 'College') {
+        bg = '#2563EB'; // Blue for Education
+        icon = '🎓';
+      } else if (place.category === 'Land Office' || place.category === 'Sub-Registry') {
+        bg = '#D97706'; // Amber for Land Offices
+        icon = '🏛️';
+      } else if (place.category === 'Market') {
+        bg = '#7C3AED'; // Purple for Markets
+        icon = '🛍️';
+      }
+
+      el.innerHTML = `
+        <div style="
+          background: ${bg};
+          border: 2px solid #FFFFFF;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 14px;
+          color: #FFFFFF;
+          cursor: pointer;
+          transform-origin: center;
+          transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        " onmouseover="this.style.transform='scale(1.25)'" onmouseout="this.style.transform='scale(1)'">
+          ${icon}
+        </div>
+      `;
+
+      const popup = new maplibregl.Popup({ offset: 25, closeButton: false }).setHTML(`
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 4px 6px; min-width: 140px;">
+          <div style="font-size: 10px; font-weight: 800; color: ${bg}; text-transform: uppercase; letter-spacing: 0.5px;">
+            ${place.category}
+          </div>
+          <div style="font-size: 13px; font-weight: 800; color: #111827; margin: 2px 0; line-height: 1.2;">
+            ${isBn ? place.bnName : place.name}
+          </div>
+          <div style="font-size: 11px; color: #4B5563;">
+            ${place.address || ''}
+          </div>
+        </div>
+      `);
+
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setSelectedPlace(place);
+        map.flyTo({
+          center: [place.lng, place.lat],
+          zoom: Math.max(map.getZoom(), 14.5),
+          duration: 800,
+        });
+      });
+
+      const marker = new maplibregl.Marker({ element: el })
+        .setLngLat([place.lng, place.lat])
+        .setPopup(popup)
+        .addTo(map);
+
+      markersRef.current.push(marker);
+    });
+
+    // Auto-fit to filtered markers when user clicks a specific category
+    if (activeCategory !== 'all' && displayedPlaces.length > 0) {
+      if (displayedPlaces.length === 1) {
+        map.flyTo({
+          center: [displayedPlaces[0].lng, displayedPlaces[0].lat],
+          zoom: 14.2,
+          duration: animationDuration,
+        });
+      } else {
+        const bounds = new maplibregl.LngLatBounds();
+        displayedPlaces.forEach((p) => bounds.extend([p.lng, p.lat]));
+        map.fitBounds(bounds, { padding: 90, maxZoom: 15, duration: animationDuration });
+      }
+    }
+  }, [displayedPlaces, activeCategory, isBn, animationDuration]);
 
   return (
     <div className={`relative w-full rounded-2xl overflow-hidden border transition-colors flex flex-col ${
@@ -626,19 +735,22 @@ export const MapLibreDistrictExplorer: React.FC<MapLibreDistrictExplorerProps> =
         {/* Floating Category Filter Pills */}
         <div className="absolute top-4 left-4 z-10 flex flex-wrap gap-1.5 max-w-sm">
           {[
-            { id: 'all', label: isBn ? 'সকল স্থান' : 'All Places', icon: Layers },
-            { id: 'College', label: isBn ? 'কলেজ/ভার্সিটি' : 'Colleges', icon: School },
-            { id: 'Hospital', label: isBn ? 'হাসপাতাল' : 'Hospitals', icon: Stethoscope },
-            { id: 'Land Office', label: isBn ? 'ভূমি অফিস' : 'Land Offices', icon: Landmark },
-            { id: 'Market', label: isBn ? 'বাজার' : 'Markets', icon: ShoppingBag },
+            { id: 'all', label: isBn ? 'সকল স্থান' : 'All Places', icon: Layers, count: currentDistrictGeo.localPlaces.length },
+            { id: 'College', label: isBn ? 'কলেজ/ভার্সিটি' : 'Colleges', icon: School, count: currentDistrictGeo.localPlaces.filter(p => p.category === 'College').length },
+            { id: 'Hospital', label: isBn ? 'হাসপাতাল' : 'Hospitals', icon: Stethoscope, count: currentDistrictGeo.localPlaces.filter(p => p.category === 'Hospital').length },
+            { id: 'Land Office', label: isBn ? 'ভূমি অফিস' : 'Land Offices', icon: Landmark, count: currentDistrictGeo.localPlaces.filter(p => p.category === 'Land Office' || p.category === 'Sub-Registry').length },
+            { id: 'Market', label: isBn ? 'বাজার' : 'Markets', icon: ShoppingBag, count: currentDistrictGeo.localPlaces.filter(p => p.category === 'Market').length },
           ].map((cat) => {
             const Icon = cat.icon;
             const isSelected = activeCategory === cat.id;
             return (
               <button
                 key={cat.id}
-                onClick={() => setActiveCategory(cat.id as any)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold backdrop-blur-md transition-all ${
+                onClick={() => {
+                  setActiveCategory(cat.id as any);
+                  setSelectedPlace(null);
+                }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold backdrop-blur-md transition-all cursor-pointer ${
                   isSelected
                     ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30 ring-2 ring-emerald-400/50'
                     : isLight
@@ -648,6 +760,13 @@ export const MapLibreDistrictExplorer: React.FC<MapLibreDistrictExplorerProps> =
               >
                 <Icon size={12} className={isSelected ? "text-white" : isLight ? "text-emerald-600" : "text-emerald-400"} />
                 <span>{cat.label}</span>
+                {cat.count > 0 && (
+                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
+                    isSelected ? 'bg-white/25 text-white' : 'bg-black/5 dark:bg-white/10 text-zinc-600 dark:text-zinc-300 font-semibold'
+                  }`}>
+                    {cat.count}
+                  </span>
+                )}
               </button>
             );
           })}
@@ -698,7 +817,7 @@ export const MapLibreDistrictExplorer: React.FC<MapLibreDistrictExplorerProps> =
 
         {/* ── SELECTED PLACE DETAIL POPUP CARD ── */}
         {selectedPlace && (
-          <div className={`absolute top-16 left-4 z-20 w-80 max-w-[calc(100vw-2rem)] rounded-2xl border p-4 shadow-xl backdrop-blur-xl space-y-3 transition-colors ${
+          <div className={`absolute top-[4.75rem] left-4 z-20 w-80 max-w-[calc(100vw-2rem)] rounded-2xl border p-4 shadow-xl backdrop-blur-xl space-y-3 transition-colors ${
             isLight
               ? "bg-white/95 border-zinc-200 text-zinc-900 shadow-zinc-900/10"
               : "bg-[#09090B]/95 border-zinc-800 text-white shadow-2xl"
