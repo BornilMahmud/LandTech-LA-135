@@ -137,48 +137,58 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
     return Boolean(selectedDistrict && zoomLevel >= 1.8);
   }, [selectedDistrict, zoomLevel]);
 
+  // Active district fallback guaranteed across all modes
+  const activeDistrict = selectedDistrict || ALL_BANGLADESH_DISTRICTS.find((d) => d.id === 'dhaka') || ALL_BANGLADESH_DISTRICTS[0];
+
   // District Area Metrics
   const districtAreaSummary = useMemo(() => {
-    if (!selectedDistrict) return null;
-    return getDistrictAreaSummary(selectedDistrict.id);
-  }, [selectedDistrict]);
+    return getDistrictAreaSummary(activeDistrict.id);
+  }, [activeDistrict]);
 
-  // All POIs for currently selected district using real boundary bounds
+  // All POIs for currently active district using real boundary bounds
   const allDistrictPOIs = useMemo(() => {
-    if (!selectedDistrict) return [];
-    const geo = geoLookup.get(selectedDistrict.id);
+    const geo = geoLookup.get(activeDistrict.id);
     const centroid = geo ? (geo.centroid as [number, number]) : ([300, 436] as [number, number]);
-    return generateDistrictPOIs(selectedDistrict.id, centroid, geo?.path);
-  }, [selectedDistrict, geoLookup]);
+    return generateDistrictPOIs(activeDistrict.id, centroid, geo?.path);
+  }, [activeDistrict, geoLookup]);
 
   // Filtered POIs based on active layer tab
   const visiblePOIs = useMemo(() => {
     return filterPOIsByCategory(allDistrictPOIs, activeLayerFilter);
   }, [allDistrictPOIs, activeLayerFilter]);
 
-  // Road Network for current district
+  // Road Network for active district
   const districtRoads = useMemo(() => {
-    if (!selectedDistrict || allDistrictPOIs.length < 2) return [];
-    return generateDistrictRoads(selectedDistrict.id, allDistrictPOIs);
-  }, [selectedDistrict, allDistrictPOIs]);
+    if (allDistrictPOIs.length < 2) return [];
+    return generateDistrictRoads(activeDistrict.id, allDistrictPOIs);
+  }, [activeDistrict, allDistrictPOIs]);
 
-  // Auto-initialize route origin (Sadar) and destination when entering route mode
+  // Auto-initialize route origin (Sadar) and destination when entering route mode or changing district
   useEffect(() => {
-    if (isRouteMode && allDistrictPOIs.length > 1) {
+    if (allDistrictPOIs.length > 1) {
       const sadar = allDistrictPOIs.find((p) => p.isHub) || allDistrictPOIs[0];
-      const otherPOIs = allDistrictPOIs.filter((p) => p.id !== sadar.id && p.category === 'upazila');
+      const otherPOIs = allDistrictPOIs.filter((p) => p.id !== sadar?.id && p.category === 'upazila');
       const defaultDest = otherPOIs[0] || allDistrictPOIs[1];
-      if (!routeFromId) setRouteFromId(sadar.id);
-      if (!routeToId) setRouteToId(defaultDest.id);
+      if (sadar && (!routeFromId || !allDistrictPOIs.some((p) => p.id === routeFromId))) {
+        setRouteFromId(sadar.id);
+      }
+      if (defaultDest && (!routeToId || !allDistrictPOIs.some((p) => p.id === routeToId))) {
+        setRouteToId(defaultDest.id);
+      }
     }
-  }, [isRouteMode, allDistrictPOIs]);
+  }, [allDistrictPOIs, routeFromId, routeToId]);
 
-  // Active Route Calculation
+  // Active Route Calculation - reliable and guaranteed
   const activeRoute = useMemo(() => {
-    if (!isRouteMode || !routeFromId || !routeToId || routeFromId === routeToId) return null;
-    const fromPOI = allDistrictPOIs.find((p) => p.id === routeFromId);
-    const toPOI = allDistrictPOIs.find((p) => p.id === routeToId);
-    if (!fromPOI || !toPOI) return null;
+    if (!isRouteMode || allDistrictPOIs.length < 2) return null;
+    const fromId = routeFromId || (allDistrictPOIs.find((p) => p.isHub)?.id || allDistrictPOIs[0]?.id);
+    let toId = routeToId;
+    if (!toId || toId === fromId) {
+      toId = allDistrictPOIs.find((p) => p.id !== fromId)?.id || allDistrictPOIs[1]?.id;
+    }
+    const fromPOI = allDistrictPOIs.find((p) => p.id === fromId);
+    const toPOI = allDistrictPOIs.find((p) => p.id === toId);
+    if (!fromPOI || !toPOI || fromPOI.id === toPOI.id) return null;
     return calculateRouteDirections(fromPOI, toPOI, districtRoads);
   }, [isRouteMode, routeFromId, routeToId, allDistrictPOIs, districtRoads]);
 
@@ -190,6 +200,9 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
     setIsRouteMode(true);
     setSelectedPOI(null);
   };
+
+  // Full Map Trigger Counter for MapLibre & SVG
+  const [fullMapTrigger, setFullMapTrigger] = useState<number>(0);
 
   // Smooth Zoom to District Centroid & auto-fit district bounding box
   const zoomToDistrict = (districtId: string) => {
@@ -228,17 +241,36 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
     zoomToDistrict(dst.id);
   };
 
-  // Reset Zoom
+  // Reset to Full Map
   const handleResetZoom = () => {
     setZoomLevel(1);
     setPanOffset({ x: 0, y: 0 });
     setSelectedPOI(null);
     setSelectedUpazilaId(null);
     setIsRouteMode(false);
+    setFullMapTrigger((prev) => prev + 1);
   };
 
-  // Active district fallback guaranteed for right-side intelligence box
-  const activeDistrict = selectedDistrict || ALL_BANGLADESH_DISTRICTS.find((d) => d.id === 'dhaka') || ALL_BANGLADESH_DISTRICTS[0];
+  // Toggle Routes Mode with immediate origin/destination setup
+  const handleToggleRoutes = () => {
+    if (!selectedDistrict) {
+      onSelectDistrict(activeDistrict);
+    }
+    if (mapMode === 'atlas') {
+      setMapMode('districts');
+      zoomToDistrict(activeDistrict.id);
+    }
+    setIsRouteMode((prev) => {
+      const nextMode = !prev;
+      if (nextMode && allDistrictPOIs.length > 1) {
+        const sadar = allDistrictPOIs.find((p) => p.isHub) || allDistrictPOIs[0];
+        const dest = allDistrictPOIs.filter((p) => p.id !== sadar?.id)[0] || allDistrictPOIs[1];
+        if (sadar) setRouteFromId(sadar.id);
+        if (dest) setRouteToId(dest.id);
+      }
+      return nextMode;
+    });
+  };
 
   // Active district area metrics
   const activeAreaSummary = useMemo(() => {
@@ -765,6 +797,8 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                   const el = document.getElementById('due-diligence');
                   el?.scrollIntoView({ behavior: 'smooth' });
                 }}
+                externalRouteOpen={isRouteMode}
+                fullMapTrigger={fullMapTrigger}
               />
             </div>
           )}
@@ -1694,69 +1728,67 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
             theme === "light" ? "bg-white border-zinc-200" : "bg-[#121215] border-zinc-800"
           }`}
         >
-          {/* Top Row: District Title, Division Pill, and Action Buttons */}
-          <div className="flex items-center justify-between gap-2.5 mb-3">
-            <div className="flex items-center gap-2.5 min-w-0">
-              <div
-                className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold shrink-0 border transition-colors ${
-                  theme === "light"
-                    ? "bg-emerald-50 border-emerald-200 text-emerald-700 shadow-2xs"
-                    : "bg-emerald-950/60 border-emerald-800 text-emerald-400"
-                }`}
-              >
-                <MapPin size={18} />
-              </div>
-
-              <div className="min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h3 className="font-heading font-extrabold text-base sm:text-lg leading-tight tracking-tight text-zinc-950 dark:text-white truncate">
-                    {isBn ? activeDistrict.bnName : activeDistrict.name} {isBn ? "জেলা" : "District"}
-                  </h3>
-                  <span
-                    className={`text-[10px] font-bold px-2 py-0.5 rounded-full border shrink-0 transition-colors ${
-                      theme === "light"
-                        ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-                        : "bg-emerald-950/50 text-emerald-300 border-emerald-800/80"
-                    }`}
-                  >
-                    {isBn ? activeDistrict.bnDivisionName : activeDistrict.divisionName} {isBn ? "বিভাগ" : "Div"}
-                  </span>
-                </div>
-              </div>
+          {/* Top Row: District Title & Division Pill (Full Width, Zero Truncation!) */}
+          <div className="flex items-center gap-2.5 mb-2.5">
+            <div
+              className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold shrink-0 border transition-colors ${
+                theme === "light"
+                  ? "bg-emerald-50 border-emerald-200 text-emerald-700 shadow-2xs"
+                  : "bg-emerald-950/60 border-emerald-800 text-emerald-400"
+              }`}
+            >
+              <MapPin size={18} />
             </div>
 
-            {/* Quick Action Controls: Routes & Full Map */}
-            <div className="flex items-center gap-1.5 shrink-0">
-              <button
-                type="button"
-                onClick={() => setIsRouteMode((prev) => !prev)}
-                className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer border ${
-                  isRouteMode
-                    ? "bg-blue-600 border-blue-600 text-white shadow-xs"
-                    : theme === "light"
-                    ? "bg-zinc-50 hover:bg-blue-50 text-zinc-700 hover:text-blue-700 border-zinc-200 hover:border-blue-300 shadow-2xs"
-                    : "bg-[#18181F] hover:bg-blue-950/50 text-zinc-300 hover:text-blue-300 border-zinc-800 hover:border-blue-800 shadow-2xs"
-                }`}
-                title="Toggle Route Navigator"
-              >
-                <Route size={13} className={isRouteMode ? "text-white" : "text-blue-500"} />
-                <span>{isBn ? "রুট" : "Routes"}</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={handleResetZoom}
-                className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer border ${
-                  theme === "light"
-                    ? "bg-zinc-50 hover:bg-emerald-50 text-zinc-700 hover:text-emerald-800 border-zinc-200 hover:border-emerald-300 shadow-2xs"
-                    : "bg-[#18181F] hover:bg-emerald-950/50 text-zinc-300 hover:text-emerald-300 border-zinc-800 hover:border-emerald-800 shadow-2xs"
-                }`}
-                title="Reset to Full Bangladesh Map"
-              >
-                <RotateCcw size={12} className="text-emerald-600 dark:text-emerald-400" />
-                <span>{isBn ? "সারাদেশ" : "Full Map"}</span>
-              </button>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h3 className="font-heading font-extrabold text-base sm:text-lg leading-tight tracking-tight text-zinc-950 dark:text-white whitespace-normal break-words">
+                  {isBn ? activeDistrict.bnName : activeDistrict.name} {isBn ? "জেলা" : "District"}
+                </h3>
+                <span
+                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full border shrink-0 transition-colors ${
+                    theme === "light"
+                      ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                      : "bg-emerald-950/50 text-emerald-300 border-emerald-800/80"
+                  }`}
+                >
+                  {isBn ? activeDistrict.bnDivisionName : activeDistrict.divisionName} {isBn ? "বিভাগ" : "Div"}
+                </span>
+              </div>
             </div>
+          </div>
+
+          {/* Next Row: Quick Action Controls (Routes & Full Map) Full Width & Perfectly Visible */}
+          <div className="flex items-center gap-2 mb-3">
+            <button
+              type="button"
+              onClick={handleToggleRoutes}
+              className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer border ${
+                isRouteMode
+                  ? "bg-blue-600 border-blue-600 text-white shadow-xs"
+                  : theme === "light"
+                  ? "bg-blue-50/80 hover:bg-blue-100/80 text-blue-700 border-blue-200 shadow-2xs"
+                  : "bg-blue-950/40 hover:bg-blue-900/50 text-blue-300 border-blue-800/80 shadow-2xs"
+              }`}
+              title="Toggle Route Navigator"
+            >
+              <Route size={14} className={isRouteMode ? "text-white" : "text-blue-600 dark:text-blue-400"} />
+              <span>{isBn ? "সড়ক রুট" : "Routes"}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleResetZoom}
+              className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer border ${
+                theme === "light"
+                  ? "bg-zinc-50 hover:bg-zinc-100 text-zinc-700 hover:text-zinc-900 border-zinc-200 shadow-2xs"
+                  : "bg-[#18181F] hover:bg-[#202028] text-zinc-300 hover:text-white border-zinc-800 shadow-2xs"
+              }`}
+              title="Reset to Full Bangladesh Map"
+            >
+              <RotateCcw size={13} className="text-emerald-600 dark:text-emerald-400" />
+              <span>{isBn ? "সারাদেশ (Full Map)" : "Full Map"}</span>
+            </button>
           </div>
 
           {/* District Area Metrics Bar: Clean 3-Segment Ribbon */}

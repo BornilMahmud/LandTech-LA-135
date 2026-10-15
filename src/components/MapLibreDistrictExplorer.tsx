@@ -53,6 +53,8 @@ interface MapLibreDistrictExplorerProps {
   onOpenDueDiligenceForParcel?: (parcel: CadastralParcelGeo) => void;
   selectedUpazilaId?: string | null;
   onSelectUpazilaId?: (id: string) => void;
+  externalRouteOpen?: boolean;
+  fullMapTrigger?: number;
 }
 
 export const MapLibreDistrictExplorer: React.FC<MapLibreDistrictExplorerProps> = ({
@@ -63,6 +65,8 @@ export const MapLibreDistrictExplorer: React.FC<MapLibreDistrictExplorerProps> =
   onOpenDueDiligenceForParcel,
   selectedUpazilaId,
   onSelectUpazilaId,
+  externalRouteOpen,
+  fullMapTrigger,
 }) => {
   const isLight = theme === "light";
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -101,6 +105,30 @@ export const MapLibreDistrictExplorer: React.FC<MapLibreDistrictExplorerProps> =
     : false;
 
   const animationDuration = prefersReducedMotion ? 0 : 1400;
+
+  // Handle Full Map trigger from parent
+  useEffect(() => {
+    if (!fullMapTrigger || !mapInstanceRef.current) return;
+    mapInstanceRef.current.flyTo({
+      center: [90.3563, 23.6850], // Bangladesh National Center
+      zoom: 6.8,
+      duration: animationDuration,
+      essential: true,
+    });
+    setCurrentLevel('national');
+    setSelectedUpazila(null);
+    setSelectedPlace(null);
+    setSelectedParcel(null);
+    setActiveRoute(null);
+    setIsRouteDrawerOpen(false);
+  }, [fullMapTrigger, animationDuration]);
+
+  // Handle externalRouteOpen from parent
+  useEffect(() => {
+    if (externalRouteOpen !== undefined) {
+      setIsRouteDrawerOpen(externalRouteOpen);
+    }
+  }, [externalRouteOpen]);
 
   /* ──────────────────────────────────────────────────────────
      1. INITIALIZE MAPLIBRE GL JS WITH RELIABLE HIGH-RES BASEMAP
