@@ -224,7 +224,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
       id: 'government',
       titleEn: 'Government Land Officials (AC Land & Sub-Registry)',
       titleBn: 'সরকারি কর্মকর্তা (সহকারী কমিশনার ও সাব-রেজিস্ট্রার)',
-      icon: 'bx-government',
+      icon: 'bxs-landmark',
       badgeEn: 'GovTech Partner',
       badgeBn: 'প্রশাসনিক অংশীদার',
       problemEn:
@@ -264,7 +264,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
       id: 'banks',
       titleEn: 'Banks & Financial Institutions',
       titleBn: 'বাণিজ্যিক ব্যাংক ও আর্থিক প্রতিষ্ঠান',
-      icon: 'bx-bank',
+      icon: 'bxs-bank',
       badgeEn: 'Financial Risk',
       badgeBn: 'ঋণ ঝুঁকি নিয়ন্ত্রণ',
       problemEn:
@@ -304,7 +304,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
       id: 'investors',
       titleEn: 'Enterprises & Industrial Investors',
       titleBn: 'শিল্পোদ্যোক্তা ও করপোরেট বিনিয়োগকারী',
-      icon: 'bx-factory',
+      icon: 'bxs-factory',
       badgeEn: 'Enterprise',
       badgeBn: 'করপোরেট বিনিয়োগ',
       problemEn:
@@ -429,8 +429,8 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
       
       {/* ── SECTION HEADER & NARRATIVE STORY BANNER ── */}
       <div className="text-center max-w-3xl mx-auto space-y-3.5 pt-4">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-800 dark:text-emerald-300 text-xs font-semibold">
-          <i className="bx bx-book-open text-emerald-600 dark:text-emerald-400 text-sm" aria-hidden="true" />
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#FAF0EB] dark:bg-[#1E1E1C] border border-[#F3D5C6] dark:border-[#2B2A27] text-emerald-800 dark:text-emerald-300 text-xs font-semibold">
+          <i className="bx bx-book-open text-[#CC5A2B] text-sm" aria-hidden="true" />
           <span>
             {isBn
               ? 'সম্পূর্ণ গল্পের ধারাবাহিক রূপরেখা • সমস্যা থেকে ভবিষ্যৎ রোডম্যাপ'
@@ -438,19 +438,19 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
           </span>
         </div>
 
-        <h2 className="text-2xl sm:text-4xl font-heading font-extrabold tracking-tight text-zinc-950 dark:text-white leading-tight">
+        <h2 className="text-2xl sm:text-4xl font-serif font-semibold tracking-tight text-[#191817] dark:text-[#FAF9F5] leading-tight">
           {isBn ? (
             <>
-              কেন ল্যান্ডওয়াইজ জরুরি? <span className="text-emerald-700 dark:text-emerald-400">একটি সহজ গল্পে জানুন</span>
+              কেন ল্যান্ডওয়াইজ জরুরি? <span className="text-[#CC5A2B]">একটি সহজ গল্পে জানুন</span>
             </>
           ) : (
             <>
-              The LandWise Story: <span className="text-emerald-700 dark:text-emerald-400">Why This Project Matters</span>
+              The LandWise Story: <span className="text-[#CC5A2B]">Why This Project Matters</span>
             </>
           )}
         </h2>
 
-        <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-xs sm:text-sm text-[#706E6B] dark:text-[#9E9B95] max-w-2xl mx-auto leading-relaxed">
           {isBn
             ? 'সাধারণ নাগরিক, বিচারকমণ্ডলী, সরকারি কর্মকর্তা ও করপোরেট বিনিয়োগকারীদের জন্য বাংলাদেশের ভূমি ব্যবস্থার সমস্যা, আমাদের প্রযুক্তি, সময় সাশ্রয়, ব্যবসায়িক মডেল ও ভবিষ্যৎ রোডম্যাপ।'
             : 'A clean narrative progression designed for judges, landowners, government officials, and investors: The Problem → How It Works → Who Benefits → Time & Cost Savings → Business Model → Trust & Roadmap.'}
@@ -463,7 +463,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
             <button
               key={key}
               onClick={() => setSelectedGlossaryTerm(key)}
-              className="px-2 py-0.5 rounded-md bg-zinc-100 hover:bg-emerald-50 dark:bg-zinc-800 dark:hover:bg-emerald-950/40 text-zinc-700 dark:text-zinc-300 hover:text-emerald-700 dark:hover:text-emerald-300 border border-zinc-200 dark:border-zinc-700 transition-colors cursor-pointer text-[10px] font-medium"
+              className="px-2 py-0.5 rounded-md bg-zinc-100 hover:bg-emerald-50 dark:bg-zinc-800 dark:hover:bg-[#1E1E1C] text-zinc-700 dark:text-zinc-300 hover:text-emerald-700 dark:hover:text-emerald-300 border border-zinc-200 dark:border-zinc-700 transition-colors cursor-pointer text-[10px] font-medium"
             >
               {key === 'ocr'
                 ? 'OCR'
@@ -484,7 +484,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
       </div>
 
       {/* ── 6-STAGE STORYLINE STEPPER / NARRATIVE BREADCRUMB ── */}
-      <div className="p-2 sm:p-3 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white/70 dark:bg-[#121215] shadow-sm">
+      <div className="p-2 sm:p-3 rounded-[6px] border border-[#E8E3DA] dark:border-[#2B2A27] bg-[#FAF9F5] dark:bg-[#1E1E1C] shadow-sm">
         <div className="text-[10px] uppercase font-bold tracking-wider text-zinc-400 dark:text-zinc-500 text-center pb-2 hidden sm:block">
           {isBn ? 'গল্পের ধাপসমূহ নির্বাচন করুন' : 'Explore The 6 Chapters of the Project Story'}
         </div>
@@ -495,11 +495,11 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
               <button
                 key={act.id}
                 onClick={() => setActiveAct(act.id)}
-                className={`p-2.5 rounded-xl text-left transition-all border flex flex-col justify-between cursor-pointer ${
+                className={`p-2.5 rounded-[4px] text-left transition-all border flex flex-col justify-between cursor-pointer ${
                   isActive
                     ? isLight
-                      ? 'bg-emerald-50/80 border-emerald-500 text-zinc-950 shadow-xs ring-1 ring-emerald-500'
-                      : 'bg-emerald-950/40 border-emerald-500 text-white shadow-xs ring-1 ring-emerald-500'
+                      ? 'bg-[#FAF0EB] border-[#CC5A2B] text-zinc-950 shadow-xs ring-1 ring-[#CC5A2B]'
+                      : 'bg-[#1E1E1C] border-[#CC5A2B] text-white shadow-xs ring-1 ring-[#CC5A2B]'
                     : isLight
                     ? 'bg-zinc-50/80 hover:bg-zinc-100 border-zinc-200 text-zinc-700'
                     : 'bg-[#18181C] hover:bg-[#202026] border-zinc-800 text-zinc-300'
@@ -509,7 +509,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
                   <span
                     className={`w-5 h-5 rounded-md flex items-center justify-center text-[10px] font-extrabold ${
                       isActive
-                        ? 'bg-emerald-600 text-white'
+                        ? 'bg-[#CC5A2B] text-white'
                         : isLight
                         ? 'bg-zinc-200 text-zinc-700'
                         : 'bg-zinc-700 text-zinc-200'
@@ -519,7 +519,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
                   </span>
                   <i
                     className={`bx ${act.icon} text-base ${
-                      isActive ? 'text-emerald-600 dark:text-emerald-400' : 'text-zinc-400'
+                      isActive ? 'text-[#CC5A2B]' : 'text-zinc-400'
                     }`}
                     aria-hidden="true"
                   />
@@ -528,7 +528,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
                   <div className="text-xs font-bold leading-tight line-clamp-1">
                     {isBn ? act.titleBn : act.titleEn}
                   </div>
-                  <div className="text-[10px] text-zinc-500 dark:text-zinc-400 line-clamp-1 mt-0.5">
+                  <div className="text-[10px] text-[#706E6B] dark:text-[#9E9B95] line-clamp-1 mt-0.5">
                     {isBn ? act.taglineBn : act.taglineEn}
                   </div>
                 </div>
@@ -545,12 +545,12 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
         <div className="space-y-6 animate-fade-in">
           
           {/* Executive Summary Card */}
-          <div className="p-6 rounded-2xl border bg-gradient-to-br from-rose-50/60 via-white to-amber-50/40 dark:from-rose-950/20 dark:via-[#141418] dark:to-amber-950/20 border-rose-200/80 dark:border-rose-900/40 space-y-3">
+          <div className="p-6 rounded-[6px] border bg-gradient-to-br from-rose-50/60 via-white to-amber-50/40 dark:from-rose-950/20 dark:via-[#141418] dark:to-amber-950/20 border-rose-200/80 dark:border-rose-900/40 space-y-3">
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wider bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
               <i className="bx bx-error text-xs" />
               <span>{isBn ? 'অধ্যায় ১: মূল সমস্যা' : 'Chapter 1: The Core Problem'}</span>
             </div>
-            <h3 className="text-xl sm:text-2xl font-heading font-extrabold text-zinc-950 dark:text-white">
+            <h3 className="text-xl sm:text-2xl font-serif font-semibold text-[#191817] dark:text-[#FAF9F5]">
               {isBn
                 ? 'বাংলাদেশের ভূমি ব্যবস্থাপনার সংকট: ৩২ লাখ মামলার জট ও কাগজের নথি বিভ্রাট'
                 : 'The Real-World Crisis: 3.2 Million Court Cases & Generational Land Conflict'}
@@ -564,7 +564,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
 
           {/* 4 Impactful Problem Metrics */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 text-xs">
-            <div className="p-4 sm:p-5 rounded-2xl border bg-white dark:bg-[#121215] border-zinc-200 dark:border-zinc-800 space-y-1.5">
+            <div className="p-4 sm:p-5 rounded-[6px] border bg-white dark:bg-[#121215] border-[#E8E3DA] dark:border-[#2B2A27] space-y-1.5">
               <div className="text-2xl sm:text-3xl font-extrabold text-rose-600 dark:text-rose-400 font-heading">
                 3.2M+
               </div>
@@ -578,7 +578,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
               </p>
             </div>
 
-            <div className="p-4 sm:p-5 rounded-2xl border bg-white dark:bg-[#121215] border-zinc-200 dark:border-zinc-800 space-y-1.5">
+            <div className="p-4 sm:p-5 rounded-[6px] border bg-white dark:bg-[#121215] border-[#E8E3DA] dark:border-[#2B2A27] space-y-1.5">
               <div className="text-2xl sm:text-3xl font-extrabold text-amber-600 dark:text-amber-400 font-heading">
                 70%+
               </div>
@@ -592,7 +592,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
               </p>
             </div>
 
-            <div className="p-4 sm:p-5 rounded-2xl border bg-white dark:bg-[#121215] border-zinc-200 dark:border-zinc-800 space-y-1.5">
+            <div className="p-4 sm:p-5 rounded-[6px] border bg-white dark:bg-[#121215] border-[#E8E3DA] dark:border-[#2B2A27] space-y-1.5">
               <div className="text-2xl sm:text-3xl font-extrabold text-indigo-600 dark:text-indigo-400 font-heading">
                 15–25 Yrs
               </div>
@@ -606,8 +606,8 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
               </p>
             </div>
 
-            <div className="p-4 sm:p-5 rounded-2xl border bg-white dark:bg-[#121215] border-zinc-200 dark:border-zinc-800 space-y-1.5">
-              <div className="text-2xl sm:text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 font-heading">
+            <div className="p-4 sm:p-5 rounded-[6px] border bg-white dark:bg-[#121215] border-[#E8E3DA] dark:border-[#2B2A27] space-y-1.5">
+              <div className="text-2xl sm:text-3xl font-extrabold text-[#CC5A2B] font-heading">
                 4 Layers
               </div>
               <div className="font-bold text-zinc-900 dark:text-white">
@@ -623,42 +623,42 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
 
           {/* 3 Root Flaws of the Existing System */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-            <div className="p-5 rounded-2xl border bg-white dark:bg-[#121215] border-zinc-200 dark:border-zinc-800 space-y-2.5">
-              <div className="w-8 h-8 rounded-lg bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-400 flex items-center justify-center text-lg font-bold">
+            <div className="p-5 rounded-[6px] border bg-white dark:bg-[#121215] border-[#E8E3DA] dark:border-[#2B2A27] space-y-2.5">
+              <div className="w-8 h-8 rounded-[4px] bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-400 flex items-center justify-center text-lg font-bold">
                 <i className="bx bx-book-content" />
               </div>
-              <h4 className="text-sm font-bold text-zinc-950 dark:text-white">
+              <h4 className="text-sm font-bold text-[#191817] dark:text-[#FAF9F5]">
                 {isBn ? '১. কাগজের বালাম বইয়ের ভঙ্গুরতা' : '1. Physical Paper Vulnerability'}
               </h4>
-              <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
+              <p className="text-[#706E6B] dark:text-[#9E9B95] leading-relaxed">
                 {isBn
                   ? 'উপজেলা ও সাব-রেজিস্ট্রির ৩০,০০০+ প্রাচীন বাঁধানো বালাম বইয়ের কালি মুছে যাচ্ছে, পোকায় কাটছে এবং ছেঁড়া পাতা বা পেনসিলের অবৈধ কাটাকাটির কারণে রেকর্ড বিকৃত হচ্ছে।'
                   : 'Over 30,000 hand-bound register volumes suffer from ink oxidation, moisture decay, termite attacks, and unauthorized pencil tampering in local record rooms.'}
               </p>
             </div>
 
-            <div className="p-5 rounded-2xl border bg-white dark:bg-[#121215] border-zinc-200 dark:border-zinc-800 space-y-2.5">
-              <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 flex items-center justify-center text-lg font-bold">
+            <div className="p-5 rounded-[6px] border bg-white dark:bg-[#121215] border-[#E8E3DA] dark:border-[#2B2A27] space-y-2.5">
+              <div className="w-8 h-8 rounded-[4px] bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 flex items-center justify-center text-lg font-bold">
                 <i className="bx bx-git-merge" />
               </div>
-              <h4 className="text-sm font-bold text-zinc-950 dark:text-white">
+              <h4 className="text-sm font-bold text-[#191817] dark:text-[#FAF9F5]">
                 {isBn ? '২. জরিপ দাগের বিচ্ছিন্নতা' : '2. Disconnected Cadastral Surveys'}
               </h4>
-              <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
+              <p className="text-[#706E6B] dark:text-[#9E9B95] leading-relaxed">
                 {isBn
                   ? 'সিএস থেকে বিএস পর্যন্ত প্রতি জরিপে প্লটের দাগ ও খতিয়ান নম্বর বদলে গেছে। সরকারি নকশার সাথে হস্তলিখিত বালাম মেলানোর কোনো স্বয়ংক্রিয় ডিজিটাল রূপান্তর নেই।'
                   : 'Dag and Khatian numbers changed across 130 years of British, Pakistan, and Bangladesh surveys without a unified digital cross-matching index.'}
               </p>
             </div>
 
-            <div className="p-5 rounded-2xl border bg-white dark:bg-[#121215] border-zinc-200 dark:border-zinc-800 space-y-2.5">
-              <div className="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-400 flex items-center justify-center text-lg font-bold">
+            <div className="p-5 rounded-[6px] border bg-white dark:bg-[#121215] border-[#E8E3DA] dark:border-[#2B2A27] space-y-2.5">
+              <div className="w-8 h-8 rounded-[4px] bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-400 flex items-center justify-center text-lg font-bold">
                 <i className="bx bx-user-x" />
               </div>
-              <h4 className="text-sm font-bold text-zinc-950 dark:text-white">
+              <h4 className="text-sm font-bold text-[#191817] dark:text-[#FAF9F5]">
                 {isBn ? '৩. দ্বৈত বিক্রি ও ওয়ারিশান জালিয়াতি' : '3. Double Selling & Heir Fraud'}
               </h4>
-              <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
+              <p className="text-[#706E6B] dark:text-[#9E9B95] leading-relaxed">
                 {isBn
                   ? 'একই জমি একাধিক ব্যক্তির কাছে বায়না বা সাফ-কবলা করা হয়। অন্য ওয়ারিশদের না জানিয়ে গোপনে অংশ বিক্রি করায় নির্দোষ ক্রেতারা সর্বস্বান্ত হন।'
                   : 'Fraudulent sellers exploit paper gaps to sell the same parcel to multiple buyers or conceal non-signing heirs, leaving innocent families bankrupt.'}
@@ -667,10 +667,10 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
           </div>
 
           {/* Statutory Mandate Note */}
-          <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/5 text-xs text-zinc-700 dark:text-zinc-300 flex items-start gap-3">
-            <i className="bx bx-badge-check text-emerald-600 text-lg shrink-0 mt-0.5" />
+          <div className="p-4 rounded-[4px] border border-[#CC5A2B]/30 bg-emerald-500/5 text-xs text-zinc-700 dark:text-zinc-300 flex items-start gap-3">
+            <i className="bx bx-badge-check text-[#CC5A2B] text-lg shrink-0 mt-0.5" />
             <div>
-              <strong className="text-zinc-950 dark:text-white font-bold">
+              <strong className="text-[#191817] dark:text-[#FAF9F5] font-bold">
                 {isBn
                   ? 'ভূমি অপরাধ প্রতিরোধ ও প্রতিকার আইন ২০২৩-এর আইনি বাধ্যবাধকতা:'
                   : 'Statutory Imperative: Land Crime Prevention and Redress Act 2023:'}
@@ -694,7 +694,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
               <i className="bx bx-git-commit text-xs" />
               <span>{isBn ? 'অধ্যায় ২: কার্যপদ্ধতি' : 'Chapter 2: The 6-Step Engine'}</span>
             </div>
-            <h3 className="text-xl sm:text-2xl font-heading font-extrabold text-zinc-950 dark:text-white">
+            <h3 className="text-xl sm:text-2xl font-serif font-semibold text-[#191817] dark:text-[#FAF9F5]">
               {isBn ? '৬টি সহজ ধাপে নথিপত্র থেকে বিশ্বস্ত নিরীক্ষা' : 'The 6-Step Land Document Verification Journey'}
             </h3>
             <p className="text-xs text-zinc-500">
@@ -707,19 +707,19 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
             
             {/* Step 1 */}
-            <div className="p-5 rounded-2xl border bg-white dark:bg-[#121215] border-zinc-200 dark:border-zinc-800 space-y-3 relative overflow-hidden">
+            <div className="p-5 rounded-[6px] border bg-white dark:bg-[#121215] border-[#E8E3DA] dark:border-[#2B2A27] space-y-3 relative overflow-hidden">
               <div className="flex items-center justify-between">
-                <span className="w-8 h-8 rounded-xl bg-emerald-600 text-white font-extrabold flex items-center justify-center text-sm shadow-xs">
+                <span className="w-8 h-8 rounded-[4px] bg-[#CC5A2B] text-white font-extrabold flex items-center justify-center text-sm shadow-xs">
                   1
                 </span>
-                <span className="text-[10px] uppercase font-bold tracking-wider text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
+                <span className="text-[10px] uppercase font-bold tracking-wider text-[#CC5A2B] bg-emerald-50 dark:bg-[#1E1E1C] px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
                   {isBn ? 'ইনটেক ও আপলোড' : 'Intake'}
                 </span>
               </div>
-              <h4 className="text-sm font-bold text-zinc-950 dark:text-white">
+              <h4 className="text-sm font-bold text-[#191817] dark:text-[#FAF9F5]">
                 {isBn ? '১. নথি আপলোড বা নির্বাচন' : '1. Upload or Access Document'}
               </h4>
-              <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
+              <p className="text-[#706E6B] dark:text-[#9E9B95] leading-relaxed">
                 {isBn
                   ? 'ব্যবহারকারী তার সাফ-কবলা দলিল, আরএস খতিয়ান বা ই-নামজারি পর্চা স্ক্যান করে সিস্টেমে প্রদান করেন অথবা আমাদের প্রোটোটাইপ ডেমো কেস নির্বাচন করেন।'
                   : 'The user provides a land document through an authorized upload workflow or selects one of the 4 authentic real-world demonstration cases.'}
@@ -730,19 +730,19 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
             </div>
 
             {/* Step 2 */}
-            <div className="p-5 rounded-2xl border bg-white dark:bg-[#121215] border-zinc-200 dark:border-zinc-800 space-y-3 relative overflow-hidden">
+            <div className="p-5 rounded-[6px] border bg-white dark:bg-[#121215] border-[#E8E3DA] dark:border-[#2B2A27] space-y-3 relative overflow-hidden">
               <div className="flex items-center justify-between">
-                <span className="w-8 h-8 rounded-xl bg-teal-600 text-white font-extrabold flex items-center justify-center text-sm shadow-xs">
+                <span className="w-8 h-8 rounded-[4px] bg-teal-600 text-white font-extrabold flex items-center justify-center text-sm shadow-xs">
                   2
                 </span>
                 <span className="text-[10px] uppercase font-bold tracking-wider text-teal-700 dark:text-teal-400 bg-teal-50 dark:bg-teal-950/40 px-2 py-0.5 rounded border border-teal-200 dark:border-teal-800">
                   {isBn ? 'ওসিআর ও ডিজিটাইজ' : 'OCR Extraction'}
                 </span>
               </div>
-              <h4 className="text-sm font-bold text-zinc-950 dark:text-white">
+              <h4 className="text-sm font-bold text-[#191817] dark:text-[#FAF9F5]">
                 {isBn ? '২. তথ্য রূপান্তর ও ডিজিটাইজেশন' : '2. Digitize the Information'}
               </h4>
-              <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
+              <p className="text-[#706E6B] dark:text-[#9E9B95] leading-relaxed">
                 {isBn
                   ? 'ওসিআর ইঞ্জিন স্ক্যানকৃত ছবি থেকে দাগ নম্বর, খতিয়ান নম্বর, জে.এল. নম্বর, জমির হিস্যা ও মালিকের নাম নির্ভুলভাবে এক্সট্রাক্ট করে।'
                   : 'Document-processing tools extract readable key-value information from scanned papers, isolating legal parcel identifiers.'}
@@ -753,19 +753,19 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
             </div>
 
             {/* Step 3 */}
-            <div className="p-5 rounded-2xl border bg-white dark:bg-[#121215] border-zinc-200 dark:border-zinc-800 space-y-3 relative overflow-hidden">
+            <div className="p-5 rounded-[6px] border bg-white dark:bg-[#121215] border-[#E8E3DA] dark:border-[#2B2A27] space-y-3 relative overflow-hidden">
               <div className="flex items-center justify-between">
-                <span className="w-8 h-8 rounded-xl bg-indigo-600 text-white font-extrabold flex items-center justify-center text-sm shadow-xs">
+                <span className="w-8 h-8 rounded-[4px] bg-indigo-600 text-white font-extrabold flex items-center justify-center text-sm shadow-xs">
                   3
                 </span>
                 <span className="text-[10px] uppercase font-bold tracking-wider text-indigo-700 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 px-2 py-0.5 rounded border border-indigo-200 dark:border-indigo-800">
                   {isBn ? 'ক্রস-অডিট ম্যাট্রিক্স' : '12-Field Graph'}
                 </span>
               </div>
-              <h4 className="text-sm font-bold text-zinc-950 dark:text-white">
+              <h4 className="text-sm font-bold text-[#191817] dark:text-[#FAF9F5]">
                 {isBn ? '৩. দলিলের ধারাবাহিকতা বিশ্লেষণ' : '3. Analyze the Document'}
               </h4>
-              <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
+              <p className="text-[#706E6B] dark:text-[#9E9B95] leading-relaxed">
                 {isBn
                   ? 'সিস্টেম সাফ-কবলা দলিলের সাথে আরএস খতিয়ান ও ই-নামজারি মিলিয়ে দেখে দাগ নম্বর ও জমির পরিমাণে কোনো অসঙ্গতি আছে কিনা।'
                   : 'The graph engine matches the deed against the underlying survey Khatian and tax receipt, checking fractional math and ownership lineage.'}
@@ -776,19 +776,19 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
             </div>
 
             {/* Step 4 */}
-            <div className="p-5 rounded-2xl border bg-white dark:bg-[#121215] border-zinc-200 dark:border-zinc-800 space-y-3 relative overflow-hidden">
+            <div className="p-5 rounded-[6px] border bg-white dark:bg-[#121215] border-[#E8E3DA] dark:border-[#2B2A27] space-y-3 relative overflow-hidden">
               <div className="flex items-center justify-between">
-                <span className="w-8 h-8 rounded-xl bg-amber-600 text-white font-extrabold flex items-center justify-center text-sm shadow-xs">
+                <span className="w-8 h-8 rounded-[4px] bg-amber-600 text-white font-extrabold flex items-center justify-center text-sm shadow-xs">
                   4
                 </span>
                 <span className="text-[10px] uppercase font-bold tracking-wider text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-2 py-0.5 rounded border border-amber-200 dark:border-amber-800">
                   {isBn ? 'রেড ফ্ল্যাগ সতর্কতা' : 'Discrepancies'}
                 </span>
               </div>
-              <h4 className="text-sm font-bold text-zinc-950 dark:text-white">
+              <h4 className="text-sm font-bold text-[#191817] dark:text-[#FAF9F5]">
                 {isBn ? '৪. সম্ভাব্য অসঙ্গতি ও ঝুঁকি চিহ্নিতকরণ' : '4. Review Potential Issues'}
               </h4>
-              <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
+              <p className="text-[#706E6B] dark:text-[#9E9B95] leading-relaxed">
                 {isBn
                   ? 'যদি বিক্রেতা তার খতিয়ানের মোট অংশের চেয়ে বেশি জমি বিক্রি করতে চান অথবা ওয়ারিশান সূত্রে শূন্যতা থাকে, তবে তা লাল সতর্কতায় হাইলাইট হয়।'
                   : 'The platform flags missing inheritance links, area deficits, or suspicious transfer patterns with specific statutory evidence citations.'}
@@ -799,19 +799,19 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
             </div>
 
             {/* Step 5 */}
-            <div className="p-5 rounded-2xl border bg-white dark:bg-[#121215] border-zinc-200 dark:border-zinc-800 space-y-3 relative overflow-hidden">
+            <div className="p-5 rounded-[6px] border bg-white dark:bg-[#121215] border-[#E8E3DA] dark:border-[#2B2A27] space-y-3 relative overflow-hidden">
               <div className="flex items-center justify-between">
-                <span className="w-8 h-8 rounded-xl bg-purple-600 text-white font-extrabold flex items-center justify-center text-sm shadow-xs">
+                <span className="w-8 h-8 rounded-[4px] bg-purple-600 text-white font-extrabold flex items-center justify-center text-sm shadow-xs">
                   5
                 </span>
                 <span className="text-[10px] uppercase font-bold tracking-wider text-purple-700 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/40 px-2 py-0.5 rounded border border-purple-200 dark:border-purple-800">
                   {isBn ? 'মানুষের চূড়ান্ত যাচাই' : 'Human Oversight'}
                 </span>
               </div>
-              <h4 className="text-sm font-bold text-zinc-950 dark:text-white">
+              <h4 className="text-sm font-bold text-[#191817] dark:text-[#FAF9F5]">
                 {isBn ? '৫. অনুমোদিত মানুষের চূড়ান্ত নিরীক্ষা' : '5. Human Verification & Oversight'}
               </h4>
-              <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
+              <p className="text-[#706E6B] dark:text-[#9E9B95] leading-relaxed">
                 {isBn
                   ? 'সরকারি কর্মকর্তা বা আইনজীবী সিস্টেমের নির্দেশিত রেড ফ্ল্যাগগুলো পর্যালোচনা করে সিদ্ধান্ত গ্রহণ করেন। এআই কখনো স্বয়ংক্রিয়ভাবে সিদ্ধান্ত চাপিয়ে দেয় না।'
                   : 'An authorized legal professional or government officer reviews flagged items, cross-verifies physical records, and approves next legal steps.'}
@@ -822,19 +822,19 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
             </div>
 
             {/* Step 6 */}
-            <div className="p-5 rounded-2xl border bg-white dark:bg-[#121215] border-zinc-200 dark:border-zinc-800 space-y-3 relative overflow-hidden">
+            <div className="p-5 rounded-[6px] border bg-white dark:bg-[#121215] border-[#E8E3DA] dark:border-[#2B2A27] space-y-3 relative overflow-hidden">
               <div className="flex items-center justify-between">
-                <span className="w-8 h-8 rounded-xl bg-emerald-700 text-white font-extrabold flex items-center justify-center text-sm shadow-xs">
+                <span className="w-8 h-8 rounded-[4px] bg-emerald-700 text-white font-extrabold flex items-center justify-center text-sm shadow-xs">
                   6
                 </span>
-                <span className="text-[10px] uppercase font-bold tracking-wider text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
+                <span className="text-[10px] uppercase font-bold tracking-wider text-[#CC5A2B] bg-emerald-50 dark:bg-[#1E1E1C] px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
                   {isBn ? 'যাচাইকৃত ডসিয়ার' : 'Verifiable Output'}
                 </span>
               </div>
-              <h4 className="text-sm font-bold text-zinc-950 dark:text-white">
+              <h4 className="text-sm font-bold text-[#191817] dark:text-[#FAF9F5]">
                 {isBn ? '৬. ফলাফল ও অডিট ডসিয়ার প্রস্তুতি' : '6. Generate Traceable Result'}
               </h4>
-              <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
+              <p className="text-[#706E6B] dark:text-[#9E9B95] leading-relaxed">
                 {isBn
                   ? 'একটি পাঠযোগ্য সারসংক্ষেপ, ঝুঁকি স্কোর, প্রমাণের অডিট ট্রেইল এবং ক্রিপ্টোগ্রাফিক হ্যাশ সহ ডাউনলোডযোগ্য ডসিয়ার তৈরি হয়।'
                   : 'Presents a readable summary, risk score, statutory finding trail, and cryptographic SHA-256 hash seal for auditability.'}
@@ -847,16 +847,16 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
           </div>
 
           {/* Working vs Planned Banner */}
-          <div className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-[#16161B] text-xs space-y-1.5">
+          <div className="p-4 rounded-[4px] border border-[#E8E3DA] dark:border-[#2B2A27] bg-zinc-50 dark:bg-[#16161B] text-xs space-y-1.5">
             <div className="flex items-center gap-2 font-bold text-zinc-900 dark:text-white">
-              <i className="bx bx-info-circle text-emerald-600 dark:text-emerald-400 text-base" />
+              <i className="bx bx-info-circle text-[#CC5A2B] text-base" />
               <span>
                 {isBn
                   ? 'স্বচ্ছতা ও সত্যনিষ্ঠতা: কার্যকর বনাম ভবিষ্যত পরিকল্পনা'
                   : 'Honest Disclosure: Working In-Browser Engine vs Planned Gov DB APIs'}
               </span>
             </div>
-            <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed text-[11px]">
+            <p className="text-[#706E6B] dark:text-[#9E9B95] leading-relaxed text-[11px]">
               {isBn
                 ? 'বর্তমান কোডবেজে ৪টি খাঁটি কেস স্টাডি, ১২টি ফিল্ডের ক্রস-অডিট গ্রাফ, ও তাৎক্ষণিক হিসাবের ইঞ্জিন সম্পূর্ণ সচল। তবে সরকারি সেন্ট্রাল ডাটাবেজের (eporcha/land.gov.bd) সাথে সরাসরি সংযোগ স্থাপনের বিষয়টি ভবিষ্যতে সমঝোতা স্মারক (MoU) ও প্রাতিষ্ঠানিক অনুমোদনের ওপর নির্ভরশীল।'
                 : 'The current prototype contains fully functional client-side graph verification, math cross-checks, and simulated OCR for 4 real-world cases. Direct real-time API verification against government databases (eporcha.gov.bd) is a planned capability requiring official Ministry of Land data-sharing agreements.'}
@@ -876,7 +876,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
               <i className="bx bx-group text-xs" />
               <span>{isBn ? 'অধ্যায় ৩: উপকারভোগী' : 'Chapter 3: Who Benefits'}</span>
             </div>
-            <h3 className="text-xl sm:text-2xl font-heading font-extrabold text-zinc-950 dark:text-white">
+            <h3 className="text-xl sm:text-2xl font-serif font-semibold text-[#191817] dark:text-[#FAF9F5]">
               {isBn ? 'কার কী উপকার হবে? ৬টি ভিন্ন স্তরের সেবা' : 'Who Benefits? Tailored for 6 Core Stakeholder Personas'}
             </h3>
             <p className="text-xs text-zinc-500">
@@ -892,7 +892,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
               <button
                 key={p.id}
                 onClick={() => setSelectedPersona(idx)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 border cursor-pointer ${
+                className={`px-3 py-1.5 rounded-[4px] text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 border cursor-pointer ${
                   selectedPersona === idx
                     ? isLight
                       ? 'bg-zinc-900 text-white border-zinc-900 shadow-xs'
@@ -910,18 +910,18 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
 
           {/* Selected Persona Deep Dive Card */}
           {personas[selectedPersona] && (
-            <div className="p-6 rounded-2xl border bg-white dark:bg-[#121215] border-zinc-200 dark:border-zinc-800 space-y-6">
+            <div className="p-6 rounded-[6px] border bg-white dark:bg-[#121215] border-[#E8E3DA] dark:border-[#2B2A27] space-y-6">
               
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-zinc-100 dark:border-zinc-800">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl font-bold">
+                  <div className="w-10 h-10 rounded-[4px] bg-[#FAF0EB] dark:bg-[#1E1E1C] text-[#CC5A2B] flex items-center justify-center text-xl font-bold">
                     <i className={`bx ${personas[selectedPersona].icon}`} />
                   </div>
                   <div>
-                    <h4 className="text-base font-bold text-zinc-950 dark:text-white">
+                    <h4 className="text-base font-bold text-[#191817] dark:text-[#FAF9F5]">
                       {isBn ? personas[selectedPersona].titleBn : personas[selectedPersona].titleEn}
                     </h4>
-                    <span className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400">
+                    <span className="text-[11px] font-semibold text-[#CC5A2B]">
                       {isBn ? personas[selectedPersona].badgeBn : personas[selectedPersona].badgeEn}
                     </span>
                   </div>
@@ -934,7 +934,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5 text-xs">
                 
                 {/* Existing Problem */}
-                <div className="p-4 rounded-xl bg-rose-50/50 dark:bg-rose-950/20 border border-rose-200/60 dark:border-rose-900/40 space-y-2">
+                <div className="p-4 rounded-[4px] bg-rose-50/50 dark:bg-rose-950/20 border border-rose-200/60 dark:border-rose-900/40 space-y-2">
                   <div className="flex items-center gap-1.5 font-bold text-rose-800 dark:text-rose-300">
                     <i className="bx bx-error-circle text-sm" />
                     <span>{isBn ? 'বিদ্যমান সমস্যা ও জটিলতা' : 'The Existing Problem'}</span>
@@ -945,7 +945,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
                 </div>
 
                 {/* How LandWise Helps */}
-                <div className="p-4 rounded-xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200/60 dark:border-emerald-900/40 space-y-2">
+                <div className="p-4 rounded-[4px] bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200/60 dark:border-emerald-900/40 space-y-2">
                   <div className="flex items-center gap-1.5 font-bold text-emerald-800 dark:text-emerald-300">
                     <i className="bx bx-check-circle text-sm" />
                     <span>{isBn ? 'ল্যান্ডওয়াইজ যেভাবে সাহায্য করে' : 'How LandWise Helps'}</span>
@@ -956,7 +956,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
                 </div>
 
                 {/* Limitations */}
-                <div className="p-4 rounded-xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-900/40 space-y-2">
+                <div className="p-4 rounded-[4px] bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-900/40 space-y-2">
                   <div className="flex items-center gap-1.5 font-bold text-amber-800 dark:text-amber-300">
                     <i className="bx bx-shield-quarter text-sm" />
                     <span>{isBn ? 'সহায়তার আইনি সীমাবদ্ধতা' : 'Limits of Assistance'}</span>
@@ -983,7 +983,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
               <i className="bx bx-calculator text-xs" />
               <span>{isBn ? 'অধ্যায় ৪: সময় ও অর্থ সাশ্রয়' : 'Chapter 4: Time & Cost Savings'}</span>
             </div>
-            <h3 className="text-xl sm:text-2xl font-heading font-extrabold text-zinc-950 dark:text-white">
+            <h3 className="text-xl sm:text-2xl font-serif font-semibold text-[#191817] dark:text-[#FAF9F5]">
               {isBn ? '৭৩% দ্রুত নিরীক্ষা: বাস্তব কাজের উদাহরণ ও হিসাব' : '73% Faster Due Diligence: Real-World Scenario & ROI Calculator'}
             </h3>
             <p className="text-xs text-zinc-500">
@@ -997,7 +997,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
             
             {/* Before Column */}
-            <div className="p-5 rounded-2xl border bg-rose-50/30 dark:bg-rose-950/10 border-rose-200 dark:border-rose-900/40 space-y-3.5">
+            <div className="p-5 rounded-[6px] border bg-rose-50/30 dark:bg-rose-950/10 border-rose-200 dark:border-rose-900/40 space-y-3.5">
               <div className="flex items-center gap-2 font-bold text-rose-800 dark:text-rose-400 text-sm pb-2 border-b border-rose-200 dark:border-rose-900/40">
                 <i className="bx bx-time text-base" />
                 <span>{isBn ? 'আগে: প্রচলিত হস্তলিখিত ব্যবস্থা' : 'BEFORE LandWise (Manual Process)'}</span>
@@ -1042,7 +1042,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
             </div>
 
             {/* With LandWise Column */}
-            <div className="p-5 rounded-2xl border bg-emerald-50/30 dark:bg-emerald-950/10 border-emerald-200 dark:border-emerald-900/40 space-y-3.5">
+            <div className="p-5 rounded-[6px] border bg-emerald-50/30 dark:bg-emerald-950/10 border-emerald-200 dark:border-emerald-900/40 space-y-3.5">
               <div className="flex items-center gap-2 font-bold text-emerald-800 dark:text-emerald-400 text-sm pb-2 border-b border-emerald-200 dark:border-emerald-900/40">
                 <i className="bx bx-check-double text-base" />
                 <span>{isBn ? 'ল্যান্ডওয়াইজের সাথে: ডিজিটাল স্ক্রিনিং' : 'WITH LandWise (Assisted Workflow)'}</span>
@@ -1050,7 +1050,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
 
               <ul className="space-y-2.5 text-zinc-700 dark:text-zinc-300">
                 <li className="flex items-start gap-2">
-                  <i className="bx bx-check text-emerald-600 text-sm mt-0.5" />
+                  <i className="bx bx-check text-[#CC5A2B] text-sm mt-0.5" />
                   <span>
                     <strong>{isBn ? 'তাৎক্ষণিক অনুসন্ধান:' : 'Searchable & Digitized:'}</strong>{' '}
                     {isBn
@@ -1059,7 +1059,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <i className="bx bx-check text-emerald-600 text-sm mt-0.5" />
+                  <i className="bx bx-check text-[#CC5A2B] text-sm mt-0.5" />
                   <span>
                     <strong>{isBn ? 'স্বয়ংক্রিয় ১২-ফিল্ড ম্যাচিং:' : 'Automated 12-Field Audit:'}</strong>{' '}
                     {isBn
@@ -1068,7 +1068,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <i className="bx bx-check text-emerald-600 text-sm mt-0.5" />
+                  <i className="bx bx-check text-[#CC5A2B] text-sm mt-0.5" />
                   <span>
                     <strong>{isBn ? 'রেড ফ্ল্যাগ হাইলাইট:' : 'Instant Red-Flag Highlighting:'}</strong>{' '}
                     {isBn
@@ -1077,7 +1077,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <i className="bx bx-check text-emerald-600 text-sm mt-0.5" />
+                  <i className="bx bx-check text-[#CC5A2B] text-sm mt-0.5" />
                   <span>
                     <strong>{isBn ? 'ফলাফল:' : 'Total Turnaround:'}</strong>{' '}
                     {isBn ? 'প্রতি ফাইলে মাত্র ১.২ ঘণ্টা; ২৪ থেকে ৪৮ ঘণ্টায় সম্পূর্ণ ডসিয়ার প্রস্তুত।' : '1.2 hours per file; 24 to 48 hours turnaround with verifiable audit trail.'}
@@ -1089,11 +1089,11 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
           </div>
 
           {/* Interactive Savings & ROI Calculator Widget */}
-          <div className="p-6 rounded-2xl border bg-white dark:bg-[#121215] border-zinc-200 dark:border-zinc-800 space-y-6">
+          <div className="p-6 rounded-[6px] border bg-white dark:bg-[#121215] border-[#E8E3DA] dark:border-[#2B2A27] space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-zinc-100 dark:border-zinc-800">
               <div>
-                <h4 className="text-base font-bold text-zinc-950 dark:text-white flex items-center gap-2">
-                  <i className="bx bx-calculator text-emerald-600" />
+                <h4 className="text-base font-bold text-[#191817] dark:text-[#FAF9F5] flex items-center gap-2">
+                  <i className="bx bx-calculator text-[#CC5A2B]" />
                   <span>{isBn ? 'আপনার সম্ভাব্য সাশ্রয় হিসাব করুন' : 'Calculate Your Potential Savings (Interactive Tool)'}</span>
                 </h4>
                 <p className="text-xs text-zinc-500 mt-0.5">
@@ -1102,7 +1102,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
                     : 'Adjust the sliders to simulate operational savings based on your team’s workload.'}
                 </p>
               </div>
-              <div className="text-[11px] px-2.5 py-1 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 font-mono">
+              <div className="text-[11px] px-2.5 py-1 rounded bg-zinc-100 dark:bg-zinc-800 text-[#706E6B] dark:text-[#9E9B95] font-mono">
                 Formula: Transparent Economics
               </div>
             </div>
@@ -1111,10 +1111,10 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 text-xs">
               
               {/* Slider 1: Monthly Doc Volume */}
-              <div className="space-y-2 p-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-[#16161B]">
+              <div className="space-y-2 p-3.5 rounded-[4px] border border-[#E8E3DA] dark:border-[#2B2A27] bg-zinc-50/50 dark:bg-[#16161B]">
                 <div className="flex justify-between font-bold text-zinc-900 dark:text-white">
                   <span>{isBn ? 'মাসিক নথির সংখ্যা:' : 'Monthly Documents:'}</span>
-                  <span className="text-emerald-700 dark:text-emerald-400 font-mono">{docVolume} files</span>
+                  <span className="text-[#CC5A2B] font-mono">{docVolume} files</span>
                 </div>
                 <input
                   type="range"
@@ -1132,10 +1132,10 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
               </div>
 
               {/* Slider 2: Hours Per Document Before */}
-              <div className="space-y-2 p-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-[#16161B]">
+              <div className="space-y-2 p-3.5 rounded-[4px] border border-[#E8E3DA] dark:border-[#2B2A27] bg-zinc-50/50 dark:bg-[#16161B]">
                 <div className="flex justify-between font-bold text-zinc-900 dark:text-white">
                   <span>{isBn ? 'পূর্ববর্তী গড় সময়/ফাইল:' : 'Time Before (hrs/file):'}</span>
-                  <span className="text-emerald-700 dark:text-emerald-400 font-mono">{timeBeforeHours} hrs</span>
+                  <span className="text-[#CC5A2B] font-mono">{timeBeforeHours} hrs</span>
                 </div>
                 <input
                   type="range"
@@ -1153,10 +1153,10 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
               </div>
 
               {/* Slider 3: Expected Reduction % */}
-              <div className="space-y-2 p-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-[#16161B]">
+              <div className="space-y-2 p-3.5 rounded-[4px] border border-[#E8E3DA] dark:border-[#2B2A27] bg-zinc-50/50 dark:bg-[#16161B]">
                 <div className="flex justify-between font-bold text-zinc-900 dark:text-white">
                   <span>{isBn ? 'প্রত্যাশিত সময় সাশ্রয় (%):' : 'Expected Reduction:'}</span>
-                  <span className="text-emerald-700 dark:text-emerald-400 font-mono">{reductionPercent}%</span>
+                  <span className="text-[#CC5A2B] font-mono">{reductionPercent}%</span>
                 </div>
                 <input
                   type="range"
@@ -1174,10 +1174,10 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
               </div>
 
               {/* Slider 4: Staff Cost Per Hour */}
-              <div className="space-y-2 p-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-[#16161B]">
+              <div className="space-y-2 p-3.5 rounded-[4px] border border-[#E8E3DA] dark:border-[#2B2A27] bg-zinc-50/50 dark:bg-[#16161B]">
                 <div className="flex justify-between font-bold text-zinc-900 dark:text-white">
                   <span>{isBn ? 'কর্মী কর্মঘণ্টা খরচ:' : 'Staff Cost/Hour:'}</span>
-                  <span className="text-emerald-700 dark:text-emerald-400 font-mono">৳{staffCostPerHour}</span>
+                  <span className="text-[#CC5A2B] font-mono">৳{staffCostPerHour}</span>
                 </div>
                 <input
                   type="range"
@@ -1195,10 +1195,10 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
               </div>
 
               {/* Slider 5: Monthly Platform Cost */}
-              <div className="space-y-2 p-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-[#16161B] sm:col-span-2">
+              <div className="space-y-2 p-3.5 rounded-[4px] border border-[#E8E3DA] dark:border-[#2B2A27] bg-zinc-50/50 dark:bg-[#16161B] sm:col-span-2">
                 <div className="flex justify-between font-bold text-zinc-900 dark:text-white">
                   <span>{isBn ? 'আনুমানিক প্ল্যাটফর্ম খরচ/মাস:' : 'Monthly Platform Cost:'}</span>
-                  <span className="text-emerald-700 dark:text-emerald-400 font-mono">৳{monthlyPlatformCost.toLocaleString()}</span>
+                  <span className="text-[#CC5A2B] font-mono">৳{monthlyPlatformCost.toLocaleString()}</span>
                 </div>
                 <input
                   type="range"
@@ -1218,12 +1218,12 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
             </div>
 
             {/* Calculated Results Banner */}
-            <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/5 grid grid-cols-2 lg:grid-cols-5 gap-3 text-center">
+            <div className="p-4 rounded-[4px] border border-[#CC5A2B]/30 bg-emerald-500/5 grid grid-cols-2 lg:grid-cols-5 gap-3 text-center">
               <div>
                 <div className="text-[10px] font-bold text-zinc-500 uppercase">
                   {isBn ? 'মাসিক সাশ্রয়কৃত সময়' : 'Hours Saved / Month'}
                 </div>
-                <div className="text-lg sm:text-xl font-extrabold text-emerald-700 dark:text-emerald-400 font-heading">
+                <div className="text-lg sm:text-xl font-extrabold text-[#CC5A2B] font-heading">
                   {timeSavedHours.toLocaleString()} hrs
                 </div>
               </div>
@@ -1232,7 +1232,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
                 <div className="text-[10px] font-bold text-zinc-500 uppercase">
                   {isBn ? 'সাশ্রয়কৃত সময়ের মূল্য' : 'Value of Saved Time'}
                 </div>
-                <div className="text-lg sm:text-xl font-extrabold text-zinc-950 dark:text-white font-heading">
+                <div className="text-lg sm:text-xl font-extrabold text-[#191817] dark:text-[#FAF9F5] font-heading">
                   ৳{valueOfTimeSavedBDT.toLocaleString()}
                 </div>
               </div>
@@ -1241,7 +1241,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
                 <div className="text-[10px] font-bold text-zinc-500 uppercase">
                   {isBn ? 'মাসিক নিট সুবিধা' : 'Net Monthly Benefit'}
                 </div>
-                <div className="text-lg sm:text-xl font-extrabold text-emerald-700 dark:text-emerald-400 font-heading">
+                <div className="text-lg sm:text-xl font-extrabold text-[#CC5A2B] font-heading">
                   ৳{netMonthlyBenefitBDT.toLocaleString()}
                 </div>
               </div>
@@ -1250,7 +1250,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
                 <div className="text-[10px] font-bold text-zinc-500 uppercase">
                   {isBn ? 'বার্ষিক নিট সুবিধা' : 'Net Annual Benefit'}
                 </div>
-                <div className="text-lg sm:text-xl font-extrabold text-zinc-950 dark:text-white font-heading">
+                <div className="text-lg sm:text-xl font-extrabold text-[#191817] dark:text-[#FAF9F5] font-heading">
                   ৳{netAnnualBenefitBDT.toLocaleString()}
                 </div>
               </div>
@@ -1259,7 +1259,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
                 <div className="text-[10px] font-bold text-zinc-500 uppercase">
                   {isBn ? 'প্রত্যাশিত আরওআই' : 'Estimated ROI %'}
                 </div>
-                <div className="text-lg sm:text-xl font-extrabold text-emerald-700 dark:text-emerald-400 font-heading">
+                <div className="text-lg sm:text-xl font-extrabold text-[#CC5A2B] font-heading">
                   {monthlyRoiPercent}%
                 </div>
               </div>
@@ -1289,7 +1289,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
               <i className="bx bx-wallet text-xs" />
               <span>{isBn ? 'অধ্যায় ৫: ব্যবসায়িক মডেল' : 'Chapter 5: Who Pays For This?'}</span>
             </div>
-            <h3 className="text-xl sm:text-2xl font-heading font-extrabold text-zinc-950 dark:text-white">
+            <h3 className="text-xl sm:text-2xl font-serif font-semibold text-[#191817] dark:text-[#FAF9F5]">
               {isBn ? 'কারা অর্থায়ন করবে? টেকসই রাজস্ব ও ব্যবসায়িক যুক্তি' : 'Who Pays For This Platform? Sustainable Revenue & Economic Model'}
             </h3>
             <p className="text-xs text-zinc-500">
@@ -1300,19 +1300,19 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
           </div>
 
           {/* Citizen Free Tier Banner */}
-          <div className="p-5 rounded-2xl border border-emerald-500/30 bg-emerald-500/5 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="p-5 rounded-[6px] border border-[#CC5A2B]/30 bg-emerald-500/5 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="space-y-1">
-              <div className="flex items-center gap-2 font-bold text-zinc-950 dark:text-white text-sm">
-                <i className="bx bx-check-shield text-emerald-600 text-lg" />
+              <div className="flex items-center gap-2 font-bold text-[#191817] dark:text-[#FAF9F5] text-sm">
+                <i className="bx bx-check-shield text-[#CC5A2B] text-lg" />
                 <span>{isBn ? 'নাগরিকদের জন্য ফ্রি পাবলিক-গুড সার্ভিস' : 'Citizens Do Not Need to Be the Primary Revenue Source'}</span>
               </div>
-              <p className="text-zinc-600 dark:text-zinc-400 text-[11px] leading-relaxed max-w-2xl">
+              <p className="text-[#706E6B] dark:text-[#9E9B95] text-[11px] leading-relaxed max-w-2xl">
                 {isBn
                   ? 'সাধারণ ভূমি ক্রেতাদের জন্য প্রাথমিক চেক-লিস্ট, রূপান্তর ক্যালকুলেটর ও চার-দফা রেজিস্ট্রি নির্দেশিকা সম্পূর্ণ বিনামূল্যে উন্মুক্ত থাকবে।'
                   : 'Ordinary citizens and small landowners can access standard educational guidance, conversion tools, and registry check-lists without mandatory subscription fees.'}
               </p>
             </div>
-            <span className="px-3 py-1 rounded-full bg-emerald-600 text-white font-bold text-[10px] uppercase tracking-wider shrink-0 self-start sm:self-center">
+            <span className="px-3 py-1 rounded-full bg-[#CC5A2B] text-white font-bold text-[10px] uppercase tracking-wider shrink-0 self-start sm:self-center">
               {isBn ? 'পাবলিক গুড স্তর' : 'Public Good Tier'}
             </span>
           </div>
@@ -1320,14 +1320,14 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
           {/* 6 Institutional Revenue Channels */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
             
-            <div className="p-5 rounded-2xl border bg-white dark:bg-[#121215] border-zinc-200 dark:border-zinc-800 space-y-2">
-              <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 flex items-center justify-center text-lg font-bold">
+            <div className="p-5 rounded-[6px] border bg-white dark:bg-[#121215] border-[#E8E3DA] dark:border-[#2B2A27] space-y-2">
+              <div className="w-8 h-8 rounded-[4px] bg-emerald-100 dark:bg-emerald-950/60 text-[#CC5A2B] flex items-center justify-center text-lg font-bold">
                 <i className="bx bx-buildings" />
               </div>
-              <h4 className="text-sm font-bold text-zinc-950 dark:text-white">
+              <h4 className="text-sm font-bold text-[#191817] dark:text-[#FAF9F5]">
                 {isBn ? '১. রিয়েল এস্টেট সাবস্ক্রিপশন' : '1. Real Estate Subscriptions'}
               </h4>
-              <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed text-[11px]">
+              <p className="text-[#706E6B] dark:text-[#9E9B95] leading-relaxed text-[11px]">
                 {isBn
                   ? 'আবাসন প্রতিষ্ঠানগুলো শত শত প্লটের জমির ধারাবাহিকতা ও বাউন্ডারি যাচাই করতে মাসিক বি২বি সাবস্ক্রিপশন নেবে।'
                   : 'Property developers processing dozens of contiguous plots subscribe to accelerate acquisitions and protect investments.'}
@@ -1337,14 +1337,14 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
               </div>
             </div>
 
-            <div className="p-5 rounded-2xl border bg-white dark:bg-[#121215] border-zinc-200 dark:border-zinc-800 space-y-2">
-              <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400 flex items-center justify-center text-lg font-bold">
-                <i className="bx bx-bank" />
+            <div className="p-5 rounded-[6px] border bg-white dark:bg-[#121215] border-[#E8E3DA] dark:border-[#2B2A27] space-y-2">
+              <div className="w-8 h-8 rounded-[4px] bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400 flex items-center justify-center text-lg font-bold">
+                <i className="bx bxs-bank" />
               </div>
-              <h4 className="text-sm font-bold text-zinc-950 dark:text-white">
+              <h4 className="text-sm font-bold text-[#191817] dark:text-[#FAF9F5]">
                 {isBn ? '২. ব্যাংকিং বন্ধকী স্ক্রিনিং' : '2. Bank Mortgage Verification'}
               </h4>
-              <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed text-[11px]">
+              <p className="text-[#706E6B] dark:text-[#9E9B95] leading-relaxed text-[11px]">
                 {isBn
                   ? 'হোম লোন ও প্রাতিষ্ঠানিক ঋণের বিপরীতে বন্ধকী জমির প্রাথমিক স্ক্রিনিং রিপোর্ট প্রদান ফি।'
                   : 'Commercial banks and NBFIs pay per-document scrutiny fees to prevent non-performing loan (NPL) title risks.'}
@@ -1354,14 +1354,14 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
               </div>
             </div>
 
-            <div className="p-5 rounded-2xl border bg-white dark:bg-[#121215] border-zinc-200 dark:border-zinc-800 space-y-2">
-              <div className="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-400 flex items-center justify-center text-lg font-bold">
+            <div className="p-5 rounded-[6px] border bg-white dark:bg-[#121215] border-[#E8E3DA] dark:border-[#2B2A27] space-y-2">
+              <div className="w-8 h-8 rounded-[4px] bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-400 flex items-center justify-center text-lg font-bold">
                 <i className="bx bx-briefcase" />
               </div>
-              <h4 className="text-sm font-bold text-zinc-950 dark:text-white">
+              <h4 className="text-sm font-bold text-[#191817] dark:text-[#FAF9F5]">
                 {isBn ? '৩. আইনি ফার্ম ওয়ার্কস্টেশন' : '3. Law Firm Workstations'}
               </h4>
-              <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed text-[11px]">
+              <p className="text-[#706E6B] dark:text-[#9E9B95] leading-relaxed text-[11px]">
                 {isBn
                   ? 'দলিল প্রস্তুতকারী ও আইনজীবীদের জন্য বংশপরম্পরা ম্যাপিং ও টাইপিং সহকারী হিসেবে সিট লাইসেন্স।'
                   : 'Multi-seat professional software licenses for real estate advocates transcribing Khatians and drafting searches.'}
@@ -1371,14 +1371,14 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
               </div>
             </div>
 
-            <div className="p-5 rounded-2xl border bg-white dark:bg-[#121215] border-zinc-200 dark:border-zinc-800 space-y-2">
-              <div className="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-400 flex items-center justify-center text-lg font-bold">
-                <i className="bx bx-government" />
+            <div className="p-5 rounded-[6px] border bg-white dark:bg-[#121215] border-[#E8E3DA] dark:border-[#2B2A27] space-y-2">
+              <div className="w-8 h-8 rounded-[4px] bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-400 flex items-center justify-center text-lg font-bold">
+                <i className="bx bxs-landmark" />
               </div>
-              <h4 className="text-sm font-bold text-zinc-950 dark:text-white">
+              <h4 className="text-sm font-bold text-[#191817] dark:text-[#FAF9F5]">
                 {isBn ? '৪. সরকারি গভটেক লাইসেন্স' : '4. GovTech Enterprise SLAs'}
               </h4>
-              <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed text-[11px]">
+              <p className="text-[#706E6B] dark:text-[#9E9B95] leading-relaxed text-[11px]">
                 {isBn
                   ? 'উপজেলা ভূমি অফিস ও সাব-রেজিস্ট্রির জন্য ক্লাউড বা অন-প্রিমিসেস সফটওয়্যার ও রক্ষণাবেক্ষণ চুক্তি।'
                   : 'Annual software maintenance and cloud hosting contracts with Upazila Land Offices and Sub-Registry rooms.'}
@@ -1388,14 +1388,14 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
               </div>
             </div>
 
-            <div className="p-5 rounded-2xl border bg-white dark:bg-[#121215] border-zinc-200 dark:border-zinc-800 space-y-2">
-              <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 flex items-center justify-center text-lg font-bold">
+            <div className="p-5 rounded-[6px] border bg-white dark:bg-[#121215] border-[#E8E3DA] dark:border-[#2B2A27] space-y-2">
+              <div className="w-8 h-8 rounded-[4px] bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 flex items-center justify-center text-lg font-bold">
                 <i className="bx bx-data" />
               </div>
-              <h4 className="text-sm font-bold text-zinc-950 dark:text-white">
+              <h4 className="text-sm font-bold text-[#191817] dark:text-[#FAF9F5]">
                 {isBn ? '৫. ঐতিহাসিক বালাম ডিজিটাইজেশন' : '5. Volume Digitization Services'}
               </h4>
-              <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed text-[11px]">
+              <p className="text-[#706E6B] dark:text-[#9E9B95] leading-relaxed text-[11px]">
                 {isBn
                   ? 'পুরাতন বালাম বই ও মৌজা নকশা স্ক্যান করে হাই-রেজুলেশন ডিজিটাল ভেক্টরে রূপান্তরের সেবা।'
                   : 'Specialized optical character recognition and digitization services for historical district land archives.'}
@@ -1405,14 +1405,14 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
               </div>
             </div>
 
-            <div className="p-5 rounded-2xl border bg-white dark:bg-[#121215] border-zinc-200 dark:border-zinc-800 space-y-2">
-              <div className="w-8 h-8 rounded-lg bg-teal-100 dark:bg-teal-950/60 text-teal-700 dark:text-teal-400 flex items-center justify-center text-lg font-bold">
+            <div className="p-5 rounded-[6px] border bg-white dark:bg-[#121215] border-[#E8E3DA] dark:border-[#2B2A27] space-y-2">
+              <div className="w-8 h-8 rounded-[4px] bg-teal-100 dark:bg-teal-950/60 text-teal-700 dark:text-teal-400 flex items-center justify-center text-lg font-bold">
                 <i className="bx bx-code-curly" />
               </div>
-              <h4 className="text-sm font-bold text-zinc-950 dark:text-white">
+              <h4 className="text-sm font-bold text-[#191817] dark:text-[#FAF9F5]">
                 {isBn ? '৬. ডেভেলপার রেস্ট এপিআই' : '6. Developer REST API'}
               </h4>
-              <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed text-[11px]">
+              <p className="text-[#706E6B] dark:text-[#9E9B95] leading-relaxed text-[11px]">
                 {isBn
                   ? 'থার্ড-পার্টি ফিনটেক ও প্রপটেক অ্যাপ্লিকেশনের জন্য জমির স্বত্ব ও ঝুঁকি স্ক্রিনিং এপিআই।'
                   : 'High-throughput programmatic API keys for enterprise ERPs, mortgage origination systems, and legal databases.'}
@@ -1425,7 +1425,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
           </div>
 
           {/* Pricing Disclaimer Note */}
-          <div className="p-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-[#141418] text-[11px] text-zinc-500 text-center">
+          <div className="p-3.5 rounded-[4px] border border-[#E8E3DA] dark:border-[#2B2A27] bg-zinc-50 dark:bg-[#141418] text-[11px] text-zinc-500 text-center">
             <strong>Labeling Notice:</strong> Illustrative business model and example pricing, not a confirmed market rate. Actual financial benefits depend on organizational workload, deployment scale, and integration complexity.
           </div>
         </div>
@@ -1442,7 +1442,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
               <i className="bx bx-shield-quarter text-xs" />
               <span>{isBn ? 'অধ্যায় ৬: বিশ্বাস ও রোডম্যাপ' : 'Chapter 6: Trust, Roadmap & FAQs'}</span>
             </div>
-            <h3 className="text-xl sm:text-2xl font-heading font-extrabold text-zinc-950 dark:text-white">
+            <h3 className="text-xl sm:text-2xl font-serif font-semibold text-[#191817] dark:text-[#FAF9F5]">
               {isBn ? 'বিশ্বস্ততা ও ভবিষ্যৎ রূপরেখা: স্বচ্ছ এআই ও পূর্ণাঙ্গ রোডম্যাপ' : 'Building Trust: AI Boundaries, Transparent Roadmap & Public FAQs'}
             </h3>
             <p className="text-xs text-zinc-500">
@@ -1456,10 +1456,10 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
           <div className="flex items-center justify-center gap-2 pb-1">
             <button
               onClick={() => setTrustSubTab('ai-limits')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border cursor-pointer ${
+              className={`px-3 py-1.5 rounded-[4px] text-xs font-bold transition-all border cursor-pointer ${
                 trustSubTab === 'ai-limits'
-                  ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
-                  : 'bg-white dark:bg-[#18181C] text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-800'
+                  ? 'bg-[#CC5A2B] text-white border-emerald-600 shadow-xs'
+                  : 'bg-white dark:bg-[#18181C] text-zinc-700 dark:text-zinc-300 border-[#E8E3DA] dark:border-[#2B2A27]'
               }`}
             >
               <i className="bx bx-check-double mr-1" />
@@ -1468,10 +1468,10 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
 
             <button
               onClick={() => setTrustSubTab('roadmap')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border cursor-pointer ${
+              className={`px-3 py-1.5 rounded-[4px] text-xs font-bold transition-all border cursor-pointer ${
                 trustSubTab === 'roadmap'
-                  ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
-                  : 'bg-white dark:bg-[#18181C] text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-800'
+                  ? 'bg-[#CC5A2B] text-white border-emerald-600 shadow-xs'
+                  : 'bg-white dark:bg-[#18181C] text-zinc-700 dark:text-zinc-300 border-[#E8E3DA] dark:border-[#2B2A27]'
               }`}
             >
               <i className="bx bx-trending-up mr-1" />
@@ -1480,10 +1480,10 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
 
             <button
               onClick={() => setTrustSubTab('faq')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border cursor-pointer ${
+              className={`px-3 py-1.5 rounded-[4px] text-xs font-bold transition-all border cursor-pointer ${
                 trustSubTab === 'faq'
-                  ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
-                  : 'bg-white dark:bg-[#18181C] text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-800'
+                  ? 'bg-[#CC5A2B] text-white border-emerald-600 shadow-xs'
+                  : 'bg-white dark:bg-[#18181C] text-zinc-700 dark:text-zinc-300 border-[#E8E3DA] dark:border-[#2B2A27]'
               }`}
             >
               <i className="bx bx-help-circle mr-1" />
@@ -1496,41 +1496,41 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs animate-fade-in">
               
               {/* What AI Can Do */}
-              <div className="p-5 rounded-2xl border bg-emerald-50/20 dark:bg-emerald-950/10 border-emerald-200 dark:border-emerald-900/40 space-y-3">
+              <div className="p-5 rounded-[6px] border bg-emerald-50/20 dark:bg-emerald-950/10 border-emerald-200 dark:border-emerald-900/40 space-y-3">
                 <div className="flex items-center gap-2 font-bold text-emerald-800 dark:text-emerald-400 text-sm pb-2 border-b border-emerald-200 dark:border-emerald-900/40">
                   <i className="bx bx-check-circle text-base" />
                   <span>{isBn ? 'কৃত্রিম বুদ্ধিমত্তা যেভাবে সাহায্য করতে পারে' : 'What AI CAN Help With'}</span>
                 </div>
                 <ul className="space-y-2 text-zinc-700 dark:text-zinc-300">
                   <li className="flex items-start gap-2">
-                    <i className="bx bx-check text-emerald-600 text-sm mt-0.5" />
+                    <i className="bx bx-check text-[#CC5A2B] text-sm mt-0.5" />
                     <span>{isBn ? 'স্ক্যানকৃত দলিলের বাংলা ও ইংরেজি টেক্সট দ্রুত পাঠ করা।' : 'Reading supported scanned deeds and handwritten Porcha forms.'}</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <i className="bx bx-check text-emerald-600 text-sm mt-0.5" />
+                    <i className="bx bx-check text-[#CC5A2B] text-sm mt-0.5" />
                     <span>{isBn ? 'মালিকের নাম, দাগ নম্বর, খতিয়ান ও জে.এল. নম্বর স্বয়ংক্রিয়ভাবে এক্সট্রাক্ট করা।' : 'Extracting names, dates, parcel IDs, and fractional shares.'}</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <i className="bx bx-check text-emerald-600 text-sm mt-0.5" />
+                    <i className="bx bx-check text-[#CC5A2B] text-sm mt-0.5" />
                     <span>{isBn ? 'দলিলের সাথে আরএস খতিয়ানের জমির পরিমাণের অমিল চিহ্নিত করা।' : 'Detecting discrepancies between deeds and underlying Khatians.'}</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <i className="bx bx-check text-emerald-600 text-sm mt-0.5" />
+                    <i className="bx bx-check text-[#CC5A2B] text-sm mt-0.5" />
                     <span>{isBn ? 'নিবন্ধনে অনুপস্থিত ওয়ারিশান বা কর দাখিলার বকেয়া সতর্কবার্তা দেওয়া।' : 'Flagging missing inheritance links and unpaid development taxes.'}</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <i className="bx bx-check text-emerald-600 text-sm mt-0.5" />
+                    <i className="bx bx-check text-[#CC5A2B] text-sm mt-0.5" />
                     <span>{isBn ? 'নথিপত্র সাজিয়ে কর্মকর্তাদের দ্রুত পর্যালোচনার জন্য প্রমাণের ছক তৈরি করা।' : 'Organizing document chains for rapid human review.'}</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <i className="bx bx-check text-emerald-600 text-sm mt-0.5" />
+                    <i className="bx bx-check text-[#CC5A2B] text-sm mt-0.5" />
                     <span>{isBn ? 'মানুষের মনোযোগ প্রয়োজন এমন ঝুঁকিপূর্ণ ফাইলগুলোকে অগ্রাধিকার দেওয়া।' : 'Prioritizing anomalous files for authorized officer oversight.'}</span>
                   </li>
                 </ul>
               </div>
 
               {/* What AI Cannot Do */}
-              <div className="p-5 rounded-2xl border bg-rose-50/20 dark:bg-rose-950/10 border-rose-200 dark:border-rose-900/40 space-y-3">
+              <div className="p-5 rounded-[6px] border bg-rose-50/20 dark:bg-rose-950/10 border-rose-200 dark:border-rose-900/40 space-y-3">
                 <div className="flex items-center gap-2 font-bold text-rose-800 dark:text-rose-400 text-sm pb-2 border-b border-rose-200 dark:border-rose-900/40">
                   <i className="bx bx-shield-x text-base" />
                   <span>{isBn ? 'এআই কখনো যা নিশ্চয়তা দিতে পারে না' : 'What AI CANNOT Automatically Guarantee'}</span>
@@ -1571,14 +1571,14 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs animate-fade-in">
               
               {/* Stage 1 */}
-              <div className="p-5 rounded-2xl border bg-emerald-50/30 dark:bg-emerald-950/10 border-emerald-500/40 space-y-3">
-                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-emerald-600 text-white">
+              <div className="p-5 rounded-[6px] border bg-emerald-50/30 dark:bg-emerald-950/10 border-[#CC5A2B]/40 space-y-3">
+                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-[#CC5A2B] text-white">
                   Available Now
                 </span>
-                <h4 className="text-sm font-bold text-zinc-950 dark:text-white">
+                <h4 className="text-sm font-bold text-[#191817] dark:text-[#FAF9F5]">
                   {isBn ? '১. বর্তমান কার্যকর ফিচার (কোডবেজ)' : '1. Available Now (Codebase Verified)'}
                 </h4>
-                <ul className="space-y-1.5 text-zinc-600 dark:text-zinc-400">
+                <ul className="space-y-1.5 text-[#706E6B] dark:text-[#9E9B95]">
                   <li>• ১২-ফিল্ড ক্রস-অডিট ভেরিফিকেশন ইঞ্জিন</li>
                   <li>• ৪টি বাস্তবসম্মত ডেমো কেস ও অসঙ্গতি বিশ্লেষণ</li>
                   <li>• ৬৪ জেলার ক্যাডাস্ট্রাল ভৌগোলিক মানচিত্র</li>
@@ -1588,14 +1588,14 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
               </div>
 
               {/* Stage 2 */}
-              <div className="p-5 rounded-2xl border bg-blue-50/30 dark:bg-blue-950/10 border-blue-500/40 space-y-3">
+              <div className="p-5 rounded-[6px] border bg-blue-50/30 dark:bg-blue-950/10 border-blue-500/40 space-y-3">
                 <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-blue-600 text-white">
                   Next Stage
                 </span>
-                <h4 className="text-sm font-bold text-zinc-950 dark:text-white">
+                <h4 className="text-sm font-bold text-[#191817] dark:text-[#FAF9F5]">
                   {isBn ? '২. পাইলট ও বাস্তব যাচাইকরণ' : '2. Next: Pilot & Validation'}
                 </h4>
-                <ul className="space-y-1.5 text-zinc-600 dark:text-zinc-400">
+                <ul className="space-y-1.5 text-[#706E6B] dark:text-[#9E9B95]">
                   <li>• ১০০টি ঐতিহাসিক দলিলের ওপর ৬ সপ্তাহের নিয়ন্ত্রিত পাইলট</li>
                   <li>• বাংলা হস্তলিপি ওসিআর একিউরেসি ও F1-স্কোর নির্ধারণ</li>
                   <li>• স্বাধীন সাইবার সিকিউরিটি ও ডাটা প্রাইভেসী অডিট</li>
@@ -1605,14 +1605,14 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
               </div>
 
               {/* Stage 3 */}
-              <div className="p-5 rounded-2xl border bg-purple-50/30 dark:bg-purple-950/10 border-purple-500/40 space-y-3">
+              <div className="p-5 rounded-[6px] border bg-purple-50/30 dark:bg-purple-950/10 border-purple-500/40 space-y-3">
                 <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-purple-600 text-white">
                   Future Vision
                 </span>
-                <h4 className="text-sm font-bold text-zinc-950 dark:text-white">
+                <h4 className="text-sm font-bold text-[#191817] dark:text-[#FAF9F5]">
                   {isBn ? '৩. প্রাতিষ্ঠানিক বিস্তার' : '3. Future: Institutional Scaling'}
                 </h4>
-                <ul className="space-y-1.5 text-zinc-600 dark:text-zinc-400">
+                <ul className="space-y-1.5 text-[#706E6B] dark:text-[#9E9B95]">
                   <li>• ভূমি মন্ত্রণালয়ের সাথে সমঝোতা (MoU) ও লাইভ API</li>
                   <li>• eporcha.gov.bd ও ই-নামজারি গেটওয়ে ইন্টিগ্রেশন</li>
                   <li>• ন্যাশনাল ডাটা সেন্টারে সার্বভৌম ক্লাউড ডিপ্লয়মেন্ট</li>
@@ -1632,7 +1632,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
                 return (
                   <div
                     key={index}
-                    className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#121215] overflow-hidden"
+                    className="rounded-[4px] border border-[#E8E3DA] dark:border-[#2B2A27] bg-white dark:bg-[#121215] overflow-hidden"
                   >
                     <button
                       onClick={() => setOpenFaqIndex(isOpen ? null : index)}
@@ -1641,12 +1641,12 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
                       <span>{isBn ? faq.qBn : faq.qEn}</span>
                       <i
                         className={`bx bx-chevron-down text-base text-zinc-400 transition-transform ${
-                          isOpen ? 'rotate-180 text-emerald-600' : ''
+                          isOpen ? 'rotate-180 text-[#CC5A2B]' : ''
                         }`}
                       />
                     </button>
                     {isOpen && (
-                      <div className="p-4 pt-1 text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed border-t border-zinc-100 dark:border-zinc-800/60 bg-zinc-50/50 dark:bg-[#15151A]">
+                      <div className="p-4 pt-1 text-xs text-[#706E6B] dark:text-[#9E9B95] leading-relaxed border-t border-zinc-100 dark:border-zinc-800/60 bg-zinc-50/50 dark:bg-[#15151A]">
                         {isBn ? faq.aBn : faq.aEn}
                       </div>
                     )}
@@ -1660,12 +1660,12 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
       )}
 
       {/* ── CHAPTER BOTTOM STORY NAVIGATION CONTROLS ── */}
-      <div className="p-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-[#141418] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+      <div className="p-4 rounded-[6px] border border-[#E8E3DA] dark:border-[#2B2A27] bg-zinc-50 dark:bg-[#141418] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-2">
           <button
             onClick={handlePrevAct}
             disabled={currentActIndex === 0}
-            className={`px-3 py-1.5 rounded-lg font-bold border flex items-center gap-1 cursor-pointer transition-colors ${
+            className={`px-3 py-1.5 rounded-[4px] font-bold border flex items-center gap-1 cursor-pointer transition-colors ${
               currentActIndex === 0
                 ? 'opacity-40 cursor-not-allowed bg-transparent text-zinc-400 border-zinc-300 dark:border-zinc-700'
                 : 'bg-white dark:bg-[#1c1c22] text-zinc-800 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 border-zinc-300 dark:border-zinc-700'
@@ -1682,10 +1682,10 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
           <button
             onClick={handleNextAct}
             disabled={currentActIndex === storyActs.length - 1}
-            className={`px-3 py-1.5 rounded-lg font-bold border flex items-center gap-1 cursor-pointer transition-colors ${
+            className={`px-3 py-1.5 rounded-[4px] font-bold border flex items-center gap-1 cursor-pointer transition-colors ${
               currentActIndex === storyActs.length - 1
                 ? 'opacity-40 cursor-not-allowed bg-transparent text-zinc-400 border-zinc-300 dark:border-zinc-700'
-                : 'bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-600'
+                : 'bg-[#CC5A2B] hover:bg-emerald-700 text-white border-emerald-600'
             }`}
           >
             <span>{isBn ? 'পরবর্তী অধ্যায়' : 'Next Chapter'}</span>
@@ -1697,9 +1697,9 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
         <div className="flex items-center gap-2">
           <a
             href="#due-diligence"
-            className="px-3 py-1.5 rounded-lg bg-zinc-200 hover:bg-zinc-300 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-900 dark:text-white font-semibold flex items-center gap-1.5 text-xs transition-colors"
+            className="px-3 py-1.5 rounded-[4px] bg-zinc-200 hover:bg-zinc-300 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-900 dark:text-white font-semibold flex items-center gap-1.5 text-xs transition-colors"
           >
-            <i className="bx bx-git-repo-forked text-emerald-600" />
+            <i className="bx bx-git-repo-forked text-[#CC5A2B]" />
             <span>{isBn ? 'লাইভ ডিউ ডিলিজেন্স টেস্ট করুন' : 'Test Live Due-Diligence Tool'}</span>
           </a>
         </div>
@@ -1710,22 +1710,22 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
           ───────────────────────────────────────────────────────────── */}
       {selectedGlossaryTerm && glossaryTerms[selectedGlossaryTerm] && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
-          <div className="w-full max-w-md p-6 rounded-2xl bg-white dark:bg-[#16161A] border border-zinc-200 dark:border-zinc-800 shadow-xl space-y-4">
+          <div className="w-full max-w-md p-6 rounded-[6px] bg-white dark:bg-[#16161A] border border-[#E8E3DA] dark:border-[#2B2A27] shadow-xl space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-zinc-100 dark:border-zinc-800">
-              <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold text-sm">
+              <div className="flex items-center gap-2 text-[#CC5A2B] font-bold text-sm">
                 <i className="bx bx-book text-base" />
                 <span>{isBn ? 'ভূমি পরিভাষা ব্যাখ্যা' : 'LandTech Glossary Term'}</span>
               </div>
               <button
                 onClick={() => setSelectedGlossaryTerm(null)}
-                className="w-7 h-7 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center justify-center text-zinc-500 cursor-pointer"
+                className="w-7 h-7 rounded-[4px] hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center justify-center text-zinc-500 cursor-pointer"
               >
                 <i className="bx bx-x text-xl" />
               </button>
             </div>
 
             <div className="space-y-2">
-              <h4 className="text-base font-bold text-zinc-950 dark:text-white">
+              <h4 className="text-base font-bold text-[#191817] dark:text-[#FAF9F5]">
                 {isBn
                   ? glossaryTerms[selectedGlossaryTerm].titleBn
                   : glossaryTerms[selectedGlossaryTerm].titleEn}
@@ -1740,7 +1740,7 @@ export const HowItWorksEducationalSection: React.FC<HowItWorksEducationalSection
             <div className="pt-2 flex justify-end">
               <button
                 onClick={() => setSelectedGlossaryTerm(null)}
-                className="px-4 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-zinc-900 text-xs font-bold cursor-pointer transition-colors"
+                className="px-4 py-1.5 rounded-[4px] bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-zinc-900 text-xs font-bold cursor-pointer transition-colors"
               >
                 {isBn ? 'বুঝেছি' : 'Got it'}
               </button>

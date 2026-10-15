@@ -32,7 +32,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   onSelectDistrict,
   districts = ALL_BANGLADESH_DISTRICTS,
   divisions = BANGLADESH_DIVISIONS,
-  onOpenQuickSelect,
   activeSection,
   setActiveSection,
 }) => {
@@ -95,7 +94,6 @@ export const Navbar: React.FC<NavbarProps> = ({
     setIsDistrictDropdownOpen(false);
     setDistrictSearch('');
 
-    // Smoothly scroll to map if not currently viewing hero-map
     const heroMap = document.getElementById('hero-map');
     if (heroMap) {
       heroMap.scrollIntoView({ behavior: 'smooth' });
@@ -161,37 +159,40 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <header className={`sticky top-0 z-50 w-full backdrop-blur-md transition-colors ${
       isLight 
-        ? "bg-white/92 border-b border-[#E4E4E7] text-[#09090B]" 
-        : "bg-[#09090B]/92 border-b border-[#27272A] text-[#FAFAFA]"
+        ? "bg-[#FAF9F5]/95 border-b border-[#E8E3DA] text-[#191817]" 
+        : "bg-[#141413]/95 border-b border-[#2B2A27] text-[#FAF9F5]"
     }`}>
       <div className="max-w-[1180px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 gap-3">
+        <div className="flex items-center justify-between h-14 gap-3">
           
-          {/* Pure Brand Text — BMS High Contrast Typography */}
+          {/* Research-Journal Brand Logo */}
           <div className="flex items-center">
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="font-heading font-black text-lg sm:text-xl tracking-tight text-[#09090B] dark:text-[#FAFAFA] hover:opacity-80 transition-opacity flex items-center"
+              className="text-lg sm:text-xl tracking-tight text-[#191817] dark:text-[#FAF9F5] hover:opacity-85 transition-opacity flex items-center gap-2.5"
             >
-              <span>LandWise</span>
-              <span className="text-[#16A34A] dark:text-[#4ADE80] font-black text-xl leading-none ml-0.5">.</span>
+              <img src="/logo.svg" alt="LandWise" className="w-7 h-7 rounded-[7px] border border-[#2E2D2B] shadow-sm flex-shrink-0" />
+              <div className="flex items-baseline">
+                <span className="font-serif font-semibold tracking-tight">LandWise</span>
+                <span className="text-[#CC5A2B] font-bold text-xl leading-none ml-0.5">.</span>
+              </div>
             </button>
           </div>
 
-          {/* Desktop Navigation Links — BMS segmented pill style */}
-          <nav className="hidden lg:flex items-center gap-1 bg-[#F4F4F5] dark:bg-[#121215] p-1 rounded-xl border border-[#E4E4E7] dark:border-[#27272A]">
+          {/* Desktop Navigation Links — Editorial Segmented Bar */}
+          <nav className="hidden lg:flex items-center gap-1 bg-[#F3EFE8] dark:bg-[#1E1E1C] p-1 rounded-[6px] border border-[#E8E3DA] dark:border-[#2B2A27]">
             {navItems.map((item) => {
               const isActive = activeSection === item.id;
               return (
                 <button
                   key={item.id}
                   onClick={() => handleNavClick(item.id)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+                  className={`px-3 py-1 rounded-[4px] text-xs font-medium whitespace-nowrap transition-all ${
                     isActive
-                      ? 'bg-white dark:bg-[#18181B] text-[#09090B] dark:text-white shadow-xs border border-[#E4E4E7] dark:border-[#27272A]'
+                      ? 'bg-[#FAF9F5] dark:bg-[#141413] text-[#191817] dark:text-[#FAF9F5] shadow-xs border border-[#E8E3DA] dark:border-[#2B2A27] font-semibold'
                       : item.highlight
-                      ? 'text-[#16A34A] dark:text-[#4ADE80] hover:text-[#09090B] dark:hover:text-white hover:bg-white/60 dark:hover:bg-[#18181B]/60'
-                      : 'text-[#52525B] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white hover:bg-white/60 dark:hover:bg-[#18181B]/60'
+                      ? 'text-[#CC5A2B] hover:text-[#191817] dark:hover:text-white hover:bg-white/50 dark:hover:bg-[#141413]/50'
+                      : 'text-[#706E6B] dark:text-[#9E9B95] hover:text-[#191817] dark:hover:text-white hover:bg-white/50 dark:hover:bg-[#141413]/50'
                   }`}
                 >
                   <span>{isBn ? item.labelBn : item.labelEn}</span>
@@ -203,28 +204,28 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Right Action Controls: Quick District, Lang & Theme */}
           <div className="flex items-center gap-2">
             
-            {/* Quick District Selector Dropdown Button — BMS btn-line */}
+            {/* Quick District Selector Dropdown Button */}
             <div className="relative" ref={dropdownRef}>
               <button
                 type="button"
                 onClick={() => setIsDistrictDropdownOpen(!isDistrictDropdownOpen)}
-                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all shadow-xs cursor-pointer ${
+                className={`h-8 inline-flex items-center gap-1.5 px-3 rounded-[4px] border text-xs font-medium transition-all shadow-xs cursor-pointer ${
                   isDistrictDropdownOpen
                     ? isLight
-                      ? "bg-zinc-100 border-zinc-400 text-zinc-900 ring-2 ring-emerald-500/20"
-                      : "bg-[#18181B] border-zinc-600 text-white ring-2 ring-emerald-500/20"
+                      ? "bg-[#FAF0EB] border-[#F3D5C6] text-[#CC5A2B]"
+                      : "bg-[#2B2A27] border-[#383632] text-[#FAF9F5]"
                     : isLight 
-                    ? "bg-white border-[#E4E4E7] text-[#09090B] hover:bg-[#FAFAFA] hover:border-[#D4D4D8]" 
-                    : "bg-[#121215] border-[#27272A] text-[#FAFAFA] hover:bg-[#18181B] hover:border-[#3F3F46]"
+                    ? "bg-[#FAF9F5] border-[#E8E3DA] text-[#191817] hover:bg-[#F3EFE8] hover:border-[#D5CEC2]" 
+                    : "bg-[#1E1E1C] border-[#2B2A27] text-[#FAF9F5] hover:bg-[#2B2A27] hover:border-[#383632]"
                 }`}
                 title={isBn ? "জেলা নির্বাচন করুন" : "Select District"}
                 aria-expanded={isDistrictDropdownOpen}
               >
-                <i className="bx bx-map-pin text-[#16A34A] dark:text-[#4ADE80] text-sm" aria-hidden="true" />
+                <i className="bx bx-map-pin text-[#CC5A2B] text-sm" aria-hidden="true" />
                 <span className="max-w-[95px] sm:max-w-[120px] truncate">{selectedDistrictName}</span>
                 <i
-                  className={`bx bx-chevron-down text-[#71717A] text-xs transition-transform duration-200 ${
-                    isDistrictDropdownOpen ? "rotate-180 text-emerald-600 dark:text-emerald-400" : ""
+                  className={`bx bx-chevron-down text-[#706E6B] text-xs transition-transform duration-150 ${
+                    isDistrictDropdownOpen ? "rotate-180 text-[#CC5A2B]" : ""
                   }`}
                   aria-hidden="true"
                 />
@@ -233,45 +234,45 @@ export const Navbar: React.FC<NavbarProps> = ({
               {/* District Dropdown Popover */}
               {isDistrictDropdownOpen && (
                 <div
-                  className={`absolute top-full right-0 mt-2 w-[340px] sm:w-[420px] max-w-[calc(100vw-2rem)] rounded-2xl border shadow-2xl backdrop-blur-xl z-50 p-3 space-y-2.5 animate-in fade-in zoom-in-95 duration-150 ${
+                  className={`absolute top-full right-0 mt-2 w-[340px] sm:w-[420px] max-w-[calc(100vw-2rem)] rounded-[6px] border shadow-editorial backdrop-blur-xl z-50 p-3 space-y-2.5 animate-in fade-in zoom-in-95 duration-150 ${
                     isLight
-                      ? "bg-white border-zinc-200 text-zinc-900 shadow-zinc-900/15"
-                      : "bg-[#121215] border-zinc-800 text-white shadow-2xl"
+                      ? "bg-[#FAF9F5] border-[#E8E3DA] text-[#191817]"
+                      : "bg-[#1E1E1C] border-[#2B2A27] text-[#FAF9F5]"
                   }`}
                 >
                   {/* Dropdown Header */}
-                  <div className="flex items-center justify-between pb-1.5 border-b border-zinc-200 dark:border-zinc-800">
+                  <div className="flex items-center justify-between pb-1.5 border-b border-[#E8E3DA] dark:border-[#2B2A27]">
                     <div className="flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                      <h4 className="text-xs font-bold tracking-tight">
+                      <span className="w-2 h-2 rounded-full bg-[#CC5A2B]"></span>
+                      <h4 className="text-xs font-semibold tracking-tight">
                         {isBn ? "৬৪টি জেলা থেকে নির্বাচন করুন" : "Select Bangladesh District"}
                       </h4>
                     </div>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-[4px] bg-[#F3EFE8] dark:bg-[#2B2A27] text-[#706E6B] dark:text-[#9E9B95]">
                       {filteredDistricts.length} {isBn ? "টি জেলা" : "districts"}
                     </span>
                   </div>
 
                   {/* Search Input Bar */}
                   <div className="relative">
-                    <i className="bx bx-search absolute left-3 top-1/2 -translate-y-1/2 text-sm text-zinc-400" aria-hidden="true" />
+                    <i className="bx bx-search absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[#9E9B95]" aria-hidden="true" />
                     <input
                       ref={searchInputRef}
                       type="text"
                       value={districtSearch}
                       onChange={(e) => setDistrictSearch(e.target.value)}
                       placeholder={isBn ? "জেলা বা বিভাগ খুঁজুন (উদাঃ চট্টগ্রাম, ঢাকা)..." : "Search district or division (e.g. Chattogram)..."}
-                      className={`w-full pl-8 pr-7 py-2 rounded-xl text-xs border outline-none font-medium transition-colors ${
+                      className={`w-full pl-8 pr-7 py-1.5 rounded-[4px] text-xs border outline-none font-medium transition-colors ${
                         isLight
-                          ? "bg-zinc-50 border-zinc-200 text-zinc-900 focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
-                          : "bg-[#18181B] border-zinc-800 text-white focus:bg-[#202025] focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                          ? "bg-white border-[#E8E3DA] text-[#191817] focus:border-[#CC5A2B] focus:ring-1 focus:ring-[#CC5A2B]/20"
+                          : "bg-[#141413] border-[#2B2A27] text-[#FAF9F5] focus:border-[#CC5A2B] focus:ring-1 focus:ring-[#CC5A2B]/20"
                       }`}
                     />
                     {districtSearch && (
                       <button
                         type="button"
                         onClick={() => setDistrictSearch('')}
-                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 p-0.5"
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-[#9E9B95] hover:text-[#191817] dark:hover:text-white p-0.5"
                       >
                         ✕
                       </button>
@@ -283,12 +284,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <button
                       type="button"
                       onClick={() => setSelectedDivisionTab('all')}
-                      className={`px-2.5 py-1 rounded-lg font-semibold shrink-0 transition-all ${
+                      className={`px-2 py-1 rounded-[4px] font-medium shrink-0 transition-all ${
                         selectedDivisionTab === 'all'
-                          ? "bg-emerald-600 text-white shadow-xs"
+                          ? "bg-[#CC5A2B] text-[#FAF9F5] shadow-xs"
                           : isLight
-                          ? "bg-zinc-100 hover:bg-zinc-200 text-zinc-700"
-                          : "bg-zinc-800 hover:bg-zinc-700 text-zinc-300"
+                          ? "bg-[#F3EFE8] hover:bg-[#EDE7DD] text-[#706E6B] hover:text-[#191817]"
+                          : "bg-[#2B2A27] hover:bg-[#383632] text-[#9E9B95] hover:text-white"
                       }`}
                     >
                       {isBn ? "সকল বিভাগ" : "All"}
@@ -300,12 +301,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                           key={div.id}
                           type="button"
                           onClick={() => setSelectedDivisionTab(div.id)}
-                          className={`px-2.5 py-1 rounded-lg font-medium shrink-0 transition-all ${
+                          className={`px-2 py-1 rounded-[4px] font-medium shrink-0 transition-all ${
                             isDivActive
-                              ? "bg-emerald-600 text-white shadow-xs font-semibold"
+                              ? "bg-[#CC5A2B] text-[#FAF9F5] shadow-xs font-semibold"
                               : isLight
-                              ? "bg-zinc-100 hover:bg-zinc-200 text-zinc-700"
-                              : "bg-zinc-800 hover:bg-zinc-700 text-zinc-300"
+                              ? "bg-[#F3EFE8] hover:bg-[#EDE7DD] text-[#706E6B] hover:text-[#191817]"
+                              : "bg-[#2B2A27] hover:bg-[#383632] text-[#9E9B95] hover:text-white"
                           }`}
                         >
                           {isBn ? div.bnName.replace(' বিভাগ', '') : div.name.replace(' Division', '')}
@@ -317,8 +318,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                   {/* Scrollable Districts Grid */}
                   <div className="max-h-64 sm:max-h-72 overflow-y-auto space-y-1 pr-1 scrollbar-thin">
                     {filteredDistricts.length === 0 ? (
-                      <div className="py-6 text-center text-xs text-zinc-500">
-                        <i className="bx bx-search-alt text-2xl block mb-1 text-zinc-400" aria-hidden="true" />
+                      <div className="py-6 text-center text-xs text-[#706E6B]">
+                        <i className="bx bx-search-alt text-2xl block mb-1 text-[#9E9B95]" aria-hidden="true" />
                         <span>{isBn ? "কোনো জেলা খুঁজে পাওয়া যায়নি" : "No matching district found"}</span>
                       </div>
                     ) : (
@@ -333,29 +334,29 @@ export const Navbar: React.FC<NavbarProps> = ({
                               key={d.id}
                               type="button"
                               onClick={() => handleDistrictSelect(d)}
-                              className={`w-full text-left p-2 rounded-xl text-xs transition-all flex items-center justify-between border ${
+                              className={`w-full text-left p-2 rounded-[4px] text-xs transition-all flex items-center justify-between border ${
                                 isSelected
                                   ? isLight
-                                    ? "bg-emerald-50 border-emerald-300 text-emerald-950 font-semibold shadow-xs"
-                                    : "bg-emerald-950/40 border-emerald-600/50 text-emerald-200 font-semibold shadow-xs"
+                                    ? "bg-[#FAF0EB] border-[#F3D5C6] text-[#CC5A2B] font-semibold"
+                                    : "bg-[#2B2A27] border-[#383632] text-[#FAF9F5] font-semibold"
                                   : isLight
-                                  ? "bg-zinc-50/60 hover:bg-zinc-100 border-zinc-200/70 text-zinc-800"
-                                  : "bg-[#18181B]/60 hover:bg-[#202025] border-zinc-800/80 text-zinc-200 hover:text-white"
+                                  ? "bg-white hover:bg-[#F3EFE8] border-[#E8E3DA] text-[#191817]"
+                                  : "bg-[#141413]/60 hover:bg-[#2B2A27] border-[#2B2A27] text-[#FAF9F5]"
                               }`}
                             >
                               <div className="flex items-center gap-2 min-w-0">
-                                <i className={`bx bx-map-pin text-sm shrink-0 ${isSelected ? "text-emerald-600 dark:text-emerald-400" : "text-zinc-400"}`} aria-hidden="true" />
+                                <i className={`bx bx-map-pin text-sm shrink-0 ${isSelected ? "text-[#CC5A2B]" : "text-[#9E9B95]"}`} aria-hidden="true" />
                                 <div className="truncate">
                                   <div className="font-semibold text-xs leading-snug truncate">
                                     {isBn ? d.bnName : d.name}
                                   </div>
-                                  <div className={`text-[10px] leading-tight truncate ${isLight ? "text-zinc-500" : "text-zinc-400"}`}>
+                                  <div className={`text-[10px] leading-tight truncate ${isLight ? "text-[#706E6B]" : "text-[#9E9B95]"}`}>
                                     {isBn ? d.name : d.bnName} • {isBn ? d.bnDivisionName : d.divisionName}
                                   </div>
                                 </div>
                               </div>
                               {isSelected && (
-                                <span className="text-emerald-600 dark:text-emerald-400 font-bold text-xs ml-1.5 shrink-0">
+                                <span className="text-[#CC5A2B] font-bold text-xs ml-1.5 shrink-0">
                                   ✓
                                 </span>
                               )}
@@ -369,47 +370,40 @@ export const Navbar: React.FC<NavbarProps> = ({
               )}
             </div>
 
-            {/* Language Switcher — BMS segmented toggle */}
-            <div className={`inline-flex items-center p-0.5 rounded-lg border text-xs font-bold ${
-              isLight ? "bg-[#FAFAFA] border-[#E4E4E7]" : "bg-[#121215] border-[#27272A]"
-            }`}>
-              <button
-                type="button"
-                onClick={() => setIsBn(false)}
-                className={`px-2 py-1 rounded-[6px] transition-all text-xs ${
-                  !isBn
-                    ? "bg-[#09090B] text-white dark:bg-[#FAFAFA] dark:text-[#09090B] shadow-xs"
-                    : "text-[#71717A] hover:text-[#09090B] dark:hover:text-white"
-                }`}
-              >
+            {/* Language Switcher Single Button (Matches h-8 height, toggles on click) */}
+            <button
+              type="button"
+              onClick={() => setIsBn((prev) => !prev)}
+              title={isBn ? "Switch to English" : "বাংলায় পরিবর্তন করুন"}
+              aria-label="Toggle language between English and Bangla"
+              className={`h-8 px-2.5 inline-flex items-center justify-center gap-1 rounded-[4px] border text-xs font-mono transition-all shadow-xs cursor-pointer select-none ${
+                isLight
+                  ? "bg-[#FAF9F5] border-[#E8E3DA] text-[#191817] hover:bg-[#F3EFE8] hover:border-[#D5CEC2]"
+                  : "bg-[#1E1E1C] border-[#2B2A27] text-[#FAF9F5] hover:bg-[#2B2A27] hover:border-[#383632]"
+              }`}
+            >
+              <span className={`transition-colors ${!isBn ? "text-[#CC5A2B] font-bold" : "text-[#706E6B] dark:text-[#9E9B95]"}`}>
                 EN
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsBn(true)}
-                className={`px-2 py-1 rounded-[6px] transition-all text-xs font-bangla ${
-                  isBn
-                    ? "bg-[#09090B] text-white dark:bg-[#FAFAFA] dark:text-[#09090B] shadow-xs"
-                    : "text-[#71717A] hover:text-[#09090B] dark:hover:text-white"
-                }`}
-              >
+              </span>
+              <span className="text-[#D5CEC2] dark:text-[#383632] text-[10px] select-none">/</span>
+              <span className={`transition-colors font-bangla ${isBn ? "text-[#CC5A2B] font-bold" : "text-[#706E6B] dark:text-[#9E9B95]"}`}>
                 বাং
-              </button>
-            </div>
+              </span>
+            </button>
 
-            {/* Theme Toggle matching newDark_portfolio + BMS square icon button */}
+            {/* Theme Toggle */}
             <ThemeToggle theme={theme} setTheme={setTheme} />
 
             {/* Mobile Menu Hamburger */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg text-[#52525B] dark:text-[#A1A1AA] hover:bg-[#F4F4F5] dark:hover:bg-[#18181B] transition-colors border border-[#E4E4E7] dark:border-[#27272A]"
+              className="lg:hidden w-8 h-8 inline-flex items-center justify-center rounded-[4px] text-[#706E6B] dark:text-[#9E9B95] hover:bg-[#F3EFE8] dark:hover:bg-[#1E1E1C] transition-colors border border-[#E8E3DA] dark:border-[#2B2A27]"
               aria-label="Toggle Navigation Menu"
             >
               {mobileMenuOpen ? (
-                <i className="bx bx-x text-xl" aria-hidden="true" />
+                <i className="bx bx-x text-lg" aria-hidden="true" />
               ) : (
-                <i className="bx bx-menu text-xl" aria-hidden="true" />
+                <i className="bx bx-menu text-lg" aria-hidden="true" />
               )}
             </button>
           </div>
@@ -418,7 +412,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Mobile Dropdown Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden border-t border-[#E4E4E7] dark:border-[#27272A] py-3 space-y-2">
+          <div className="lg:hidden border-t border-[#E8E3DA] dark:border-[#2B2A27] py-3 space-y-2">
             {/* Quick district selector in mobile menu */}
             <div className="px-1 pb-2">
               <button
@@ -427,15 +421,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                   setMobileMenuOpen(false);
                   setIsDistrictDropdownOpen(true);
                 }}
-                className={`w-full flex items-center justify-between p-2.5 rounded-xl border text-xs font-semibold ${
-                  isLight ? "bg-zinc-50 border-zinc-200 text-zinc-900" : "bg-[#18181B] border-zinc-800 text-white"
+                className={`w-full flex items-center justify-between p-2.5 rounded-[4px] border text-xs font-semibold ${
+                  isLight ? "bg-[#FAF9F5] border-[#E8E3DA] text-[#191817]" : "bg-[#1E1E1C] border-[#2B2A27] text-white"
                 }`}
               >
                 <div className="flex items-center gap-2">
-                  <i className="bx bx-map-pin text-emerald-600 text-base" aria-hidden="true" />
+                  <i className="bx bx-map-pin text-[#CC5A2B] text-base" aria-hidden="true" />
                   <span>{isBn ? "বর্তমান জেলা:" : "Current District:"} <strong>{selectedDistrictName}</strong></span>
                 </div>
-                <span className="text-xs text-emerald-600 font-semibold">{isBn ? "পরিবর্তন করুন →" : "Change →"}</span>
+                <span className="text-xs text-[#CC5A2B] font-semibold">{isBn ? "পরিবর্তন করুন →" : "Change →"}</span>
               </button>
             </div>
 
@@ -443,10 +437,10 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 key={item.id}
                 onClick={() => handleNavClick(item.id)}
-                className={`w-full flex items-center px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
+                className={`w-full flex items-center px-3 py-2 rounded-[4px] text-xs font-medium transition-colors ${
                   activeSection === item.id
-                    ? 'bg-[#09090B] text-white dark:bg-[#FAFAFA] dark:text-[#09090B] shadow-xs'
-                    : 'text-[#52525B] dark:text-[#A1A1AA] hover:bg-[#F4F4F5] dark:hover:bg-[#18181B]'
+                    ? 'bg-[#191817] text-[#FAF9F5] dark:bg-[#FAF9F5] dark:text-[#191817] shadow-xs'
+                    : 'text-[#706E6B] dark:text-[#9E9B95] hover:bg-[#F3EFE8] dark:hover:bg-[#1E1E1C]'
                 }`}
               >
                 <span>{isBn ? item.labelBn : item.labelEn}</span>

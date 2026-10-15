@@ -62,23 +62,23 @@ export const LandCalculatorSection: React.FC<LandCalculatorSectionProps> = ({
     <section
       id="calculator"
       className={`w-full py-16 border-t transition-colors ${
-        isLight ? "bg-white border-[#E4E4E7] text-[#09090B]" : "bg-[#09090B] border-[#27272A] text-[#FAFAFA]"
+        isLight ? "bg-[#FAF9F5] border-[#E8E3DA] text-[#191817]" : "bg-[#141413] border-[#2B2A27] text-[#FAF9F5]"
       }`}
     >
       <div className="max-w-[1180px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Title */}
         <div className="text-center max-w-2xl mx-auto mb-10 space-y-2">
-          <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border ${
-            isLight ? "bg-[#FAFAFA] border-[#E4E4E7] text-[#52525B]" : "bg-[#18181B] border-[#27272A] text-[#A1A1AA]"
+          <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-[4px] text-xs font-semibold border ${
+            isLight ? "bg-[#FAFAFA] border-[#E8E3DA] text-[#706E6B]" : "bg-[#18181B] border-[#2B2A27] text-[#A1A1AA]"
           }`}>
             <span className="bms-live-dot"></span>
             <span>{isBn ? "বাংলাদেশী ভূমি পরিমাপ ও মূল্যায়ন" : "Spatial Unit Conversion & Valuation"}</span>
           </div>
-          <h2 className={`text-2xl sm:text-3xl font-heading font-black tracking-tight ${isLight ? "text-[#09090B]" : "text-white"}`}>
+          <h2 className={`text-2xl sm:text-3xl font-serif font-semibold tracking-tight ${isLight ? "text-[#191817]" : "text-white"}`}>
             {isBn ? "প্রচলিত ভূমি একক ক্যালকুলেটর" : "Traditional Land Units & Valuation Engine"}
           </h2>
-          <p className={`text-xs sm:text-[14px] leading-relaxed ${isLight ? "text-[#52525B]" : "text-[#A1A1AA]"}`}>
+          <p className={`text-xs sm:text-[14px] leading-relaxed ${isLight ? "text-[#706E6B]" : "text-[#A1A1AA]"}`}>
             {isBn
               ? "শতাংশ, কাঠা, বিঘা, একর এবং বর্গফুটের সঠিক রূপান্তর ও নির্বাচিত জেলার বর্তমান বাজারমূল্য হিসাব করুন।"
               : "Instantly convert between Decimal, Katha, Bigha, Acre, and Sq Ft with live pricing tied to your selected region."}
@@ -89,18 +89,18 @@ export const LandCalculatorSection: React.FC<LandCalculatorSectionProps> = ({
           
           {/* Left: Input Panel — BMS Card */}
           <div className={`lg:col-span-5 bms-card p-6 ${
-            isLight ? "bg-[#FAFAFA] border-[#E4E4E7]" : "bg-[#121215] border-[#27272A]"
+            isLight ? "bg-[#FAFAFA] border-[#E8E3DA]" : "bg-[#121215] border-[#2B2A27]"
           }`}>
             <div className={`flex items-center justify-between pb-3.5 border-b mb-4 ${
-              isLight ? "border-[#E4E4E7]" : "border-[#27272A]"
+              isLight ? "border-[#E8E3DA]" : "border-[#2B2A27]"
             }`}>
               <span className={`text-xs font-bold flex items-center gap-1.5 ${
-                isLight ? "text-[#09090B]" : "text-white"
+                isLight ? "text-[#191817]" : "text-white"
               }`}>
-                <i className="bx bx-calculator text-[#16A34A] dark:text-[#4ADE80] text-sm" aria-hidden="true" />
+                <i className="bx bx-calculator text-[#CC5A2B] dark:text-[#CC5A2B] text-sm" aria-hidden="true" />
                 <span>{isBn ? "পরিমাপ ইনপুট" : "Measurement Input"}</span>
               </span>
-              <span className="text-[11px] font-bold text-[#16A34A] dark:text-[#4ADE80]">
+              <span className="text-[11px] font-bold text-[#CC5A2B] dark:text-[#CC5A2B]">
                 {selectedDistrict ? (isBn ? selectedDistrict.bnName : selectedDistrict.name) : "Dhaka"}
               </span>
             </div>
@@ -108,7 +108,7 @@ export const LandCalculatorSection: React.FC<LandCalculatorSectionProps> = ({
             <div className="space-y-4">
               <div>
                 <label className={`text-xs font-semibold block mb-1.5 ${
-                  isLight ? "text-[#52525B]" : "text-[#A1A1AA]"
+                  isLight ? "text-[#706E6B]" : "text-[#A1A1AA]"
                 }`}>
                   {isBn ? "জমির পরিমাণ দিন" : "Enter Land Quantity"}
                 </label>
@@ -119,19 +119,19 @@ export const LandCalculatorSection: React.FC<LandCalculatorSectionProps> = ({
                     step="0.5"
                     value={inputValue}
                     onChange={(e) => setInputValue(Math.max(0.01, Number(e.target.value)))}
-                    className={`flex-1 rounded-xl px-3.5 py-2 font-black text-base transition-colors focus:outline-none focus:border-[#09090B] dark:focus:border-white ${
+                    className={`flex-1 rounded-[4px] px-3.5 py-2 font-black text-base transition-colors focus:outline-none focus:border-[#09090B] dark:focus:border-white ${
                       isLight
-                        ? "bg-white border border-[#E4E4E7] text-[#09090B] shadow-xs"
-                        : "bg-[#18181B] border border-[#27272A] text-white"
+                        ? "bg-white border border-[#E8E3DA] text-[#191817] shadow-xs"
+                        : "bg-[#18181B] border border-[#2B2A27] text-white"
                     }`}
                   />
                   <select
                     value={inputUnit}
                     onChange={(e) => setInputUnit(e.target.value as any)}
-                    className={`rounded-xl px-3 py-2 text-xs font-bold transition-colors focus:outline-none focus:border-[#09090B] dark:focus:border-white ${
+                    className={`rounded-[4px] px-3 py-2 text-xs font-bold transition-colors focus:outline-none focus:border-[#09090B] dark:focus:border-white ${
                       isLight
-                        ? "bg-white border border-[#E4E4E7] text-[#09090B] shadow-xs"
-                        : "bg-[#18181B] border border-[#27272A] text-white"
+                        ? "bg-white border border-[#E8E3DA] text-[#191817] shadow-xs"
+                        : "bg-[#18181B] border border-[#2B2A27] text-white"
                     }`}
                   >
                     <option value="katha">{isBn ? "কাঠা (Katha)" : "Katha (কাঠা)"}</option>
@@ -144,10 +144,10 @@ export const LandCalculatorSection: React.FC<LandCalculatorSectionProps> = ({
               </div>
 
               {/* Active District Rate Notice */}
-              <div className={`rounded-xl p-3.5 border text-xs ${
+              <div className={`rounded-[4px] p-3.5 border text-xs ${
                 isLight
-                  ? "bg-white border-[#E4E4E7] text-[#52525B]"
-                  : "bg-[#18181B] border-[#27272A] text-[#A1A1AA]"
+                  ? "bg-white border-[#E8E3DA] text-[#706E6B]"
+                  : "bg-[#18181B] border-[#2B2A27] text-[#A1A1AA]"
               }`}>
                 <div className="flex justify-between items-center">
                   <span>{isBn ? "নির্বাচিত এলাকার গড় দর:" : "Prevailing Area Rate:"}</span>
@@ -155,9 +155,9 @@ export const LandCalculatorSection: React.FC<LandCalculatorSectionProps> = ({
                     ৳{(ratePerKatha / 100000).toFixed(1)} {isBn ? "লাখ / কাঠা" : "Lakh / Katha"}
                   </span>
                 </div>
-                <div className="flex justify-between items-center mt-1.5 pt-1.5 border-t border-dashed border-[#E4E4E7] dark:border-[#27272A]">
+                <div className="flex justify-between items-center mt-1.5 pt-1.5 border-t border-dashed border-[#E8E3DA] dark:border-[#2B2A27]">
                   <span>{isBn ? "প্রতি শতক / শতাংশ দর:" : "Rate per Decimal:"}</span>
-                  <span className={`font-semibold ${isLight ? "text-[#09090B]" : "text-white"}`}>
+                  <span className={`font-semibold ${isLight ? "text-[#191817]" : "text-white"}`}>
                     ৳{(ratePerKatha / 1.653 / 100000).toFixed(1)} Lakh
                   </span>
                 </div>
@@ -167,9 +167,9 @@ export const LandCalculatorSection: React.FC<LandCalculatorSectionProps> = ({
               <button
                 type="button"
                 onClick={handleCopySummary}
-                className="w-full btn-bms-secondary py-2.5 rounded-xl text-xs font-semibold"
+                className="w-full btn-bms-secondary py-2.5 rounded-[4px] text-xs font-semibold"
               >
-                <i className={`bx ${copied ? "bx-check text-[#16A34A] dark:text-[#4ADE80]" : "bx-copy"} text-sm`} aria-hidden="true" />
+                <i className={`bx ${copied ? "bx-check text-[#CC5A2B] dark:text-[#CC5A2B]" : "bx-copy"} text-sm`} aria-hidden="true" />
                 <span>{copied ? (isBn ? "কপি হয়েছে!" : "Copied to Clipboard!") : (isBn ? "সারসংক্ষেপ কপি করুন" : "Copy Conversion Summary")}</span>
               </button>
             </div>
@@ -179,24 +179,24 @@ export const LandCalculatorSection: React.FC<LandCalculatorSectionProps> = ({
           <div className="lg:col-span-7 space-y-4">
             
             {/* Big Valuation Hero Banner — BMS Fintech Card Aesthetic */}
-            <div className="p-6 sm:p-7 rounded-2xl bg-gradient-to-br from-[#18181B] to-[#09090B] border border-white/20 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.6)] text-white relative overflow-hidden flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="p-6 sm:p-7 rounded-[6px] bg-gradient-to-br from-[#18181B] to-[#09090B] border border-white/20 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.6)] text-white relative overflow-hidden flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="relative z-10">
-                <span className="text-xs font-bold uppercase tracking-wider text-[#4ADE80] flex items-center gap-1.5">
-                  <i className="bx bx-sparkles text-sm" aria-hidden="true" />
+                <span className="text-xs font-bold uppercase tracking-wider text-[#CC5A2B] flex items-center gap-1.5">
+                  <i className="bx bxs-magic-wand text-sm" aria-hidden="true" />
                   <span>{isBn ? "মোট আনুমানিক বাজারমূল্য" : "Total Market Valuation Forecast"}</span>
                 </span>
-                <span className="text-2xl sm:text-4xl font-heading font-black block mt-1 tracking-tight text-white">
+                <span className="text-2xl sm:text-4xl font-serif font-semibold block mt-1 tracking-tight text-white">
                   {formattedValuation}
                 </span>
                 <span className="text-xs mt-1 block text-[#A1A1AA]">
                   {selectedDistrict?.name || 'Dhaka'} {isBn ? "অঞ্চলের সাম্প্রতিক ভূমি রেজিস্ট্রি ডাটা অনুযায়ী" : "Sub-registry prevailing index"}
                 </span>
               </div>
-              <div className="relative z-10 px-4 py-3 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md text-left sm:text-right">
+              <div className="relative z-10 px-4 py-3 rounded-[4px] border border-white/10 bg-white/5 backdrop-blur-md text-left sm:text-right">
                 <span className="text-[11px] block font-bold uppercase text-[#A1A1AA]">
                   {isBn ? "মোট কাঠা সমতুল্য" : "Total Katha"}
                 </span>
-                <span className="text-xl font-black text-[#4ADE80]">
+                <span className="text-xl font-black text-[#CC5A2B]">
                   {kathaEquivalent.toFixed(2)}
                 </span>
               </div>
@@ -205,48 +205,48 @@ export const LandCalculatorSection: React.FC<LandCalculatorSectionProps> = ({
             {/* Equivalent Units Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
               <div className={`bms-pill-box p-3.5 border ${
-                isLight ? "bg-[#FAFAFA] border-[#E4E4E7]" : "bg-[#18181B] border-[#27272A]"
+                isLight ? "bg-[#FAFAFA] border-[#E8E3DA]" : "bg-[#18181B] border-[#2B2A27]"
               }`}>
                 <span className="text-[10px] text-[#71717A] uppercase font-bold block">
                   {isBn ? "শতাংশ / শতক" : "Decimal (শতক)"}
                 </span>
-                <span className={`text-lg font-black block mt-0.5 ${isLight ? "text-[#09090B]" : "text-white"}`}>
+                <span className={`text-lg font-black block mt-0.5 ${isLight ? "text-[#191817]" : "text-white"}`}>
                   {decimalEquivalent.toFixed(2)}
                 </span>
                 <span className="text-[10px] text-[#71717A]">1 Katha ≈ 1.65 Dec</span>
               </div>
 
               <div className={`bms-pill-box p-3.5 border ${
-                isLight ? "bg-[#FAFAFA] border-[#E4E4E7]" : "bg-[#18181B] border-[#27272A]"
+                isLight ? "bg-[#FAFAFA] border-[#E8E3DA]" : "bg-[#18181B] border-[#2B2A27]"
               }`}>
                 <span className="text-[10px] text-[#71717A] uppercase font-bold block">
                   {isBn ? "বিঘা" : "Bigha (বিঘা)"}
                 </span>
-                <span className={`text-lg font-black block mt-0.5 ${isLight ? "text-[#09090B]" : "text-white"}`}>
+                <span className={`text-lg font-black block mt-0.5 ${isLight ? "text-[#191817]" : "text-white"}`}>
                   {bighaEquivalent.toFixed(3)}
                 </span>
                 <span className="text-[10px] text-[#71717A]">1 Bigha = 20 Katha</span>
               </div>
 
               <div className={`bms-pill-box p-3.5 border ${
-                isLight ? "bg-[#FAFAFA] border-[#E4E4E7]" : "bg-[#18181B] border-[#27272A]"
+                isLight ? "bg-[#FAFAFA] border-[#E8E3DA]" : "bg-[#18181B] border-[#2B2A27]"
               }`}>
                 <span className="text-[10px] text-[#71717A] uppercase font-bold block">
                   {isBn ? "একর" : "Acre (একর)"}
                 </span>
-                <span className={`text-lg font-black block mt-0.5 ${isLight ? "text-[#09090B]" : "text-white"}`}>
+                <span className={`text-lg font-black block mt-0.5 ${isLight ? "text-[#191817]" : "text-white"}`}>
                   {acreEquivalent.toFixed(3)}
                 </span>
                 <span className="text-[10px] text-[#71717A]">1 Acre = 100 Dec</span>
               </div>
 
               <div className={`bms-pill-box p-3.5 border ${
-                isLight ? "bg-[#FAFAFA] border-[#E4E4E7]" : "bg-[#18181B] border-[#27272A]"
+                isLight ? "bg-[#FAFAFA] border-[#E8E3DA]" : "bg-[#18181B] border-[#2B2A27]"
               }`}>
                 <span className="text-[10px] text-[#71717A] uppercase font-bold block">
                   {isBn ? "বর্গফুট" : "Square Feet"}
                 </span>
-                <span className={`text-lg font-black block mt-0.5 ${isLight ? "text-[#09090B]" : "text-white"}`}>
+                <span className={`text-lg font-black block mt-0.5 ${isLight ? "text-[#191817]" : "text-white"}`}>
                   {sqftEquivalent.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                 </span>
                 <span className="text-[10px] text-[#71717A]">1 Katha = 720 Sq Ft</span>

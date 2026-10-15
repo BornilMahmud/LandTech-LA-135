@@ -405,7 +405,7 @@ export const DueDiligenceReportModal: React.FC<DueDiligenceReportModalProps> = (
               <div className="p-3 rounded-lg bg-zinc-50 dark:bg-[#18181B] border border-zinc-200 dark:border-zinc-800 space-y-1">
                 <span className="text-[10px] font-bold uppercase text-zinc-500 block">Government Land Buffer</span>
                 <span className="font-bold text-zinc-900 dark:text-white capitalize flex items-center gap-1">
-                  <i className="bx bx-government text-indigo-600" />
+                  <i className="bx bxs-landmark text-indigo-600" />
                   Khash & Acquisition Status
                 </span>
                 <p className="text-[11px] text-zinc-600 dark:text-zinc-400">{caseData.spatialRisk.khashOrGovernmentProximityEn}</p>

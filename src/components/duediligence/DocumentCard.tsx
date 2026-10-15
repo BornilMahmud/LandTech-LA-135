@@ -98,14 +98,14 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
   return (
     <div
       onClick={() => onInspect?.(document)}
-      className={`relative p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between ${
+      className={`relative p-4 rounded-xl border transition-all cursor-pointer flex flex-col justify-between ${
         isSelected
           ? isLight
-            ? 'bg-emerald-50/70 border-emerald-500 shadow-md ring-2 ring-emerald-500/30'
-            : 'bg-emerald-950/20 border-emerald-500 shadow-lg ring-2 ring-emerald-500/40'
+            ? 'bg-white border-[#CC5A2B] shadow-sm'
+            : 'bg-[#1E1E1C] border-[#CC5A2B] shadow-sm'
           : isLight
-          ? 'bg-white border-zinc-200 hover:border-emerald-400 hover:shadow-md text-zinc-900'
-          : 'bg-[#121217] border-zinc-800 hover:border-emerald-500/50 hover:shadow-md text-white'
+          ? 'bg-white border-[#E8E3DA] hover:border-[#CC5A2B]/40 hover:shadow-xs text-zinc-900'
+          : 'bg-[#141413] border-[#2B2A27] hover:border-[#CC5A2B]/40 hover:shadow-xs text-white'
       }`}
     >
       <div>
@@ -238,11 +238,11 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
           }}
           className={`w-full inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
             isLight
-              ? 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-200 shadow-2xs'
-              : 'bg-emerald-950/40 hover:bg-emerald-900/60 text-emerald-300 border-emerald-800/60 shadow-2xs'
+              ? 'bg-[#FAF0EB] hover:bg-[#F3D5C6] text-[#CC5A2B] border-[#F3D5C6] shadow-2xs'
+              : 'bg-[#2B2A27] hover:bg-[#383632] text-[#D4A373] border-[#383632] shadow-2xs'
           }`}
         >
-          <i className="bx bx-scan text-sm text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
+          <i className="bx bx-scan text-sm text-[#CC5A2B] dark:text-[#D4A373]" aria-hidden="true" />
           <span>{isBn ? 'ওসিআর ও স্ক্যান অ্যানোটেশন দেখুন' : 'Inspect OCR & Scan Annotations'}</span>
         </button>
       </div>

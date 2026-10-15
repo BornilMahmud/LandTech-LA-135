@@ -92,8 +92,8 @@ export function App() {
   const isLight = theme === "light";
 
   return (
-    <div className={`min-h-screen flex flex-col selection:bg-zinc-900 selection:text-white dark:selection:bg-zinc-100 dark:selection:text-zinc-950 transition-colors duration-150 ${
-      isLight ? "bg-[#FFFFFF] text-[#09090B]" : "bg-[#09090B] text-[#FAFAFA]"
+    <div className={`min-h-screen flex flex-col selection:bg-[#CC5A2B] selection:text-[#FAF9F5] transition-colors duration-150 ${
+      isLight ? "bg-[#FAF9F5] text-[#191817]" : "bg-[#141413] text-[#FAF9F5]"
     }`}>
       {/* ── 1. STICKY TOP NAVIGATION BAR ── */}
       <Navbar
@@ -123,10 +123,10 @@ export function App() {
         <section id="hero-map" className="relative w-full pt-6 sm:pt-8 px-4 sm:px-6 lg:px-8 max-w-[1180px] mx-auto space-y-6">
           {/* Hero Header */}
           <div className="text-center max-w-4xl mx-auto space-y-3.5">
-            <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-semibold tracking-tight transition-all ${
+            <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-[4px] border text-xs font-mono font-medium tracking-tight transition-all ${
               isLight 
-                ? "bg-[#FAFAFA] border-[#E4E4E7] text-[#52525B]" 
-                : "bg-[#18181B] border-[#27272A] text-[#A1A1AA]"
+                ? "bg-[#F3EFE8] border-[#E8E3DA] text-[#706E6B]" 
+                : "bg-[#1E1E1C] border-[#2B2A27] text-[#9E9B95]"
             }`}>
               <span className="bms-live-dot"></span>
               <span>
@@ -136,13 +136,13 @@ export function App() {
               </span>
             </div>
 
-            <h1 className={`text-2xl sm:text-3xl md:text-4xl lg:text-[44px] xl:text-5xl font-heading font-extrabold tracking-tight leading-tight sm:whitespace-nowrap ${isLight ? "text-[#09090B]" : "text-[#FAFAFA]"}`}>
+            <h1 className={`text-2xl sm:text-3xl md:text-4xl lg:text-[42px] xl:text-5xl font-serif font-semibold tracking-tight leading-tight sm:whitespace-nowrap ${isLight ? "text-[#191817]" : "text-[#FAF9F5]"}`}>
               {isBn
                 ? "বাংলাদেশের স্মার্ট ভূমি ও ক্যাডাস্ট্রাল তথ্যচিত্র"
                 : "Bangladesh Land & Cadastral Intelligence"}
             </h1>
 
-            <p className={`text-sm sm:text-[15px] max-w-2xl mx-auto leading-relaxed ${isLight ? "text-[#52525B]" : "text-[#A1A1AA]"}`}>
+            <p className={`text-sm sm:text-[15px] max-w-2xl mx-auto leading-relaxed ${isLight ? "text-[#706E6B]" : "text-[#9E9B95]"}`}>
               {isBn
                 ? "৬৪ জেলার ক্যাডাস্ট্রাল মানচিত্র, তাৎক্ষণিক প্লট মূল্যায়ন, দাগ ও খতিয়ান রেকর্ড এবং মৌজা ভিত্তিক যাচাই প্ল্যাটফর্ম।"
                 : "Interactive cadastral maps, instant land valuations, plot & khatian records, and spatial intelligence across all 64 districts."}
@@ -183,7 +183,7 @@ export function App() {
             <div className="pt-2 flex items-center justify-center">
               <a
                 href="#how-it-works"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all border shadow-xs bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-700/60 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 cursor-pointer"
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-[4px] text-xs font-semibold transition-all border shadow-subtle bg-[#FAF0EB] dark:bg-[#1E1E1C] text-[#CC5A2B] border-[#F3D5C6] dark:border-[#2B2A27] hover:bg-[#F5DDD3] dark:hover:bg-[#2B2A27] cursor-pointer"
               >
                 <i className="bx bx-book-open text-sm" />
                 <span>

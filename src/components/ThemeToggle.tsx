@@ -29,7 +29,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ theme, setTheme }) => 
       }
     };
 
-    // Smooth circular radial View Transition from button center, matching newDark_portfolio
+    // Smooth circular radial View Transition from button center
     if (
       typeof document === "undefined" ||
       !("startViewTransition" in document) ||
@@ -65,8 +65,8 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ theme, setTheme }) => 
       document.documentElement.animate(
         { clipPath },
         {
-          duration: 750,
-          easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+          duration: 400,
+          easing: "cubic-bezier(0.16, 1, 0.3, 1)",
           pseudoElement: "::view-transition-new(root)",
         }
       );
@@ -76,7 +76,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ theme, setTheme }) => 
   if (!mounted) {
     return (
       <div
-        className="w-8 h-8 rounded-lg border border-[#E4E4E7] dark:border-[#27272A] opacity-0"
+        className="w-8 h-8 rounded-[4px] border border-[#E8E3DA] dark:border-[#2B2A27] opacity-0"
         aria-hidden="true"
       />
     );
@@ -88,12 +88,12 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ theme, setTheme }) => 
       onClick={toggleTheme}
       aria-label="Toggle dark/light theme"
       title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
-      className="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-[#E4E4E7] dark:border-[#27272A] bg-white dark:bg-[#121215] hover:bg-[#FAFAFA] dark:hover:bg-[#18181B] transition-all cursor-pointer text-[#09090B] dark:text-[#FAFAFA] shadow-xs"
+      className="inline-flex items-center justify-center w-8 h-8 rounded-[4px] border border-[#E8E3DA] dark:border-[#2B2A27] bg-[#FAF9F5] dark:bg-[#1E1E1C] hover:bg-[#F3EFE8] dark:hover:bg-[#2B2A27] transition-all cursor-pointer text-[#191817] dark:text-[#FAF9F5] shadow-xs"
     >
       {theme === "dark" ? (
-        <i className="bx bx-sun text-[#F6BA42] text-base" aria-hidden="true" />
+        <i className="bx bx-sun text-[#CC5A2B] text-base" aria-hidden="true" />
       ) : (
-        <i className="bx bx-moon text-[#2563EB] text-base" aria-hidden="true" />
+        <i className="bx bx-moon text-[#706E6B] text-base" aria-hidden="true" />
       )}
     </button>
   );
