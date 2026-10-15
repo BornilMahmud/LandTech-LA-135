@@ -183,17 +183,17 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#09090B] backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
         
         {/* Header */}
-        <div className="p-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between sticky top-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur z-10">
+        <div className="p-5 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between sticky top-0 bg-white/95 dark:bg-[#121215] backdrop-blur z-10">
           <div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <h3 className="text-lg font-bold text-zinc-950 dark:text-white flex items-center gap-2">
               <UploadCloud className="text-emerald-500" size={20} />
               <span>{isBn ? 'নতুন জমির নথি আপলোড বা এন্ট্রি' : 'Upload or Enter Land Document'}</span>
             </h3>
-            <p className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+            <p className="text-xs text-zinc-600 dark:text-zinc-300 mt-0.5">
               {isBn
                 ? 'দলিল, খতিয়ান বা দাখিলার তথ্য দিয়ে তাৎক্ষণিক ক্রস-ভেরিফিকেশন করুন'
                 : 'Extract fields from Sale Deed, Khatian, or Tax Receipt for instant reconciliation'}
@@ -201,7 +201,7 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-[#18181B] transition-colors"
           >
             <X size={20} />
           </button>
@@ -220,21 +220,21 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
               <button
                 type="button"
                 onClick={() => handleApplyPreset('clean_mutation')}
-                className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:border-emerald-500 font-medium"
+                className="px-2.5 py-1 rounded-lg bg-white dark:bg-[#18181B] text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-800 hover:border-emerald-500 font-medium"
               >
                 + {isBn ? 'বৈধ নামজারি খতিয়ান (Clean Mutation)' : 'Valid Namjari Record'}
               </button>
               <button
                 type="button"
                 onClick={() => handleApplyPreset('mismatched_dag')}
-                className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:border-rose-500 font-medium"
+                className="px-2.5 py-1 rounded-lg bg-white dark:bg-[#18181B] text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-800 hover:border-rose-500 font-medium"
               >
                 + {isBn ? 'অমিল দাগ নম্বর দলিল (Dag Mismatch)' : 'Mismatched Dag Deed'}
               </button>
               <button
                 type="button"
                 onClick={() => handleApplyPreset('area_deficit')}
-                className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:border-amber-500 font-medium"
+                className="px-2.5 py-1 rounded-lg bg-white dark:bg-[#18181B] text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-800 hover:border-amber-500 font-medium"
               >
                 + {isBn ? 'কম অংশের খতিয়ান (Area Deficit)' : 'Area Deficit Khatian'}
               </button>
@@ -242,8 +242,8 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
           </div>
 
           {/* Upload Dropzone */}
-          <div className="p-4 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-800 text-center hover:border-emerald-500/50 transition-colors">
-            <UploadCloud size={28} className="mx-auto text-slate-400 mb-2" />
+          <div className="p-4 rounded-xl border-2 border-dashed border-zinc-200 dark:border-zinc-800 text-center hover:border-emerald-500/50 transition-colors">
+            <UploadCloud size={28} className="mx-auto text-zinc-400 mb-2" />
             <label className="cursor-pointer block">
               <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline">
                 {isBn ? 'নথির কপি বা ডাটা ফাইল আপলোড করুন (TXT, JSON, CSV, PDF, JPG, PNG)' : 'Select land document or data file (TXT, JSON, CSV, PDF, JPG, PNG)'}
@@ -265,7 +265,7 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
                 ✓ {extractedFeedback}
               </p>
             ) : (
-              <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-1">
+              <p className="text-[11px] text-zinc-600 dark:text-zinc-300 mt-1">
                 {isBn
                   ? '🔒 ১০০% ক্লায়েন্ট-সাইড প্রসেসিং — কোনো ফাইল বা ব্যক্তিগত তথ্য বহিরাগত সার্ভারে পাঠানো হয় না'
                   : '🔒 100% Client-Side Processing — Zero document data transmitted to external servers'}
@@ -275,7 +275,7 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
 
           {/* Document Type Selector */}
           <div>
-            <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1.5">
+            <label className="text-xs font-bold text-zinc-700 dark:text-zinc-300 block mb-1.5">
               {isBn ? 'নথির ধরন (Document Category):' : 'Document Type:'}
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -292,7 +292,7 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
                   className={`p-2.5 rounded-xl border text-left flex items-center gap-2 text-xs font-bold transition-all ${
                     docType === type
                       ? 'bg-emerald-500/10 border-emerald-500 text-emerald-600 dark:text-emerald-400'
-                      : 'bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                      : 'bg-zinc-50 dark:bg-[#18181B] border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400'
                   }`}
                 >
                   <Icon size={16} />
@@ -306,7 +306,7 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             {/* Number */}
             <div>
-              <label className="font-semibold text-slate-700 dark:text-slate-300 block mb-1">
+              <label className="font-semibold text-zinc-700 dark:text-zinc-300 block mb-1">
                 {isBn ? 'দলিল / খতিয়ান / দাখিলা নম্বর' : 'Document Serial / Number'}
               </label>
               <input
@@ -314,20 +314,20 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
                 required
                 value={docNumber}
                 onChange={(e) => setDocNumber(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                className="w-full px-3 py-2 rounded-lg bg-zinc-50 dark:bg-[#18181B] border border-zinc-200 dark:border-zinc-800 text-zinc-950 dark:text-white"
               />
             </div>
 
             {/* Survey Edition (If Khatian) */}
             {docType === 'khatian' && (
               <div>
-                <label className="font-semibold text-slate-700 dark:text-slate-300 block mb-1">
+                <label className="font-semibold text-zinc-700 dark:text-zinc-300 block mb-1">
                   {isBn ? 'জরিপের ধরন' : 'Survey Edition'}
                 </label>
                 <select
                   value={surveyEdition}
                   onChange={(e) => setSurveyEdition(e.target.value as SurveyEdition)}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                  className="w-full px-3 py-2 rounded-lg bg-zinc-50 dark:bg-[#18181B] border border-zinc-200 dark:border-zinc-800 text-zinc-950 dark:text-white"
                 >
                   <option value="RS">RS (Revisional Survey)</option>
                   <option value="CS">CS (Cadastral Survey)</option>
@@ -339,7 +339,7 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
 
             {/* Dag Number */}
             <div>
-              <label className="font-semibold text-slate-700 dark:text-slate-300 block mb-1">
+              <label className="font-semibold text-zinc-700 dark:text-zinc-300 block mb-1">
                 {isBn ? 'দাগ নম্বর (Dag / Plot)' : 'Dag / Plot Number'}
               </label>
               <input
@@ -348,13 +348,13 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
                 value={dagNumber}
                 onChange={(e) => setDagNumber(e.target.value)}
                 placeholder="e.g. 812 or Hal 940"
-                className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                className="w-full px-3 py-2 rounded-lg bg-zinc-50 dark:bg-[#18181B] border border-zinc-200 dark:border-zinc-800 text-zinc-950 dark:text-white"
               />
             </div>
 
             {/* Stated Land Area */}
             <div>
-              <label className="font-semibold text-slate-700 dark:text-slate-300 block mb-1">
+              <label className="font-semibold text-zinc-700 dark:text-zinc-300 block mb-1">
                 {isBn ? 'জমির পরিমাণ (শতক / Decimal)' : 'Land Area (Decimals)'}
               </label>
               <input
@@ -363,13 +363,13 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
                 required
                 value={landAreaDecimals}
                 onChange={(e) => setLandAreaDecimals(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                className="w-full px-3 py-2 rounded-lg bg-zinc-50 dark:bg-[#18181B] border border-zinc-200 dark:border-zinc-800 text-zinc-950 dark:text-white"
               />
             </div>
 
             {/* Owner/Seller Name */}
             <div>
-              <label className="font-semibold text-slate-700 dark:text-slate-300 block mb-1">
+              <label className="font-semibold text-zinc-700 dark:text-zinc-300 block mb-1">
                 {isBn ? 'মালিক বা বিক্রেতার নাম' : 'Recorded Owner / Seller Name'}
               </label>
               <input
@@ -377,13 +377,13 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
                 required
                 value={ownerName}
                 onChange={(e) => setOwnerName(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                className="w-full px-3 py-2 rounded-lg bg-zinc-50 dark:bg-[#18181B] border border-zinc-200 dark:border-zinc-800 text-zinc-950 dark:text-white"
               />
             </div>
 
             {/* Mouza Name */}
             <div>
-              <label className="font-semibold text-slate-700 dark:text-slate-300 block mb-1">
+              <label className="font-semibold text-zinc-700 dark:text-zinc-300 block mb-1">
                 {isBn ? 'মৌজা ও জে.এল. নম্বর' : 'Mouza Name & J.L.'}
               </label>
               <div className="flex gap-2">
@@ -392,7 +392,7 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
                   required
                   value={mouzaName}
                   onChange={(e) => setMouzaName(e.target.value)}
-                  className="flex-1 px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                  className="flex-1 px-3 py-2 rounded-lg bg-zinc-50 dark:bg-[#18181B] border border-zinc-200 dark:border-zinc-800 text-zinc-950 dark:text-white"
                 />
                 <input
                   type="text"
@@ -400,31 +400,31 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
                   value={jlNumber}
                   onChange={(e) => setJlNumber(e.target.value)}
                   placeholder="J.L."
-                  className="w-16 px-2 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-center"
+                  className="w-16 px-2 py-2 rounded-lg bg-zinc-50 dark:bg-[#18181B] border border-zinc-200 dark:border-zinc-800 text-zinc-950 dark:text-white text-center"
                 />
               </div>
             </div>
 
             {/* Office of Record */}
             <div className="sm:col-span-2">
-              <label className="font-semibold text-slate-700 dark:text-slate-300 block mb-1">
+              <label className="font-semibold text-zinc-700 dark:text-zinc-300 block mb-1">
                 {isBn ? 'ইস্যুকারী কার্যালয়' : 'Issuing Land Office / Registry'}
               </label>
               <input
                 type="text"
                 value={issueOffice}
                 onChange={(e) => setIssueOffice(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                className="w-full px-3 py-2 rounded-lg bg-zinc-50 dark:bg-[#18181B] border border-zinc-200 dark:border-zinc-800 text-zinc-950 dark:text-white"
               />
             </div>
           </div>
 
           {/* Footer Submit */}
-          <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-3">
+          <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-end gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+              className="px-4 py-2 rounded-xl text-xs font-semibold text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-[#18181B]"
             >
               {isBn ? 'বাতিল' : 'Cancel'}
             </button>

@@ -35,11 +35,11 @@ export const ChainOfTitleVisualizer: React.FC<ChainOfTitleVisualizerProps> = ({
   const isChainBroken = hasDeed && !hasMutation;
 
   return (
-    <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
+    <div className="p-5 rounded-2xl bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800 shadow-sm space-y-5">
       {/* Visualizer Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-100 dark:border-zinc-800 pb-3">
         <div>
-          <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <h3 className="text-base font-bold text-zinc-950 dark:text-white flex items-center gap-2">
             <GitCommit className="text-emerald-500" size={18} />
             <span>
               {isBn
@@ -47,7 +47,7 @@ export const ChainOfTitleVisualizer: React.FC<ChainOfTitleVisualizerProps> = ({
                 : 'Historical Chain-of-Title & Mutation Audit'}
             </span>
           </h3>
-          <p className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+          <p className="text-xs text-zinc-600 dark:text-zinc-300 mt-0.5">
             {isBn
               ? 'সিএস → এসএ → আরএস → নামজারি → সাফ-কবলা দলিলের নিরবচ্ছিন্ন বৈধতা পরীক্ষা'
               : 'Verifying continuous legal lineage from Cadastral Survey to AC (Land) Mutation and Conveyance Deed'}
@@ -74,34 +74,34 @@ export const ChainOfTitleVisualizer: React.FC<ChainOfTitleVisualizerProps> = ({
         <div className="min-w-[640px] flex items-center justify-between gap-3 relative">
           
           {/* Step 1: Historical CS Survey (Benchmark) */}
-          <div className="flex-1 flex flex-col items-center text-center p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+          <div className="flex-1 flex flex-col items-center text-center p-3 rounded-xl bg-zinc-50 dark:bg-[#18181B] border border-zinc-200 dark:border-zinc-800">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">
               {isBn ? 'ঐতিহাসিক মূল জরিপ' : 'Original Cadastre'}
             </span>
-            <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center font-bold text-xs text-slate-700 dark:text-slate-300 my-2">
+            <div className="w-8 h-8 rounded-full bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center font-bold text-xs text-zinc-700 dark:text-zinc-300 my-2">
               CS
             </div>
-            <span className="text-xs font-bold text-slate-900 dark:text-slate-100">
+            <span className="text-xs font-bold text-zinc-950 dark:text-zinc-100">
               {csKhatian ? `খতিয়ান ${csKhatian.documentNumber}` : (isBn ? 'সিএস বেঞ্চমার্ক' : 'CS Benchmark')}
             </span>
-            <span className="text-[11px] text-slate-500 mt-1">1888–1940</span>
+            <span className="text-[11px] text-zinc-500 mt-1">1888–1940</span>
           </div>
 
           {/* Connector */}
-          <ArrowRight className="text-slate-300 dark:text-slate-700 shrink-0" size={18} />
+          <ArrowRight className="text-zinc-300 dark:text-zinc-700 shrink-0" size={18} />
 
           {/* Step 2: Revisional Survey (RS Record) */}
-          <div className="flex-1 flex flex-col items-center text-center p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+          <div className="flex-1 flex flex-col items-center text-center p-3 rounded-xl bg-zinc-50 dark:bg-[#18181B] border border-zinc-200 dark:border-zinc-800">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">
               {isBn ? 'হাল মাঠ জরিপ' : 'Revisional Survey'}
             </span>
             <div className="w-8 h-8 rounded-full bg-sky-100 dark:bg-sky-950/60 border border-sky-400/30 flex items-center justify-center font-bold text-xs text-sky-600 dark:text-sky-400 my-2">
               RS
             </div>
-            <span className="text-xs font-bold text-slate-900 dark:text-slate-100">
+            <span className="text-xs font-bold text-zinc-950 dark:text-zinc-100">
               {rsKhatian ? `খতিয়ান #${rsKhatian.documentNumber}` : (isBn ? 'আরএস খতিয়ান' : 'RS Khatian')}
             </span>
-            <span className="text-[11px] text-slate-500 mt-1">
+            <span className="text-[11px] text-zinc-500 mt-1">
               {rsKhatian?.primaryOwnerName ? `মালিক: ${rsKhatian.primaryOwnerName}` : '1965–Present'}
             </span>
           </div>
@@ -131,7 +131,7 @@ export const ChainOfTitleVisualizer: React.FC<ChainOfTitleVisualizerProps> = ({
                 : 'bg-rose-500/5 border-rose-500/40 border-dashed ring-2 ring-rose-500/20'
             }`}
           >
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-600 dark:text-zinc-300">
               {isBn ? 'এসি ল্যান্ড নামজারি' : 'AC (Land) Mutation'}
             </span>
             <div
@@ -143,54 +143,54 @@ export const ChainOfTitleVisualizer: React.FC<ChainOfTitleVisualizerProps> = ({
             >
               {hasMutation ? <CheckCircle2 size={16} /> : <AlertOctagon size={16} />}
             </div>
-            <span className="text-xs font-bold text-slate-900 dark:text-slate-100">
+            <span className="text-xs font-bold text-zinc-950 dark:text-zinc-100">
               {mutation ? `নামজারি #${mutation.documentNumber}` : (isBn ? 'নামজারি অনুপস্থিত' : 'No Mutation')}
             </span>
-            <span className="text-[11px] text-slate-500 mt-1">
+            <span className="text-[11px] text-zinc-500 mt-1">
               {mutation?.primaryOwnerName ? `মালিক: ${mutation.primaryOwnerName}` : (isBn ? 'সরকারি রেকর্ডে শূন্যতা' : 'Critical Defect')}
             </span>
           </div>
 
           {/* Connector */}
-          <ArrowRight className="text-slate-300 dark:text-slate-700 shrink-0" size={18} />
+          <ArrowRight className="text-zinc-300 dark:text-zinc-700 shrink-0" size={18} />
 
           {/* Step 4: Registered Sale Deed (সাফ-কবলা) */}
-          <div className="flex-1 flex flex-col items-center text-center p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+          <div className="flex-1 flex flex-col items-center text-center p-3 rounded-xl bg-zinc-50 dark:bg-[#18181B] border border-zinc-200 dark:border-zinc-800">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">
               {isBn ? 'বিক্রয় দলিল' : 'Conveyance Deed'}
             </span>
             <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-950/60 border border-indigo-400/30 flex items-center justify-center font-bold text-xs text-indigo-600 dark:text-indigo-400 my-2">
               দলিল
             </div>
-            <span className="text-xs font-bold text-slate-900 dark:text-slate-100">
+            <span className="text-xs font-bold text-zinc-950 dark:text-zinc-100">
               {deed ? `দলিল #${deed.documentNumber}` : (isBn ? 'সাফ-কবলা দলিল' : 'Sale Deed')}
             </span>
-            <span className="text-[11px] text-slate-500 mt-1">
+            <span className="text-[11px] text-zinc-500 mt-1">
               {deed?.sellerOrDonorName ? `বিক্রেতা: ${deed.sellerOrDonorName}` : (isBn ? 'হস্তান্তরকারী' : 'Transferor')}
             </span>
           </div>
 
           {/* Connector */}
-          <ArrowRight className="text-slate-300 dark:text-slate-700 shrink-0" size={18} />
+          <ArrowRight className="text-zinc-300 dark:text-zinc-700 shrink-0" size={18} />
 
           {/* Step 5: Land Tax Dakhila (দাখিলা) */}
           <div
             className={`flex-1 flex flex-col items-center text-center p-3 rounded-xl border ${
               hasDakhila
                 ? 'bg-amber-500/5 border-amber-500/30'
-                : 'bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-800'
+                : 'bg-zinc-50 dark:bg-[#18181B] border-zinc-200 dark:border-zinc-800'
             }`}
           >
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">
               {isBn ? 'ভূমি কর দাখিলা' : 'LD Tax Dakhila'}
             </span>
             <div className="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-950/60 border border-amber-400/30 flex items-center justify-center font-bold text-xs text-amber-600 dark:text-amber-400 my-2">
               কর
             </div>
-            <span className="text-xs font-bold text-slate-900 dark:text-slate-100">
+            <span className="text-xs font-bold text-zinc-950 dark:text-zinc-100">
               {dakhila ? `দাখিলা #${dakhila.documentNumber}` : (isBn ? 'দাখিলা নেই' : 'No Receipt')}
             </span>
-            <span className="text-[11px] text-slate-500 mt-1">
+            <span className="text-[11px] text-zinc-500 mt-1">
               {dakhila?.taxClearanceYear || 'হালনাগাদ কর'}
             </span>
           </div>

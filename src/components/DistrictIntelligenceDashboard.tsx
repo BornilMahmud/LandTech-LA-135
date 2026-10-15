@@ -33,7 +33,7 @@ import { formatBdt } from '../utils/formatters';
 interface DistrictIntelligenceDashboardProps {
   selectedDistrict: DistrictData | null;
   isBn: boolean;
-  theme: "light" | "reference" | "emerald" | "atlas" | "midnight";
+  theme: "dark" | "light";
   onSelectUpazila?: (upazilaName: string) => void;
   onNavigateToFinder?: (districtName: string) => void;
   onNavigateToTourism?: (destinationName?: string) => void;
@@ -101,23 +101,23 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
   }, [intel, healthSearch]);
 
   const tabs = [
-    { id: 'admin', labelEn: 'Administrative & Upazilas', labelBn: 'প্রশাসনিক ও উপজেলা', icon: <Building2 size={14} />, count: intel.upazilasCount },
-    { id: 'education', labelEn: 'Education Directory', labelBn: 'শিক্ষা প্রতিষ্ঠান', icon: <GraduationCap size={14} />, count: intel.schoolsCount + intel.collegesCount + intel.universitiesCount },
-    { id: 'healthcare', labelEn: 'Healthcare & Clinics', labelBn: 'চিকিৎসা সেবা', icon: <Hospital size={14} />, count: intel.hospitalsCount + intel.clinicsCount },
-    { id: 'infra', labelEn: 'Infrastructure & Transit', labelBn: 'যোগাযোগ ও অবকাঠামো', icon: <Navigation size={14} />, count: intel.highways.length + intel.railwayStations.length },
-    { id: 'tourism', labelEn: 'Tourism & Heritage', labelBn: 'পর্যটন ও দর্শনীয় স্থান', icon: <Compass size={14} />, count: intel.attractionsCount },
-    { id: 'land', labelEn: 'Land for Sale & Zoning', labelBn: 'জমি বিক্রয় ও মূল্যায়ন', icon: <TrendingUp size={14} />, count: intel.landListingsCount },
+    { id: 'admin', labelEn: 'Administrative & Upazilas', labelBn: 'প্রশাসনিক ও উপজেলা', icon: <i className="bx bx-buildings text-sm" aria-hidden="true" />, count: intel.upazilasCount },
+    { id: 'education', labelEn: 'Education Directory', labelBn: 'শিক্ষা প্রতিষ্ঠান', icon: <i className="bx bx-book-reader text-sm" aria-hidden="true" />, count: intel.schoolsCount + intel.collegesCount + intel.universitiesCount },
+    { id: 'healthcare', labelEn: 'Healthcare & Clinics', labelBn: 'চিকিৎসা সেবা', icon: <i className="bx bx-plus-medical text-sm" aria-hidden="true" />, count: intel.hospitalsCount + intel.clinicsCount },
+    { id: 'infra', labelEn: 'Infrastructure & Transit', labelBn: 'যোগাযোগ ও অবকাঠামো', icon: <i className="bx bx-navigation text-sm" aria-hidden="true" />, count: intel.highways.length + intel.railwayStations.length },
+    { id: 'tourism', labelEn: 'Tourism & Heritage', labelBn: 'পর্যটন ও দর্শনীয় স্থান', icon: <i className="bx bx-compass text-sm" aria-hidden="true" />, count: intel.attractionsCount },
+    { id: 'land', labelEn: 'Land for Sale & Zoning', labelBn: 'জমি বিক্রয় ও মূল্যায়ন', icon: <i className="bx bx-trending-up text-sm" aria-hidden="true" />, count: intel.landListingsCount },
   ];
 
   return (
     <div className={`w-full rounded-2xl transition-all border ${
       isLight 
-        ? 'bg-white border-slate-200/90 shadow-xl text-slate-800' 
-        : 'bg-slate-900/95 border-slate-700/80 shadow-2xl text-slate-100'
+        ? 'bg-white border-zinc-200 shadow-sm text-zinc-800' 
+        : 'bg-[#121215] border-zinc-800 shadow-2xl text-zinc-100'
     } p-4 sm:p-6 lg:p-8 space-y-6`}>
 
       {/* ── 1. DASHBOARD HEADER & QUICK STATS BANNER ── */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-slate-200 dark:border-slate-800">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-zinc-200 dark:border-zinc-800">
         <div>
           <div className="flex flex-wrap items-center gap-2 mb-2">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
@@ -126,21 +126,21 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
             </span>
 
             <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20">
-              <ShieldCheck size={12} />
+              <i className="bx bx-shield-quarter text-xs" aria-hidden="true" />
               <span>{isBn ? "বিবিএস ২০২২ আদমশুমারি যাচাইকৃত" : "BBS 2022 Census Verified"}</span>
             </span>
 
             <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
-              <Sparkles size={12} />
+              <i className="bx bx-bar-chart-alt-2 text-xs" aria-hidden="true" />
               <span>{intel.dataCoveragePercent}% {isBn ? "উপাত্ত কভারেজ" : "Data Coverage"}</span>
             </span>
           </div>
 
-          <h2 className="text-2xl sm:text-4xl font-heading font-black tracking-tight text-slate-900 dark:text-white">
+          <h2 className="text-2xl sm:text-4xl font-heading font-black tracking-tight text-zinc-950 dark:text-white">
             {isBn ? intel.bnName : intel.name} {isBn ? "জেলা গোয়েন্দা তথ্যকোষ" : "District Comprehensive Intelligence"}
           </h2>
 
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-2xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mt-1 max-w-2xl leading-relaxed">
             {isBn
               ? `${intel.bnName} জেলার মোট ${intel.upazilasCount}টি উপজেলা, ${intel.pourashavasCount}টি পৌরসভা, শিক্ষা ও স্বাস্থ্য প্রতিষ্ঠানের বিশদ জিআইএস উপাত্ত তালিকা।`
               : `Comprehensive spatial directory of ${intel.upazilasCount} upazilas, ${intel.pourashavasCount} municipalities, institutions, healthcare hubs, and land feasibility in ${intel.name} District.`}
@@ -152,22 +152,22 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
           <button
             type="button"
             onClick={() => onNavigateToFinder && onNavigateToFinder(intel.name)}
-            className="px-4 py-2.5 rounded-xl font-bold text-xs bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-600/20 transition-all flex items-center gap-2"
+            className="px-4 py-2.5 rounded-xl font-bold text-xs bg-emerald-600 hover:bg-emerald-500 text-white shadow-xs transition-all flex items-center gap-2"
           >
-            <TrendingUp size={14} />
+            <i className="bx bx-trending-up text-sm" aria-hidden="true" />
             <span>{isBn ? "এই জেলার জমি দেখুন" : "Find Land in District"}</span>
           </button>
 
           <button
             type="button"
-            onClick={() => onAskAdvisor && onAskAdvisor(`Provide an intelligence and due diligence briefing for ${intel.name} District.`)}
+            onClick={() => onAskAdvisor && onAskAdvisor(`Provide an intelligence and spatial record briefing for ${intel.name} District.`)}
             className={`px-4 py-2.5 rounded-xl font-bold text-xs border transition-all flex items-center gap-2 ${
               isLight
-                ? 'bg-slate-100 hover:bg-slate-200 text-slate-800 border-slate-300'
-                : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-700'
+                ? 'bg-zinc-100 hover:bg-zinc-200 text-zinc-800 border-zinc-300 shadow-xs'
+                : 'bg-[#18181B] hover:bg-zinc-800 text-zinc-200 border-zinc-800'
             }`}
           >
-            <Sparkles size={14} className="text-amber-400" />
+            <i className="bx bx-sparkles text-sm text-amber-500" aria-hidden="true" />
             <span>{isBn ? "এআই উপদেষ্টাকে জিজ্ঞাসা করুন" : "Ask AI Advisor"}</span>
           </button>
         </div>
@@ -175,23 +175,23 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
 
       {/* ── 2. KEY STATS METRICS STRIP ── */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        <div className={`p-3.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-950/60 border-slate-800'}`}>
-          <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 block tracking-wider">
+        <div className={`p-3.5 rounded-xl border ${isLight ? 'bg-zinc-50 border-zinc-200' : 'bg-[#18181B] border-zinc-800'}`}>
+          <span className="text-[10px] uppercase font-bold text-zinc-500 dark:text-zinc-400 block tracking-wider">
             {isBn ? "জনসংখ্যা" : "Population"}
           </span>
-          <span className="text-base sm:text-lg font-black text-slate-900 dark:text-white block mt-0.5">
+          <span className="text-base sm:text-lg font-black text-zinc-950 dark:text-white block mt-0.5">
             {intel.population}
           </span>
-          <span className="text-[10px] text-slate-400 block mt-0.5">
+          <span className="text-[10px] text-zinc-400 block mt-0.5">
             {intel.density}
           </span>
         </div>
 
-        <div className={`p-3.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-950/60 border-slate-800'}`}>
-          <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 block tracking-wider">
+        <div className={`p-3.5 rounded-xl border ${isLight ? 'bg-zinc-50 border-zinc-200' : 'bg-[#18181B] border-zinc-800'}`}>
+          <span className="text-[10px] uppercase font-bold text-zinc-500 dark:text-zinc-400 block tracking-wider">
             {isBn ? "আয়তন" : "Total Area"}
           </span>
-          <span className="text-base sm:text-lg font-black text-slate-900 dark:text-white block mt-0.5">
+          <span className="text-base sm:text-lg font-black text-zinc-950 dark:text-white block mt-0.5">
             {intel.areaSqKm} km²
           </span>
           <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold block mt-0.5">
@@ -199,50 +199,50 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
           </span>
         </div>
 
-        <div className={`p-3.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-950/60 border-slate-800'}`}>
-          <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 block tracking-wider">
+        <div className={`p-3.5 rounded-xl border ${isLight ? 'bg-zinc-50 border-zinc-200' : 'bg-[#18181B] border-zinc-800'}`}>
+          <span className="text-[10px] uppercase font-bold text-zinc-500 dark:text-zinc-400 block tracking-wider">
             {isBn ? "গড় মূল্য (কাঠা)" : "Avg Rate / Katha"}
           </span>
           <span className="text-base sm:text-lg font-black text-amber-500 dark:text-amber-400 block mt-0.5">
             ৳{(intel.avgPricePerKathaBDT / 100000).toFixed(1)}L
           </span>
-          <span className="text-[10px] text-slate-400 block mt-0.5">
+          <span className="text-[10px] text-zinc-400 block mt-0.5">
             ≈ ৳{(intel.avgPricePerDecimalBDT / 100000).toFixed(1)}L / Dec
           </span>
         </div>
 
-        <div className={`p-3.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-950/60 border-slate-800'}`}>
-          <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 block tracking-wider">
+        <div className={`p-3.5 rounded-xl border ${isLight ? 'bg-zinc-50 border-zinc-200' : 'bg-[#18181B] border-zinc-800'}`}>
+          <span className="text-[10px] uppercase font-bold text-zinc-500 dark:text-zinc-400 block tracking-wider">
             {isBn ? "শিক্ষা প্রতিষ্ঠান" : "Education Units"}
           </span>
           <span className="text-base sm:text-lg font-black text-sky-600 dark:text-sky-400 block mt-0.5">
             {(intel.schoolsCount + intel.collegesCount).toLocaleString()}
           </span>
-          <span className="text-[10px] text-slate-400 block mt-0.5">
+          <span className="text-[10px] text-zinc-400 block mt-0.5">
             {intel.universitiesCount} {isBn ? "বিশ্ববিদ্যালয়" : "Universities"}
           </span>
         </div>
 
-        <div className={`p-3.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-950/60 border-slate-800'}`}>
-          <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 block tracking-wider">
+        <div className={`p-3.5 rounded-xl border ${isLight ? 'bg-zinc-50 border-zinc-200' : 'bg-[#18181B] border-zinc-800'}`}>
+          <span className="text-[10px] uppercase font-bold text-zinc-500 dark:text-zinc-400 block tracking-wider">
             {isBn ? "হাসপাতাল ও ক্লিনিক" : "Healthcare Hubs"}
           </span>
           <span className="text-base sm:text-lg font-black text-emerald-600 dark:text-emerald-400 block mt-0.5">
             {(intel.hospitalsCount + intel.clinicsCount).toLocaleString()}
           </span>
-          <span className="text-[10px] text-slate-400 block mt-0.5">
+          <span className="text-[10px] text-zinc-400 block mt-0.5">
             {intel.diagnosticCentersCount} {isBn ? "ডায়াগনস্টিক" : "Diagnostics"}
           </span>
         </div>
 
-        <div className={`p-3.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-950/60 border-slate-800'}`}>
-          <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 block tracking-wider">
+        <div className={`p-3.5 rounded-xl border ${isLight ? 'bg-zinc-50 border-zinc-200' : 'bg-[#18181B] border-zinc-800'}`}>
+          <span className="text-[10px] uppercase font-bold text-zinc-500 dark:text-zinc-400 block tracking-wider">
             {isBn ? "আবাসিক মান সূচক" : "Residential Fit"}
           </span>
           <span className="text-base sm:text-lg font-black text-emerald-600 dark:text-emerald-400 block mt-0.5">
             {intel.suitabilityScores.residential} / 100
           </span>
-          <span className="text-[10px] text-slate-400 block mt-0.5">
+          <span className="text-[10px] text-zinc-400 block mt-0.5">
             {isBn ? "বাণিজ্যিক:" : "Commercial:"} {intel.suitabilityScores.commercial}/100
           </span>
         </div>
@@ -250,7 +250,7 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
 
       {/* ── 3. DASHBOARD TAB NAVIGATION ── */}
       <div className={`flex items-center gap-1.5 overflow-x-auto pb-2 border-b scrollbar-thin ${
-        isLight ? 'border-slate-200' : 'border-slate-800'
+        isLight ? 'border-zinc-200' : 'border-zinc-800'
       }`}>
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
@@ -263,8 +263,8 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
                 isActive
                   ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20'
                   : isLight
-                  ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                  ? 'text-zinc-600 hover:text-zinc-950 hover:bg-zinc-100'
+                  : 'text-zinc-400 hover:text-white hover:bg-[#18181B]'
               }`}
             >
               <span>{tab.icon}</span>
@@ -273,8 +273,8 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
                 isActive 
                   ? 'bg-emerald-700 text-white' 
                   : isLight 
-                  ? 'bg-slate-200 text-slate-700' 
-                  : 'bg-slate-800 text-slate-400'
+                  ? 'bg-zinc-200 text-zinc-700' 
+                  : 'bg-[#18181B] text-zinc-400'
               }`}>
                 {tab.count}
               </span>
@@ -290,11 +290,11 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
         <div className="space-y-6 animate-fade-in">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h3 className="text-base sm:text-lg font-heading font-black text-slate-900 dark:text-white flex items-center gap-2">
+              <h3 className="text-base sm:text-lg font-heading font-black text-zinc-950 dark:text-white flex items-center gap-2">
                 <Building2 className="text-emerald-500" size={18} />
                 <span>{isBn ? `${intel.bnName} জেলার উপজেলা তালিকা (${intel.upazilasCount}টি)` : `Upazilas of ${intel.name} District (${intel.upazilasCount})`}</span>
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
                 {isBn 
                   ? "যেকোনো উপজেলায় ক্লিক করে স্থানীয় ক্যাডাস্ট্রাল ও জমি তথ্য পর্যালোচনা করুন।"
                   : "Click any upazila to focus on localized boundaries, mouzas, and land listings."}
@@ -303,7 +303,7 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
 
             {/* Upazila Search Box */}
             <div className="relative w-full sm:w-72">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
               <input
                 type="text"
                 value={upazilaSearch}
@@ -311,8 +311,8 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
                 placeholder={isBn ? "উপজেলা অনুসন্ধান করুন..." : "Filter upazilas..."}
                 className={`w-full rounded-xl pl-9 pr-3 py-2 text-xs transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
                   isLight 
-                    ? 'bg-slate-100 border border-slate-300 text-slate-900 placeholder-slate-400' 
-                    : 'bg-slate-950 border border-slate-800 text-white placeholder-slate-500'
+                    ? 'bg-zinc-100 border border-zinc-300 text-zinc-950 placeholder-zinc-400' 
+                    : 'bg-[#09090B] border border-zinc-800 text-white placeholder-zinc-500'
                 }`}
               />
             </div>
@@ -328,27 +328,27 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
                   onClick={() => onSelectUpazila && onSelectUpazila(upazila)}
                   className={`p-3 rounded-xl border transition-all cursor-pointer group flex flex-col justify-between ${
                     isLight 
-                      ? 'bg-slate-50/80 hover:bg-emerald-50/60 border-slate-200 hover:border-emerald-400 shadow-sm' 
-                      : 'bg-slate-950/60 hover:bg-emerald-950/30 border-slate-800 hover:border-emerald-500/50'
+                      ? 'bg-zinc-50/80 hover:bg-emerald-50/60 border-zinc-200 hover:border-emerald-400 shadow-sm' 
+                      : 'bg-[#18181B] hover:bg-emerald-950/30 border-zinc-800 hover:border-emerald-500/50'
                   }`}
                 >
                   <div className="flex items-start justify-between gap-1">
-                    <span className="text-[10px] font-bold text-slate-400">
+                    <span className="text-[10px] font-bold text-zinc-400">
                       #{idx + 1}
                     </span>
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 opacity-60 group-hover:opacity-100"></span>
                   </div>
 
                   <div className="mt-2">
-                    <span className="font-heading font-bold text-xs sm:text-sm text-slate-900 dark:text-white block group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                    <span className="font-heading font-bold text-xs sm:text-sm text-zinc-950 dark:text-white block group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
                       {isBn ? bnName : upazila}
                     </span>
-                    <span className="text-[10px] text-slate-500 dark:text-slate-400 block mt-0.5">
+                    <span className="text-[10px] text-zinc-500 dark:text-zinc-400 block mt-0.5">
                       {isBn ? upazila : bnName}
                     </span>
                   </div>
 
-                  <div className="mt-2.5 pt-2 border-t border-slate-200 dark:border-slate-800/80 text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center justify-between">
+                  <div className="mt-2.5 pt-2 border-t border-zinc-200 dark:border-zinc-800 text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center justify-between">
                     <span>{isBn ? "ক্যাডাস্ট্রাল ডাটা" : "Inspect"}</span>
                     <ArrowRight size={10} className="group-hover:translate-x-0.5 transition-transform" />
                   </div>
@@ -359,13 +359,13 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
 
           {/* Administrative Hierarchy Explainer Card */}
           <div className={`p-4 rounded-xl border text-xs ${
-            isLight ? 'bg-emerald-50/40 border-emerald-200 text-slate-700' : 'bg-emerald-950/20 border-emerald-500/30 text-slate-300'
+            isLight ? 'bg-emerald-50/40 border-emerald-200 text-zinc-700' : 'bg-emerald-950/20 border-emerald-500/30 text-zinc-300'
           }`}>
             <h4 className="font-bold text-emerald-700 dark:text-emerald-300 flex items-center gap-1.5 mb-1">
               <Info size={14} />
               <span>{isBn ? "বাংলাদেশ ভূমি ও প্রশাসনিক স্তর বিন্যাস" : "Bangladesh Land & Administrative Hierarchy"}</span>
             </h4>
-            <p className="text-[11px] leading-relaxed text-slate-600 dark:text-slate-400">
+            <p className="text-[11px] leading-relaxed text-zinc-600 dark:text-zinc-400">
               {isBn
                 ? "প্রশাসনিক ধাপ: বিভাগ → জেলা → উপজেলা → পৌরসভা/ইউনিয়ন পরিষদ → মৌজা (ক্যাডাস্ট্রাল মানচিত্র ইউনিট) → খতিয়ান (মালিকানার রেকর্ড) → দাগ নম্বর (প্লট)।"
                 : "Hierarchy: Division → District → Upazila → Pourashava/Union Parishad → Mouza (cadastral sheet unit) → Khatian (record of rights) → Dag Number (individual plot boundary)."}
@@ -390,8 +390,8 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
                     eduCategory === cat
                       ? 'bg-sky-600 text-white shadow-sm'
                       : isLight
-                      ? 'bg-slate-100 hover:bg-slate-200 text-slate-700'
-                      : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
+                      ? 'bg-zinc-100 hover:bg-zinc-200 text-zinc-700'
+                      : 'bg-[#18181B] hover:bg-zinc-800 text-zinc-300'
                   }`}
                 >
                   {cat === 'All' ? (isBn ? 'সকল প্রতিষ্ঠান' : 'All Institutions') : cat}
@@ -401,7 +401,7 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
 
             {/* Institution Search */}
             <div className="relative w-full sm:w-64">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
               <input
                 type="text"
                 value={eduSearch}
@@ -409,8 +409,8 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
                 placeholder={isBn ? "প্রতিষ্ঠানের নাম খুঁজুন..." : "Search institutions..."}
                 className={`w-full rounded-xl pl-9 pr-3 py-1.5 text-xs transition-colors focus:outline-none focus:ring-2 focus:ring-sky-500 ${
                   isLight 
-                    ? 'bg-slate-100 border border-slate-300 text-slate-900 placeholder-slate-400' 
-                    : 'bg-slate-950 border border-slate-800 text-white placeholder-slate-500'
+                    ? 'bg-zinc-100 border border-zinc-300 text-zinc-950 placeholder-zinc-400' 
+                    : 'bg-[#09090B] border border-zinc-800 text-white placeholder-zinc-500'
                 }`}
               />
             </div>
@@ -423,8 +423,8 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
                 key={inst.id}
                 className={`p-4 rounded-xl border transition-all flex flex-col justify-between ${
                   isLight 
-                    ? 'bg-slate-50 border-slate-200 hover:border-sky-400 shadow-sm' 
-                    : 'bg-slate-950/60 border-slate-800 hover:border-sky-500/50'
+                    ? 'bg-zinc-50 border-zinc-200 hover:border-sky-400 shadow-sm' 
+                    : 'bg-[#18181B] border-zinc-800 hover:border-sky-500/50'
                 }`}
               >
                 <div>
@@ -440,22 +440,22 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
                     )}
                   </div>
 
-                  <h4 className="font-heading font-bold text-sm text-slate-900 dark:text-white leading-snug">
+                  <h4 className="font-heading font-bold text-sm text-zinc-950 dark:text-white leading-snug">
                     {isBn ? inst.bnName : inst.name}
                   </h4>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                  <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5">
                     {isBn ? inst.name : inst.bnName}
                   </p>
 
-                  <div className="mt-3 space-y-1 text-xs text-slate-600 dark:text-slate-400">
+                  <div className="mt-3 space-y-1 text-xs text-zinc-600 dark:text-zinc-400">
                     <div className="flex items-center gap-1.5">
-                      <MapPin size={12} className="text-slate-400 shrink-0" />
+                      <MapPin size={12} className="text-zinc-400 shrink-0" />
                       <span className="truncate">{inst.address} ({inst.upazila})</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="mt-4 pt-2.5 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs">
+                <div className="mt-4 pt-2.5 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between text-xs">
                   {inst.website ? (
                     <a
                       href={inst.website}
@@ -467,9 +467,9 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
                       <ExternalLink size={11} />
                     </a>
                   ) : (
-                    <span className="text-slate-400 text-[10px]">{isBn ? "ওয়েবসাইট সংরক্ষিত" : "Institutional Record"}</span>
+                    <span className="text-zinc-400 text-[10px]">{isBn ? "ওয়েবসাইট সংরক্ষিত" : "Institutional Record"}</span>
                   )}
-                  <span className="text-[10px] text-slate-400">BANBEIS Ref</span>
+                  <span className="text-[10px] text-zinc-400">BANBEIS Ref</span>
                 </div>
               </div>
             ))}
@@ -482,11 +482,11 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
         <div className="space-y-6 animate-fade-in">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h3 className="text-base sm:text-lg font-heading font-black text-slate-900 dark:text-white flex items-center gap-2">
+              <h3 className="text-base sm:text-lg font-heading font-black text-zinc-950 dark:text-white flex items-center gap-2">
                 <Hospital className="text-red-500" size={18} />
                 <span>{isBn ? `${intel.bnName} জেলার হাসপাতাল ও স্বাস্থ্য কেন্দ্র` : `Healthcare & Hospitals in ${intel.name}`}</span>
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
                 {isBn 
                   ? "জরুরি চিকিৎসা সেবা, বেড সংখ্যা ও অবস্থান সংক্রান্ত তথ্য।"
                   : "Verified medical colleges, district sadar hospitals, and upazila health complexes."}
@@ -494,7 +494,7 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
             </div>
 
             <div className="relative w-full sm:w-64">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
               <input
                 type="text"
                 value={healthSearch}
@@ -502,8 +502,8 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
                 placeholder={isBn ? "হাসপাতাল খুঁজুন..." : "Filter healthcare..."}
                 className={`w-full rounded-xl pl-9 pr-3 py-1.5 text-xs transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 ${
                   isLight 
-                    ? 'bg-slate-100 border border-slate-300 text-slate-900 placeholder-slate-400' 
-                    : 'bg-slate-950 border border-slate-800 text-white placeholder-slate-500'
+                    ? 'bg-zinc-100 border border-zinc-300 text-zinc-950 placeholder-zinc-400' 
+                    : 'bg-[#09090B] border border-zinc-800 text-white placeholder-zinc-500'
                 }`}
               />
             </div>
@@ -515,8 +515,8 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
                 key={hosp.id}
                 className={`p-4 rounded-xl border transition-all flex flex-col justify-between ${
                   isLight 
-                    ? 'bg-slate-50 border-slate-200 hover:border-red-400 shadow-sm' 
-                    : 'bg-slate-950/60 border-slate-800 hover:border-red-500/50'
+                    ? 'bg-zinc-50 border-zinc-200 hover:border-red-400 shadow-sm' 
+                    : 'bg-[#18181B] border-zinc-800 hover:border-red-500/50'
                 }`}
               >
                 <div>
@@ -531,26 +531,26 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
                     )}
                   </div>
 
-                  <h4 className="font-heading font-bold text-sm text-slate-900 dark:text-white leading-snug">
+                  <h4 className="font-heading font-bold text-sm text-zinc-950 dark:text-white leading-snug">
                     {isBn ? hosp.bnName : hosp.name}
                   </h4>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                  <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5">
                     {isBn ? hosp.name : hosp.bnName}
                   </p>
 
-                  <div className="mt-3 space-y-1.5 text-xs text-slate-600 dark:text-slate-400">
+                  <div className="mt-3 space-y-1.5 text-xs text-zinc-600 dark:text-zinc-400">
                     <div className="flex items-center justify-between">
-                      <span className="text-slate-400">{isBn ? "শয্যা সংখ্যা:" : "Bed Capacity:"}</span>
-                      <span className="font-bold text-slate-800 dark:text-slate-200">{hosp.beds} Beds</span>
+                      <span className="text-zinc-400">{isBn ? "শয্যা সংখ্যা:" : "Bed Capacity:"}</span>
+                      <span className="font-bold text-zinc-800 dark:text-zinc-200">{hosp.beds} Beds</span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <MapPin size={12} className="text-slate-400 shrink-0" />
+                      <MapPin size={12} className="text-zinc-400 shrink-0" />
                       <span className="truncate">{hosp.address}</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="mt-4 pt-2.5 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs">
+                <div className="mt-4 pt-2.5 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between text-xs">
                   <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">
                     DGHS Health Bulletin Verified
                   </span>
@@ -572,25 +572,25 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
       {activeTab === 'infra' && (
         <div className="space-y-6 animate-fade-in">
           <div>
-            <h3 className="text-base sm:text-lg font-heading font-black text-slate-900 dark:text-white flex items-center gap-2">
+            <h3 className="text-base sm:text-lg font-heading font-black text-zinc-950 dark:text-white flex items-center gap-2">
               <Navigation className="text-sky-500" size={18} />
               <span>{isBn ? `${intel.bnName} জেলার প্রধান সংযোগ ও অবকাঠামো` : `Infrastructure & Major Transit in ${intel.name}`}</span>
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
               {isBn ? "জাতীয় মহাসড়ক, রেল স্টেশন, নদী বন্দর ও অর্থনৈতিক অঞ্চল নেটওয়ার্ক।" : "National highways, railways, river ports, and BEZA industrial economic zones."}
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {/* Highways */}
-            <div className={`p-4 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-950/60 border-slate-800'}`}>
+            <div className={`p-4 rounded-xl border ${isLight ? 'bg-zinc-50 border-zinc-200' : 'bg-[#18181B] border-zinc-800'}`}>
               <div className="flex items-center gap-2 text-sky-600 dark:text-sky-400 font-bold text-xs mb-3">
                 <Car size={15} />
                 <span>{isBn ? "জাতীয় ও আঞ্চলিক মহাসড়ক" : "National Highway Corridors"}</span>
               </div>
               <ul className="space-y-2 text-xs">
                 {intel.highways.map((hw, idx) => (
-                  <li key={idx} className="flex items-start gap-2 text-slate-700 dark:text-slate-300">
+                  <li key={idx} className="flex items-start gap-2 text-zinc-700 dark:text-zinc-300">
                     <span className="w-1.5 h-1.5 rounded-full bg-sky-500 mt-1.5 shrink-0"></span>
                     <span>{hw}</span>
                   </li>
@@ -599,14 +599,14 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
             </div>
 
             {/* Railways & Stations */}
-            <div className={`p-4 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-950/60 border-slate-800'}`}>
+            <div className={`p-4 rounded-xl border ${isLight ? 'bg-zinc-50 border-zinc-200' : 'bg-[#18181B] border-zinc-800'}`}>
               <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold text-xs mb-3">
                 <Train size={15} />
                 <span>{isBn ? "রেলপথ ও জংশন" : "Railway Access & Stations"}</span>
               </div>
               <ul className="space-y-2 text-xs">
                 {intel.railwayStations.map((st, idx) => (
-                  <li key={idx} className="flex items-start gap-2 text-slate-700 dark:text-slate-300">
+                  <li key={idx} className="flex items-start gap-2 text-zinc-700 dark:text-zinc-300">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0"></span>
                     <span>{st}</span>
                   </li>
@@ -615,14 +615,14 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
             </div>
 
             {/* Ports & Terminals */}
-            <div className={`p-4 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-950/60 border-slate-800'}`}>
+            <div className={`p-4 rounded-xl border ${isLight ? 'bg-zinc-50 border-zinc-200' : 'bg-[#18181B] border-zinc-800'}`}>
               <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400 font-bold text-xs mb-3">
                 <Ship size={15} />
                 <span>{isBn ? "নদী বন্দর ও বাস টার্মিনাল" : "River Ports & Bus Terminals"}</span>
               </div>
               <ul className="space-y-2 text-xs">
                 {[...intel.portsAndFerries, ...intel.busTerminals].map((pt, idx) => (
-                  <li key={idx} className="flex items-start gap-2 text-slate-700 dark:text-slate-300">
+                  <li key={idx} className="flex items-start gap-2 text-zinc-700 dark:text-zinc-300">
                     <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 shrink-0"></span>
                     <span>{pt}</span>
                   </li>
@@ -638,11 +638,11 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
         <div className="space-y-6 animate-fade-in">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h3 className="text-base sm:text-lg font-heading font-black text-slate-900 dark:text-white flex items-center gap-2">
+              <h3 className="text-base sm:text-lg font-heading font-black text-zinc-950 dark:text-white flex items-center gap-2">
                 <Compass className="text-amber-500" size={18} />
                 <span>{isBn ? `${intel.bnName} জেলার পর্যটন আকর্ষণ ও নিদর্শন` : `Tourist Attractions in ${intel.name}`}</span>
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
                 {isBn ? "প্রাকৃতিক, প্রত্নতাত্ত্বিক ও সাংস্কৃতিক ঐতিহ্যবাহী দর্শনীয় স্থান।" : "Curated natural landmarks, heritage sites, and seasonal travel guidance."}
               </p>
             </div>
@@ -662,7 +662,7 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
               <div
                 key={attr.id}
                 className={`p-4 rounded-xl border transition-all flex flex-col justify-between ${
-                  isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-950/60 border-slate-800'
+                  isLight ? 'bg-zinc-50 border-zinc-200' : 'bg-[#18181B] border-zinc-800'
                 }`}
               >
                 <div>
@@ -670,19 +670,19 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
                     <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
                       {attr.category}
                     </span>
-                    <span className="text-[10px] text-slate-400">{attr.upazila}</span>
+                    <span className="text-[10px] text-zinc-400">{attr.upazila}</span>
                   </div>
 
-                  <h4 className="font-heading font-bold text-sm text-slate-900 dark:text-white">
+                  <h4 className="font-heading font-bold text-sm text-zinc-950 dark:text-white">
                     {isBn ? attr.bnName : attr.name}
                   </h4>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-1.5 leading-relaxed">
+                  <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1.5 leading-relaxed">
                     {attr.description}
                   </p>
                 </div>
 
-                <div className="mt-4 pt-2.5 border-t border-slate-200 dark:border-slate-800 text-[11px] flex items-center justify-between">
-                  <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                <div className="mt-4 pt-2.5 border-t border-zinc-200 dark:border-zinc-800 text-[11px] flex items-center justify-between">
+                  <span className="text-zinc-500 dark:text-zinc-400 flex items-center gap-1">
                     <Clock size={11} className="text-amber-500" />
                     <span>{attr.bestSeason}</span>
                   </span>
@@ -701,11 +701,11 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
         <div className="space-y-6 animate-fade-in">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h3 className="text-base sm:text-lg font-heading font-black text-slate-900 dark:text-white flex items-center gap-2">
+              <h3 className="text-base sm:text-lg font-heading font-black text-zinc-950 dark:text-white flex items-center gap-2">
                 <TrendingUp className="text-emerald-500" size={18} />
                 <span>{isBn ? `${intel.bnName} জেলার ভূমি মূল্যায়ন ও উপযোগীতা বিশ্লেষণ` : `Land Valuation & Suitability Scores in ${intel.name}`}</span>
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
                 {isBn ? "বিভিন্ন উদ্দেশ্যে জমি ব্যবহারের ডিটারমিনিস্টিক স্কোর ও ক্যাডাস্ট্রাল জরিপ স্ট্যাটাস।" : "Deterministic suitability scores across 6 use cases with cadastral metadata."}
               </p>
             </div>
@@ -731,15 +731,15 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
               { key: 'restaurant', labelEn: 'Restaurant', labelBn: 'রেস্তোরাঁ', score: intel.suitabilityScores.restaurant, color: 'text-purple-500' },
             ].map((prof) => (
               <div key={prof.key} className={`p-3.5 rounded-xl border text-center ${
-                isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-950/60 border-slate-800'
+                isLight ? 'bg-zinc-50 border-zinc-200' : 'bg-[#18181B] border-zinc-800'
               }`}>
-                <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300 block">
+                <span className="text-[11px] font-bold text-zinc-600 dark:text-zinc-300 block">
                   {isBn ? prof.labelBn : prof.labelEn}
                 </span>
                 <span className={`text-xl sm:text-2xl font-black ${prof.color} block mt-1`}>
-                  {prof.score}<span className="text-xs text-slate-400 font-normal">/100</span>
+                  {prof.score}<span className="text-xs text-zinc-400 font-normal">/100</span>
                 </span>
-                <div className="w-full bg-slate-200 dark:bg-slate-800 h-1.5 rounded-full mt-2 overflow-hidden">
+                <div className="w-full bg-zinc-200 dark:bg-[#18181B] h-1.5 rounded-full mt-2 overflow-hidden">
                   <div 
                     className="h-full bg-emerald-500 rounded-full"
                     style={{ width: `${prof.score}%` }}
@@ -751,19 +751,19 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
 
           {/* Land Meta Breakdown */}
           <div className={`p-4 rounded-xl border space-y-2 text-xs ${
-            isLight ? 'bg-slate-50 border-slate-200 text-slate-700' : 'bg-slate-950/60 border-slate-800 text-slate-300'
+            isLight ? 'bg-zinc-50 border-zinc-200 text-zinc-700' : 'bg-[#18181B] border-zinc-800 text-zinc-300'
           }`}>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
-                <span className="text-slate-400 block font-semibold">{isBn ? "ক্যাডাস্ট্রাল জরিপ অবস্থা:" : "Cadastral Survey Type:"}</span>
-                <span className="font-bold text-slate-900 dark:text-white mt-0.5 block">{intel.cadastralSurveyStatus}</span>
+                <span className="text-zinc-400 block font-semibold">{isBn ? "ক্যাডাস্ট্রাল জরিপ অবস্থা:" : "Cadastral Survey Type:"}</span>
+                <span className="font-bold text-zinc-950 dark:text-white mt-0.5 block">{intel.cadastralSurveyStatus}</span>
               </div>
               <div>
-                <span className="text-slate-400 block font-semibold">{isBn ? "বন্যা ঝুঁকি জোন:" : "Flood Vulnerability:"}</span>
+                <span className="text-zinc-400 block font-semibold">{isBn ? "বন্যা ঝুঁকি জোন:" : "Flood Vulnerability:"}</span>
                 <span className="font-bold text-amber-500 mt-0.5 block">{intel.floodRiskZone}</span>
               </div>
               <div>
-                <span className="text-slate-400 block font-semibold">{isBn ? "বিজ্ঞাপিত জমি প্লট সংখ্যা:" : "Available Listings:"}</span>
+                <span className="text-zinc-400 block font-semibold">{isBn ? "বিজ্ঞাপিত জমি প্লট সংখ্যা:" : "Available Listings:"}</span>
                 <span className="font-bold text-emerald-500 mt-0.5 block">{intel.landListingsCount} listings found</span>
               </div>
             </div>
@@ -772,7 +772,7 @@ export const DistrictIntelligenceDashboard: React.FC<DistrictIntelligenceDashboa
       )}
 
       {/* ── 5. DATA PROVENANCE & FRESHNESS FOOTER ── */}
-      <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-slate-400">
+      <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-zinc-400">
         <div className="flex items-center gap-2">
           <ShieldCheck size={13} className="text-emerald-500" />
           <span><strong>Official Source:</strong> {intel.sourceProvenance.adminSource}</span>

@@ -92,7 +92,7 @@ export const EnvironmentalRiskCard: React.FC<EnvironmentalRiskCardProps> = ({
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-slate-500/10 text-slate-600 dark:text-slate-400 border border-slate-500/20">
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-zinc-500/10 text-zinc-600 dark:text-zinc-400 border border-zinc-500/20">
             {spatialRisk.zoningClassification}
           </span>
         );
@@ -100,11 +100,11 @@ export const EnvironmentalRiskCard: React.FC<EnvironmentalRiskCardProps> = ({
   };
 
   return (
-    <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
+    <div className="p-5 rounded-2xl bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800 shadow-sm space-y-5">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-100 dark:border-zinc-800 pb-3">
         <div>
-          <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <h3 className="text-base font-bold text-zinc-950 dark:text-white flex items-center gap-2">
             <Compass className="text-emerald-500" size={18} />
             <span>
               {isBn
@@ -112,7 +112,7 @@ export const EnvironmentalRiskCard: React.FC<EnvironmentalRiskCardProps> = ({
                 : 'Environmental, Cadastral & Zoning Risk Profile'}
             </span>
           </h3>
-          <p className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+          <p className="text-xs text-zinc-600 dark:text-zinc-300 mt-0.5">
             {isBn
               ? `স্মার্ট ভূমি নকশা (map.land.gov.bd) এবং হাইড্রোলজিক্যাল স্যাটেলাইট উপাত্তের ভিত্তিতে ${mouzaName}, ${districtName}-এর ভূ-প্রাকৃতিক বিশ্লেষণ`
               : `Grounded in Smart Bhumi Naksha (map.land.gov.bd) and geospatial hydrological markers for ${mouzaName}, ${districtName}`}
@@ -134,23 +134,23 @@ export const EnvironmentalRiskCard: React.FC<EnvironmentalRiskCardProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         
         {/* Card 1: Flood Hazard & Elevation */}
-        <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800 space-y-2">
+        <div className="p-4 rounded-xl bg-zinc-50 dark:bg-[#18181B] border border-zinc-200 dark:border-zinc-800 space-y-2">
           <div className="flex items-center justify-between gap-2">
-            <span className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+            <span className="text-xs font-bold text-zinc-700 dark:text-zinc-300 flex items-center gap-1.5">
               <Waves size={15} className="text-sky-500" />
               {isBn ? 'বন্যা ও প্লাবন প্রবণতা' : 'Flood Hazard & Elevation'}
             </span>
             {getFloodBadge()}
           </div>
-          <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+          <p className="text-xs text-zinc-600 dark:text-zinc-300 leading-relaxed">
             {isBn ? spatialRisk.floodRiskDescriptionBn : spatialRisk.floodRiskDescriptionEn}
           </p>
         </div>
 
         {/* Card 2: Riverbank Erosion (নদী ভাঙন) */}
-        <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800 space-y-2">
+        <div className="p-4 rounded-xl bg-zinc-50 dark:bg-[#18181B] border border-zinc-200 dark:border-zinc-800 space-y-2">
           <div className="flex items-center justify-between gap-2">
-            <span className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+            <span className="text-xs font-bold text-zinc-700 dark:text-zinc-300 flex items-center gap-1.5">
               <AlertTriangle size={15} className="text-amber-500" />
               {isBn ? 'নদী ভাঙন ঝুঁকি' : 'Riverbank Erosion Risk'}
             </span>
@@ -166,21 +166,21 @@ export const EnvironmentalRiskCard: React.FC<EnvironmentalRiskCardProps> = ({
               </span>
             )}
           </div>
-          <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+          <p className="text-xs text-zinc-600 dark:text-zinc-300 leading-relaxed">
             {isBn ? spatialRisk.riverErosionDescriptionBn : spatialRisk.riverErosionDescriptionEn}
           </p>
         </div>
 
         {/* Card 3: Digital Zoning & Land Classification */}
-        <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800 space-y-2">
+        <div className="p-4 rounded-xl bg-zinc-50 dark:bg-[#18181B] border border-zinc-200 dark:border-zinc-800 space-y-2">
           <div className="flex items-center justify-between gap-2">
-            <span className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+            <span className="text-xs font-bold text-zinc-700 dark:text-zinc-300 flex items-center gap-1.5">
               <Building2 size={15} className="text-indigo-500" />
               {isBn ? 'ভূমি জোনিং ও অনুমতি' : 'Digital Land Zoning Classification'}
             </span>
             {getZoningBadge()}
           </div>
-          <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+          <p className="text-xs text-zinc-600 dark:text-zinc-300 leading-relaxed">
             {isBn ? spatialRisk.zoningPermitStatusBn : spatialRisk.zoningPermitStatusEn}
           </p>
           {spatialRisk.isZoningConversionRequired && (
@@ -191,17 +191,17 @@ export const EnvironmentalRiskCard: React.FC<EnvironmentalRiskCardProps> = ({
         </div>
 
         {/* Card 4: Road Frontage & Accessibility */}
-        <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800 space-y-2">
+        <div className="p-4 rounded-xl bg-zinc-50 dark:bg-[#18181B] border border-zinc-200 dark:border-zinc-800 space-y-2">
           <div className="flex items-center justify-between gap-2">
-            <span className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+            <span className="text-xs font-bold text-zinc-700 dark:text-zinc-300 flex items-center gap-1.5">
               <Car size={15} className="text-emerald-500" />
               {isBn ? 'রাস্তার সংযোগ ও হালট' : 'Road Access & Frontage'}
             </span>
-            <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200">
+            <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200">
               {spatialRisk.roadAccessWidthFeet} {isBn ? 'ফুট প্রশস্ত' : 'Feet Wide'}
             </span>
           </div>
-          <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+          <p className="text-xs text-zinc-600 dark:text-zinc-300 leading-relaxed">
             {isBn ? spatialRisk.roadAccessDescriptionBn : spatialRisk.roadAccessDescriptionEn}
           </p>
         </div>
@@ -209,12 +209,12 @@ export const EnvironmentalRiskCard: React.FC<EnvironmentalRiskCardProps> = ({
       </div>
 
       {/* Government Khash & Setback Notice */}
-      <div className="p-3.5 rounded-xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 space-y-1">
-        <div className="font-bold flex items-center gap-1.5 text-slate-900 dark:text-slate-100">
+      <div className="p-3.5 rounded-xl bg-zinc-100 dark:bg-[#18181B] border border-zinc-200 dark:border-zinc-800 text-xs text-zinc-700 dark:text-zinc-300 space-y-1">
+        <div className="font-bold flex items-center gap-1.5 text-zinc-950 dark:text-zinc-100">
           <MapPin size={13} className="text-amber-500" />
           <span>{isBn ? 'সরকারি খাস জমি ও অধিগ্রহণ স্ট্যাটাস:' : 'Government Khash & Acquisition Setback Status:'}</span>
         </div>
-        <p className="text-slate-600 dark:text-slate-300">
+        <p className="text-zinc-600 dark:text-zinc-300">
           {isBn ? spatialRisk.khashOrGovernmentProximityBn : spatialRisk.khashOrGovernmentProximityEn}
         </p>
       </div>

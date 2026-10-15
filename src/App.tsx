@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { BangladeshInteractiveMap } from './components/BangladeshInteractiveMap';
 import { HeroMapDossier } from './components/HeroMapDossier';
@@ -7,7 +7,11 @@ import { LandCalculatorSection } from './components/LandCalculatorSection';
 import { CadastralExplorerSection } from './components/CadastralExplorerSection';
 import { DistrictIntelligenceDashboard } from './components/DistrictIntelligenceDashboard';
 import { DueDiligenceWorkbench } from './components/duediligence/DueDiligenceWorkbench';
+import { HowItWorksEducationalSection } from './components/education/HowItWorksEducationalSection';
+import { TrustedInfrastructureSection } from './components/business/TrustedInfrastructureSection';
+import { LandTech2026Suite } from './components/landtech/LandTech2026Suite';
 import { Footer } from './components/Footer';
+import { LandWiseChatbot } from './components/LandWiseChatbot';
 
 // Geographic Datasets & Types
 import {
@@ -16,11 +20,31 @@ import {
   DistrictData,
   DivisionData,
 } from './data/bangladeshMapData';
-import { CheckCircle2, ShieldCheck, Sparkles, FileCheck2, Scale } from 'lucide-react';
 
 export function App() {
   const [isBn, setIsBn] = useState<boolean>(false);
-  const [theme, setTheme] = useState<"light" | "reference" | "emerald" | "atlas" | "midnight">("light");
+  const [theme, setTheme] = useState<"dark" | "light">(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("theme-mode");
+      if (stored === "dark" || stored === "light") {
+        return stored;
+      }
+    }
+    return "light";
+  });
+
+  useEffect(() => {
+    if (theme === "dark") {
+      document.documentElement.classList.remove("light");
+      document.documentElement.classList.add("dark");
+      document.documentElement.setAttribute("data-theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      document.documentElement.classList.add("light");
+      document.documentElement.setAttribute("data-theme", "light");
+    }
+  }, [theme]);
+
   const [activeSection, setActiveSection] = useState<string>("hero-map");
 
   // Default selected: Dhaka district & Dhaka division
@@ -30,6 +54,21 @@ export function App() {
   const [selectedDivision, setSelectedDivision] = useState<DivisionData | null>(
     BANGLADESH_DIVISIONS.find((d) => d.id === "dhaka") || BANGLADESH_DIVISIONS[0]
   );
+
+  // Sync document title dynamically with language and active district
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      if (selectedDistrict) {
+        document.title = isBn
+          ? `${selectedDistrict.bnName} — ল্যান্ডওয়াইজ স্মার্ট ভূমি প্ল্যাটফর্ম`
+          : `${selectedDistrict.name} — LandWise Land Intelligence`;
+      } else {
+        document.title = isBn
+          ? "ল্যান্ডওয়াইজ — বাংলাদেশের স্মার্ট ভূমি ও ক্যাডাস্ট্রাল তথ্যচিত্র"
+          : "LandWise — Bangladesh Land & Cadastral Intelligence";
+      }
+    }
+  }, [isBn, selectedDistrict]);
 
   const [searchQuery, setSearchQuery] = useState<string>("");
 
@@ -53,8 +92,8 @@ export function App() {
   const isLight = theme === "light";
 
   return (
-    <div className={`min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white transition-colors duration-150 ${
-      isLight ? "bg-slate-50 text-slate-900" : "bg-slate-950 text-slate-100"
+    <div className={`min-h-screen flex flex-col selection:bg-zinc-900 selection:text-white dark:selection:bg-zinc-100 dark:selection:text-zinc-950 transition-colors duration-150 ${
+      isLight ? "bg-[#FFFFFF] text-[#09090B]" : "bg-[#09090B] text-[#FAFAFA]"
     }`}>
       {/* ── 1. STICKY TOP NAVIGATION BAR ── */}
       <Navbar
@@ -65,6 +104,10 @@ export function App() {
         selectedDistrictName={
           selectedDistrict ? (isBn ? selectedDistrict.bnName : selectedDistrict.name) : "Dhaka"
         }
+        selectedDistrict={selectedDistrict}
+        onSelectDistrict={handleSelectDistrict}
+        districts={ALL_BANGLADESH_DISTRICTS}
+        divisions={BANGLADESH_DIVISIONS}
         onOpenQuickSelect={() => {
           const el = document.getElementById('quick-grid');
           el?.scrollIntoView({ behavior: 'smooth' });
@@ -77,98 +120,145 @@ export function App() {
       <main className="flex-1 flex flex-col space-y-16 sm:space-y-20 pb-16">
         
         {/* ── 2. PRESERVED BANGLADESH 64-DISTRICT INTERACTIVE VECTOR MAP OVERVIEW ── */}
-        <section id="hero-map" className="relative w-full pt-6 sm:pt-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-6">
+        <section id="hero-map" className="relative w-full pt-6 sm:pt-8 px-4 sm:px-6 lg:px-8 max-w-[1180px] mx-auto space-y-6">
           {/* Hero Header */}
-          <div className="text-center max-w-3xl mx-auto space-y-3">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+          <div className="text-center max-w-4xl mx-auto space-y-3.5">
+            <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-semibold tracking-tight transition-all ${
+              isLight 
+                ? "bg-[#FAFAFA] border-[#E4E4E7] text-[#52525B]" 
+                : "bg-[#18181B] border-[#27272A] text-[#A1A1AA]"
+            }`}>
+              <span className="bms-live-dot"></span>
               <span>
                 {isBn
-                  ? "🇧🇩 ৬৪ জেলা • ৮ বিভাগ • পূর্ণাঙ্গ ইন্টারেক্টিভ ভেক্টর মানচিত্র"
-                  : "🇧🇩 64 DISTRICTS • 8 DIVISIONS • INTERACTIVE VECTOR MAP"}
+                  ? "৬৪ জেলা • জাতীয় ভূমি ও ক্যাডাস্ট্রাল মানচিত্র"
+                  : "64 Districts • National Land & Cadastral Graph"}
               </span>
             </div>
 
-            <h1 className={`text-3xl sm:text-5xl font-heading font-black tracking-tight leading-tight ${isLight ? "text-slate-900" : "text-white"}`}>
-              {isBn ? (
-                <>
-                  বাংলাদেশের ইন্টারেক্টিভ <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-600 to-amber-600 dark:from-emerald-400 dark:via-teal-300 dark:to-amber-300">ভৌগোলিক ও ভূমি মানচিত্র</span>
-                </>
-              ) : (
-                <>
-                  Interactive Bangladesh <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-600 to-amber-600 dark:from-emerald-400 dark:via-teal-300 dark:to-amber-300">Spatial & Land Intelligence</span> Atlas
-                </>
-              )}
+            <h1 className={`text-2xl sm:text-3xl md:text-4xl lg:text-[44px] xl:text-5xl font-heading font-extrabold tracking-tight leading-tight sm:whitespace-nowrap ${isLight ? "text-[#09090B]" : "text-[#FAFAFA]"}`}>
+              {isBn
+                ? "বাংলাদেশের স্মার্ট ভূমি ও ক্যাডাস্ট্রাল তথ্যচিত্র"
+                : "Bangladesh Land & Cadastral Intelligence"}
             </h1>
 
-            <p className={`text-xs sm:text-sm font-medium max-w-2xl mx-auto leading-relaxed ${isLight ? "text-slate-600" : "text-slate-300"}`}>
+            <p className={`text-sm sm:text-[15px] max-w-2xl mx-auto leading-relaxed ${isLight ? "text-[#52525B]" : "text-[#A1A1AA]"}`}>
               {isBn
-                ? "মানচিত্রের যেকোনো অংশ (জেলা বা বিভাগ) নির্বাচন করে তাৎক্ষণিক জমি মূল্যায়ন, ক্যাডাস্ট্রাল জরিপ স্ট্যাটাস ও মৌজা ভিত্তিক আইনি বিশ্লেষণ অন্বেষণ করুন।"
-                : "Select any district or division on the vector map to inspect real-time land valuation, cadastral survey progress, infrastructure connectivity, and mouza intelligence."}
+                ? "৬৪ জেলার ক্যাডাস্ট্রাল মানচিত্র, তাৎক্ষণিক প্লট মূল্যায়ন, দাগ ও খতিয়ান রেকর্ড এবং মৌজা ভিত্তিক যাচাই প্ল্যাটফর্ম।"
+                : "Interactive cadastral maps, instant land valuations, plot & khatian records, and spatial intelligence across all 64 districts."}
             </p>
 
-            {/* Quick KPI stats strip */}
-            <div className={`flex flex-wrap items-center justify-center gap-3 sm:gap-6 pt-2 text-xs ${isLight ? "text-slate-600" : "text-slate-400"}`}>
-              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border ${isLight ? "bg-white border-slate-200 shadow-sm" : "bg-slate-900/60 border-slate-800"}`}>
-                <CheckCircle2 size={13} className="text-emerald-500" />
-                <span><strong>64</strong> {isBn ? "জেলা ম্যাপড" : "Districts Mapped"}</span>
+            {/* Quick KPI stats cards — BMS Pill Box style */}
+            <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3.5 pt-2 text-xs">
+              <div className={`bms-pill-box flex items-center gap-2 px-3.5 py-2 shadow-xs cursor-default ${
+                isLight ? "bg-[#FAFAFA] border-[#E4E4E7] text-[#09090B]" : "bg-[#18181B] border-[#27272A] text-[#FAFAFA]"
+              }`}>
+                <i className="bx bx-map-alt text-base text-[#16A34A] dark:text-[#4ADE80]" aria-hidden="true" />
+                <span><strong className="font-bold">64</strong> {isBn ? "জেলা ম্যাপড" : "Districts Mapped"}</span>
               </div>
-              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border ${isLight ? "bg-white border-slate-200 shadow-sm" : "bg-slate-900/60 border-slate-800"}`}>
-                <CheckCircle2 size={13} className="text-emerald-500" />
-                <span><strong>8</strong> {isBn ? "প্রশাসনিক বিভাগ" : "Divisions"}</span>
+
+              <div className={`bms-pill-box flex items-center gap-2 px-3.5 py-2 shadow-xs cursor-default ${
+                isLight ? "bg-[#FAFAFA] border-[#E4E4E7] text-[#09090B]" : "bg-[#18181B] border-[#27272A] text-[#FAFAFA]"
+              }`}>
+                <i className="bx bx-grid-alt text-base text-[#2563EB] dark:text-[#60A5FA]" aria-hidden="true" />
+                <span><strong className="font-bold">8</strong> {isBn ? "প্রশাসনিক বিভাগ" : "Divisions"}</span>
               </div>
-              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border ${isLight ? "bg-white border-slate-200 shadow-sm" : "bg-slate-900/60 border-slate-800"}`}>
-                <ShieldCheck size={13} className="text-amber-500" />
-                <span>{isBn ? "অফলাইন ডিটারমিনিস্টিক ইঞ্জিন" : "100% Offline Engine"}</span>
+
+              <div className={`bms-pill-box flex items-center gap-2 px-3.5 py-2 shadow-xs cursor-default ${
+                isLight ? "bg-[#FAFAFA] border-[#E4E4E7] text-[#09090B]" : "bg-[#18181B] border-[#27272A] text-[#FAFAFA]"
+              }`}>
+                <i className="bx bx-network-chart text-base text-[#16A34A] dark:text-[#4ADE80]" aria-hidden="true" />
+                <span>{isBn ? "১০০% ক্লায়েন্ট সাইড ইঞ্জিন" : "100% Client Spatial Graph"}</span>
               </div>
-              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border ${isLight ? "bg-white border-slate-200 shadow-sm" : "bg-slate-900/60 border-slate-800"}`}>
-                <FileCheck2 size={13} className="text-sky-500" />
-                <span>{isBn ? "ডিউ-ডিলিজেন্স ক্রস-অডিট" : "Due-Diligence Cross-Audit"}</span>
+
+              <div className={`bms-pill-box flex items-center gap-2 px-3.5 py-2 shadow-xs cursor-default ${
+                isLight ? "bg-[#FAFAFA] border-[#E4E4E7] text-[#09090B]" : "bg-[#18181B] border-[#27272A] text-[#FAFAFA]"
+              }`}>
+                <i className="bx bx-git-repo-forked text-base text-[#D97706] dark:text-[#FBBF24]" aria-hidden="true" />
+                <span>{isBn ? "রেকর্ড ও স্বত্বলিপি ক্রস-অডিট" : "Records & Title Chain Graph"}</span>
               </div>
+            </div>
+
+            {/* Story Navigation CTA for Judges and First-Time Visitors */}
+            <div className="pt-2 flex items-center justify-center">
+              <a
+                href="#how-it-works"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all border shadow-xs bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-700/60 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 cursor-pointer"
+              >
+                <i className="bx bx-book-open text-sm" />
+                <span>
+                  {isBn
+                    ? "১ মিনিটের গল্প: সমস্যা → সমাধান → ব্যবসায়িক মডেল (সম্পূর্ণ রূপরেখা) ↓"
+                    : "The 1-Minute Story: Problem → Solution → Business Value ↓"}
+                </span>
+                <i className="bx bx-down-arrow-alt text-sm" />
+              </a>
             </div>
           </div>
 
-          {/* Interactive Map & Side Dossier Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start pt-4">
-            {/* Left 7/12 Cols: Interactive Map */}
-            <div className="lg:col-span-7 xl:col-span-8 w-full">
-              <BangladeshInteractiveMap
-                isBn={isBn}
-                theme={theme}
-                setTheme={setTheme}
-                selectedDistrict={selectedDistrict}
-                onSelectDistrict={handleSelectDistrict}
-                selectedDivision={selectedDivision}
-                onSelectDivision={handleSelectDivision}
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
-              />
-            </div>
+          {/* Interactive Map — full width */}
+          <div className="w-full pt-4">
+            <BangladeshInteractiveMap
+              isBn={isBn}
+              theme={theme}
+              setTheme={setTheme}
+              selectedDistrict={selectedDistrict}
+              onSelectDistrict={handleSelectDistrict}
+              selectedDivision={selectedDivision}
+              onSelectDivision={handleSelectDivision}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+            />
+          </div>
 
-            {/* Right 5/12 Cols: Side Dossier Inspector */}
-            <div className="lg:col-span-5 xl:col-span-4 w-full">
-              <HeroMapDossier
-                isBn={isBn}
-                theme={theme}
-                selectedDistrict={selectedDistrict}
-                selectedDivision={selectedDivision}
-                onSelectDistrictById={handleSelectDistrictById}
-              />
-            </div>
+          {/* Dossier — full-width row below the map */}
+          <div className="w-full">
+            <HeroMapDossier
+              isBn={isBn}
+              theme={theme}
+              selectedDistrict={selectedDistrict}
+              selectedDivision={selectedDivision}
+              onSelectDistrictById={handleSelectDistrictById}
+            />
           </div>
         </section>
 
-        {/* ── 3. NEW PRODUCT CORE: LANDWISE AI DUE-DILIGENCE WORKBENCH ── */}
+        {/* ── 3. VISITOR EDUCATION & HOW IT WORKS (END-TO-END TRUST JOURNEY) ── */}
+        <section id="how-it-works" className="w-full">
+          <HowItWorksEducationalSection
+            isBn={isBn}
+            theme={theme}
+          />
+        </section>
+
+        {/* ── 4. NEW PRODUCT CORE: LANDWISE AI DUE-DILIGENCE WORKBENCH ── */}
         <section id="due-diligence" className="w-full">
           <DueDiligenceWorkbench
             isBn={isBn}
+            theme={theme}
             selectedDistrictId={selectedDistrict?.id}
             onSelectDistrictById={handleSelectDistrictById}
           />
         </section>
 
-        {/* ── 4. FULL 64-DISTRICT CADASTRAL & ECONOMIC INTELLIGENCE DASHBOARD ── */}
-        <section id="district-dashboard" className="w-full">
+        {/* ── 4. STRATEGIC VALUE & GOVTECH INFRASTRUCTURE: BUSINESS, REVENUE & ROI ── */}
+        <section id="trusted-infrastructure" className="w-full">
+          <TrustedInfrastructureSection
+            isBn={isBn}
+            theme={theme}
+          />
+        </section>
+
+        {/* ── 5. LANDTECH 2026 INNOVATION HACKATHON TRACK SUITE (P1-P5 & TARGET SECTORS) ── */}
+        <section id="landtech-track" className="w-full">
+          <LandTech2026Suite
+            isBn={isBn}
+            theme={theme}
+          />
+        </section>
+
+        {/* ── 5. FULL 64-DISTRICT CADASTRAL & ECONOMIC INTELLIGENCE DASHBOARD ── */}
+        <section id="district-dashboard" className="w-full max-w-[1180px] mx-auto px-4 sm:px-6 lg:px-8">
           <DistrictIntelligenceDashboard
             selectedDistrict={selectedDistrict}
             isBn={isBn}
@@ -176,37 +266,48 @@ export function App() {
           />
         </section>
 
+
         {/* ── 5. CADASTRAL EXPLORER (CS, SA, RS, BS SURVEYS & PORCHA RECORDS) ── */}
-        <section id="cadastre" className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section id="cadastre" className="w-full">
           <CadastralExplorerSection
             isBn={isBn}
             selectedDistrict={selectedDistrict}
+            theme={theme}
           />
         </section>
 
         {/* ── 6. BANGLADESHI LAND UNIT CONVERTER & REGIONAL VALUATION ── */}
-        <section id="calculator" className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section id="calculator" className="w-full">
           <LandCalculatorSection
             isBn={isBn}
             selectedDistrict={selectedDistrict}
+            theme={theme}
           />
         </section>
 
         {/* ── 7. QUICK DIVISION & REGION SELECTOR GRID ── */}
-        <div id="quick-grid" className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div id="quick-grid" className="w-full">
           <RegionQuickGrid
             isBn={isBn}
             selectedDistrict={selectedDistrict}
             onSelectDistrict={handleSelectDistrict}
             selectedDivision={selectedDivision}
             onSelectDivision={handleSelectDivision}
+            theme={theme}
           />
         </div>
 
       </main>
 
       {/* ── FOOTER WITH OFFICIAL SOURCES & STATUTORY LEGAL DISCLAIMER ── */}
-      <Footer isBn={isBn} />
+      <Footer isBn={isBn} theme={theme} />
+
+      {/* ── FLOATING AI CHATBOT ── */}
+      <LandWiseChatbot
+        theme={theme}
+        isBn={isBn}
+        selectedDistrictName={selectedDistrict ? (isBn ? selectedDistrict.bnName : selectedDistrict.name) : undefined}
+      />
     </div>
   );
 }

@@ -17,6 +17,7 @@ import {
 interface DocumentCardProps {
   document: ExtractedLandDocument;
   isBn: boolean;
+  theme?: 'dark' | 'light';
   onInspect?: (doc: ExtractedLandDocument) => void;
   isSelected?: boolean;
 }
@@ -24,35 +25,54 @@ interface DocumentCardProps {
 export const DocumentCard: React.FC<DocumentCardProps> = ({
   document,
   isBn,
+  theme = 'light',
   onInspect,
   isSelected = false,
 }) => {
+  const isLight = theme === 'light';
+
   const getStatusBadge = () => {
     switch (document.status) {
       case 'verified':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-            <CheckCircle2 size={12} />
+          <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${
+            isLight
+              ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+              : 'bg-emerald-950/50 text-emerald-300 border-emerald-700/50'
+          }`}>
+            <CheckCircle2 size={12} className={isLight ? "text-emerald-700" : "text-emerald-400"} />
             {isBn ? 'যাচাইকৃত' : 'Verified'}
           </span>
         );
       case 'disputed':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
-            <XCircle size={12} />
+          <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${
+            isLight
+              ? 'bg-rose-50 text-rose-800 border-rose-200'
+              : 'bg-rose-950/50 text-rose-300 border-rose-700/50'
+          }`}>
+            <XCircle size={12} className={isLight ? "text-rose-700" : "text-rose-400"} />
             {isBn ? 'বিরোধপূর্ণ' : 'Disputed'}
           </span>
         );
       case 'provisional':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
-            <AlertTriangle size={12} />
+          <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${
+            isLight
+              ? 'bg-amber-50 text-amber-800 border-amber-200'
+              : 'bg-amber-950/50 text-amber-300 border-amber-700/50'
+          }`}>
+            <AlertTriangle size={12} className={isLight ? "text-amber-700" : "text-amber-400"} />
             {isBn ? 'খসড়া / পর্যালোচনায়' : 'Provisional Draft'}
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-500/10 text-slate-600 dark:text-slate-400 border border-slate-500/20">
+          <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${
+            isLight
+              ? 'bg-zinc-100 text-zinc-800 border-zinc-200'
+              : 'bg-zinc-800 text-zinc-300 border-zinc-700'
+          }`}>
             <HelpCircle size={12} />
             {isBn ? 'অনিশ্চিত' : 'Unverified'}
           </span>
@@ -63,107 +83,169 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
   const getDocTypeIcon = () => {
     switch (document.type) {
       case 'saf_kabala':
-        return <FileText className="text-emerald-600 dark:text-emerald-400" size={18} />;
+        return <FileText className={isLight ? "text-emerald-700" : "text-emerald-400"} size={17} />;
       case 'khatian':
-        return <Layers className="text-sky-600 dark:text-sky-400" size={18} />;
+        return <Layers className={isLight ? "text-sky-700" : "text-sky-400"} size={17} />;
       case 'namjari':
-        return <CheckCircle2 className="text-indigo-600 dark:text-indigo-400" size={18} />;
+        return <CheckCircle2 className={isLight ? "text-indigo-700" : "text-indigo-400"} size={17} />;
       case 'dakhila':
-        return <Scale className="text-amber-600 dark:text-amber-400" size={18} />;
+        return <Scale className={isLight ? "text-amber-700" : "text-amber-400"} size={17} />;
       default:
-        return <FileText className="text-slate-600 dark:text-slate-400" size={18} />;
+        return <FileText className={isLight ? "text-zinc-700" : "text-zinc-400"} size={17} />;
     }
   };
 
   return (
     <div
       onClick={() => onInspect?.(document)}
-      className={`relative p-4 rounded-xl border transition-all cursor-pointer ${
+      className={`relative p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between ${
         isSelected
-          ? 'bg-emerald-500/5 border-emerald-500 shadow-md ring-1 ring-emerald-500'
-          : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-emerald-500/40 hover:shadow-sm'
+          ? isLight
+            ? 'bg-emerald-50/70 border-emerald-500 shadow-md ring-2 ring-emerald-500/30'
+            : 'bg-emerald-950/20 border-emerald-500 shadow-lg ring-2 ring-emerald-500/40'
+          : isLight
+          ? 'bg-white border-zinc-200 hover:border-emerald-400 hover:shadow-md text-zinc-900'
+          : 'bg-[#121217] border-zinc-800 hover:border-emerald-500/50 hover:shadow-md text-white'
       }`}
     >
-      {/* Top Header */}
-      <div className="flex items-start justify-between gap-2 mb-2">
-        <div className="flex items-center gap-2">
-          <div className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800">
-            {getDocTypeIcon()}
-          </div>
-          <div>
-            <h4 className="text-sm font-bold text-slate-900 dark:text-white leading-tight">
-              {isBn ? document.titleBn : document.titleEn}
-            </h4>
-            <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-0.5">
-              <span>#{document.documentNumber}</span>
-              {document.surveyEdition && (
-                <span className="px-1.5 py-0.2 rounded bg-sky-500/10 text-sky-600 dark:text-sky-400 text-[10px] font-bold">
-                  {document.surveyEdition}
+      <div>
+        {/* Top Header */}
+        <div className="flex items-start justify-between gap-2 mb-3">
+          <div className="flex items-center gap-2.5">
+            <div className={`p-2 rounded-xl shrink-0 border ${
+              isLight ? 'bg-zinc-100 border-zinc-200/80' : 'bg-[#181820] border-zinc-700/60'
+            }`}>
+              {getDocTypeIcon()}
+            </div>
+            <div>
+              <h4 className={`text-xs sm:text-sm font-extrabold leading-tight ${
+                isLight ? 'text-zinc-950' : 'text-white'
+              }`}>
+                {isBn ? document.titleBn : document.titleEn}
+              </h4>
+              <div className="text-[11px] flex items-center gap-1.5 mt-1">
+                <span className={`font-mono font-medium ${isLight ? 'text-zinc-600' : 'text-zinc-400'}`}>
+                  #{document.documentNumber}
                 </span>
-              )}
+                {document.surveyEdition && (
+                  <span className={`px-1.5 py-0.2 rounded font-mono text-[10px] font-bold ${
+                    isLight ? 'bg-sky-100 text-sky-800' : 'bg-sky-950/60 text-sky-300'
+                  }`}>
+                    {document.surveyEdition}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-        {getStatusBadge()}
-      </div>
-
-      {/* Primary Key Identifiers */}
-      <div className="grid grid-cols-2 gap-2 mt-3 text-xs">
-        <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
-          <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 block">
-            {isBn ? 'দাগ নম্বর' : 'Dag / Plot'}
-          </span>
-          <span className="font-bold text-slate-900 dark:text-slate-100">
-            {document.dagNumber || '—'}
-          </span>
+          {getStatusBadge()}
         </div>
 
-        <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
-          <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 block">
-            {isBn ? 'জমির পরিমাণ' : 'Stated Area'}
-          </span>
-          <span className="font-bold text-emerald-600 dark:text-emerald-400">
-            {document.landAreaDecimals} {isBn ? 'শতক' : 'Dec'}
-          </span>
-        </div>
-      </div>
-
-      {/* Owner & Office Details */}
-      <div className="mt-3 space-y-1 text-xs text-slate-600 dark:text-slate-300 pt-2 border-t border-slate-100 dark:border-slate-800/80">
-        <div className="flex items-center gap-1.5 truncate">
-          <User size={12} className="text-slate-400 shrink-0" />
-          <span className="truncate">
-            <strong>{isBn ? 'মালিক/বিক্রেতা:' : 'Owner/Seller:'}</strong> {document.primaryOwnerName}
-          </span>
-        </div>
-
-        <div className="flex items-center gap-1.5 truncate">
-          <MapPin size={12} className="text-slate-400 shrink-0" />
-          <span className="truncate">
-            {document.mouzaName} (J.L. {document.jlNumber}), {document.upazila}
-          </span>
-        </div>
-
-        <div className="flex items-center gap-1.5 truncate">
-          <Building size={12} className="text-slate-400 shrink-0" />
-          <span className="truncate text-slate-500 dark:text-slate-400">
-            {document.issueOffice}
-          </span>
-        </div>
-
-        {document.registrationDate && (
-          <div className="flex items-center gap-1.5 truncate text-[11px] text-slate-400">
-            <Calendar size={11} className="shrink-0" />
-            <span>{isBn ? 'তারিখ:' : 'Date:'} {document.registrationDate}</span>
+        {/* Primary Key Identifiers (Dag / Stated Area) */}
+        <div className="grid grid-cols-2 gap-2 mt-2 text-xs">
+          <div className={`p-2.5 rounded-xl border ${
+            isLight
+              ? 'bg-zinc-50 border-zinc-200 text-zinc-900'
+              : 'bg-[#181820] border-zinc-800 text-white'
+          }`}>
+            <span className={`text-[10px] font-bold uppercase tracking-wider block ${
+              isLight ? 'text-zinc-600' : 'text-zinc-400'
+            }`}>
+              {isBn ? 'দাগ নম্বর' : 'DAG / PLOT'}
+            </span>
+            <span className={`font-black text-sm block mt-0.5 ${
+              isLight ? 'text-zinc-950' : 'text-white'
+            }`}>
+              {document.dagNumber || '—'}
+            </span>
           </div>
-        )}
+
+          <div className={`p-2.5 rounded-xl border ${
+            isLight
+              ? 'bg-emerald-50/70 border-emerald-200 text-emerald-950'
+              : 'bg-emerald-950/30 border-emerald-800/40 text-emerald-300'
+          }`}>
+            <span className={`text-[10px] font-bold uppercase tracking-wider block ${
+              isLight ? 'text-emerald-800' : 'text-emerald-400'
+            }`}>
+              {isBn ? 'জমির পরিমাণ' : 'STATED AREA'}
+            </span>
+            <span className={`font-black text-sm block mt-0.5 ${
+              isLight ? 'text-emerald-900' : 'text-emerald-400'
+            }`}>
+              {document.landAreaDecimals} {isBn ? 'শতক' : 'Dec'}
+            </span>
+          </div>
+        </div>
+
+        {/* Owner & Office Details */}
+        <div className={`mt-3 space-y-1.5 text-xs pt-2.5 border-t ${
+          isLight ? 'border-zinc-200/80 text-zinc-800' : 'border-zinc-800/80 text-zinc-300'
+        }`}>
+          <div className="flex items-start gap-1.5 leading-snug">
+            <User size={13} className={`mt-0.5 shrink-0 ${isLight ? 'text-zinc-500' : 'text-zinc-400'}`} />
+            <span className="truncate">
+              <strong className={isLight ? 'text-zinc-900 font-semibold' : 'text-white font-semibold'}>
+                {isBn ? 'মালিক/বিক্রেতা:' : 'Owner/Seller:'}
+              </strong>{' '}
+              <span className={isLight ? 'text-zinc-800' : 'text-zinc-200'}>
+                {document.primaryOwnerName}
+              </span>
+            </span>
+          </div>
+
+          <div className="flex items-start gap-1.5 leading-snug">
+            <MapPin size={13} className={`mt-0.5 shrink-0 ${isLight ? 'text-zinc-500' : 'text-zinc-400'}`} />
+            <span className={`truncate ${isLight ? 'text-zinc-700' : 'text-zinc-300'}`}>
+              {document.mouzaName} (J.L. {document.jlNumber}), {document.upazila}
+            </span>
+          </div>
+
+          <div className="flex items-start gap-1.5 leading-snug">
+            <Building size={13} className={`mt-0.5 shrink-0 ${isLight ? 'text-zinc-500' : 'text-zinc-400'}`} />
+            <span className={`truncate ${isLight ? 'text-zinc-600' : 'text-zinc-400'}`}>
+              {document.issueOffice}
+            </span>
+          </div>
+
+          {document.registrationDate && (
+            <div className={`flex items-center gap-1.5 text-[11px] ${
+              isLight ? 'text-zinc-500' : 'text-zinc-400'
+            }`}>
+              <Calendar size={12} className="shrink-0" />
+              <span>{isBn ? 'তারিখ:' : 'Date:'} {document.registrationDate}</span>
+            </div>
+          )}
+        </div>
       </div>
 
       {document.notes && (
-        <div className="mt-2 text-[11px] italic text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/40 p-1.5 rounded">
+        <div className={`mt-3 text-[11px] italic p-2 rounded-xl border leading-relaxed ${
+          isLight
+            ? 'bg-zinc-50 border-zinc-200/80 text-zinc-700'
+            : 'bg-[#181820] border-zinc-800 text-zinc-300'
+        }`}>
           {document.notes}
         </div>
       )}
+
+      {/* Inspect OCR & Bounding Box Action Button */}
+      <div className="mt-3.5 pt-2 border-t border-zinc-200/60 dark:border-zinc-800/60">
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onInspect?.(document);
+          }}
+          className={`w-full inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
+            isLight
+              ? 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-200 shadow-2xs'
+              : 'bg-emerald-950/40 hover:bg-emerald-900/60 text-emerald-300 border-emerald-800/60 shadow-2xs'
+          }`}
+        >
+          <i className="bx bx-scan text-sm text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
+          <span>{isBn ? 'ওসিআর ও স্ক্যান অ্যানোটেশন দেখুন' : 'Inspect OCR & Scan Annotations'}</span>
+        </button>
+      </div>
     </div>
   );
 };
