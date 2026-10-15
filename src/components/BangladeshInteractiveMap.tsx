@@ -1825,35 +1825,47 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
             </div>
           </div>
 
-          {/* Layer Filter Pills */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[11px] scrollbar-none">
-            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider shrink-0 mr-0.5">
-              {isBn ? "ফিল্টার:" : "Filter:"}
-            </span>
-            {[
-              { id: "all", label: isBn ? "সবগুলো" : "All", icon: "🔘", count: allDistrictPOIs.length },
-              { id: "upazila", label: isBn ? "উপজেলা" : "Upazilas", icon: "🏛️", count: activeAreaSummary.upazilasCount },
-              { id: "pourashava", label: isBn ? "পৌরসভা" : "Pourashavas", icon: "🏢", count: activeAreaSummary.pourashavasCount },
-              { id: "college", label: isBn ? "কলেজ" : "Colleges", icon: "🎓", count: activeAreaSummary.collegesCount },
-              { id: "school", label: isBn ? "স্কুল" : "Schools", icon: "🏫", count: activeAreaSummary.schoolsCount },
-              { id: "hospital", label: isBn ? "হাসপাতাল" : "Hospitals", icon: "🏥", count: activeAreaSummary.hospitalsCount },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setActiveLayerFilter(tab.id as any)}
-                className={`px-2 py-1 rounded-lg font-bold transition flex items-center gap-1 shrink-0 ${
-                  activeLayerFilter === tab.id
-                    ? "bg-emerald-600 text-white shadow-sm"
-                    : theme === "light"
-                    ? "bg-zinc-100 hover:bg-zinc-200 text-zinc-700"
-                    : "bg-[#18181B] hover:bg-zinc-800 text-zinc-300"
-                }`}
-              >
-                <span>{tab.icon}</span>
-                <span>{tab.label}</span>
-              </button>
-            ))}
+          {/* Layer Filter Buttons — All Visible at Once, ZERO Horizontal Scrolling */}
+          <div className="pt-1 space-y-1.5">
+            <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-zinc-400">
+              <span className="flex items-center gap-1">
+                <span>{isBn ? "ক্যাটাগরি ফিল্টার" : "Category Filter"}</span>
+              </span>
+              <span className="text-[10px] font-medium text-emerald-600 dark:text-emerald-400">
+                {allDistrictPOIs.length} {isBn ? "টি পয়েন্ট" : "POIs"}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-3 gap-1.5 w-full text-xs">
+              {[
+                { id: "all", label: isBn ? "সবগুলো" : "All", icon: "🔘", count: allDistrictPOIs.length },
+                { id: "upazila", label: isBn ? "উপজেলা" : "Upazilas", icon: "🏛️", count: activeAreaSummary.upazilasCount },
+                { id: "pourashava", label: isBn ? "পৌরসভা" : "Pourashavas", icon: "🏢", count: activeAreaSummary.pourashavasCount },
+                { id: "college", label: isBn ? "কলেজ" : "Colleges", icon: "🎓", count: activeAreaSummary.collegesCount },
+                { id: "school", label: isBn ? "স্কুল" : "Schools", icon: "🏫", count: activeAreaSummary.schoolsCount },
+                { id: "hospital", label: isBn ? "হাসপাতাল" : "Hospitals", icon: "🏥", count: activeAreaSummary.hospitalsCount },
+              ].map((tab) => {
+                const isActive = activeLayerFilter === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setActiveLayerFilter(tab.id as any)}
+                    className={`py-1.5 px-2 rounded-lg text-[11px] font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer border text-center ${
+                      isActive
+                        ? "bg-emerald-600 border-emerald-600 text-white shadow-xs"
+                        : theme === "light"
+                        ? "bg-[#F4F4F5] hover:bg-[#E4E4E7] text-zinc-800 border-zinc-200/90 hover:border-zinc-300"
+                        : "bg-[#18181D] hover:bg-[#23232A] text-zinc-300 border-zinc-800"
+                    }`}
+                    title={`${tab.label} (${tab.count})`}
+                  >
+                    <span className="text-xs leading-none">{tab.icon}</span>
+                    <span className="truncate">{tab.label}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
 
