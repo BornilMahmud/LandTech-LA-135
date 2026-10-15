@@ -107,53 +107,45 @@ export const Navbar: React.FC<NavbarProps> = ({
       id: 'hero-map',
       labelEn: 'Map',
       labelBn: 'মানচিত্র',
-      icon: <i className="bx bx-map-alt text-sm" aria-hidden="true" />,
     },
     {
       id: 'how-it-works',
-      labelEn: 'The Story',
-      labelBn: 'গল্প ও কার্যপদ্ধতি',
-      icon: <i className="bx bx-book-open text-sm text-emerald-600 dark:text-emerald-400" aria-hidden="true" />,
+      labelEn: 'Story',
+      labelBn: 'গল্প',
       highlight: true,
     },
     {
       id: 'due-diligence',
       labelEn: 'Graph',
       labelBn: 'গ্রাফ',
-      icon: <i className="bx bx-git-repo-forked text-sm" aria-hidden="true" />,
       highlight: true,
     },
     {
       id: 'trusted-infrastructure',
-      labelEn: 'Impact & ROI',
-      labelBn: 'বিজনেস ও আরওআই',
-      icon: <i className="bx bx-buildings text-sm text-emerald-500" aria-hidden="true" />,
+      labelEn: 'Impact',
+      labelBn: 'প্রভাব',
       highlight: true,
     },
     {
       id: 'district-dashboard',
       labelEn: 'Cadastre',
       labelBn: 'ক্যাডাস্ট্রে',
-      icon: <i className="bx bx-analyse text-sm" aria-hidden="true" />,
     },
     {
       id: 'calculator',
       labelEn: 'Calculator',
-      labelBn: 'ক্যালকুলেটর',
-      icon: <i className="bx bx-calculator text-sm" aria-hidden="true" />,
+      labelBn: 'হিসাব',
     },
     {
       id: 'landtech-track',
-      labelEn: 'LandTech 2026',
-      labelBn: 'ল্যান্ডটেক ২০২৬',
-      icon: <i className="bx bx-award text-sm text-emerald-500" aria-hidden="true" />,
+      labelEn: 'LandTech',
+      labelBn: 'ল্যান্ডটেক',
       highlight: true,
     },
     {
       id: 'cadastre',
       labelEn: 'Mouza',
       labelBn: 'মৌজা',
-      icon: <i className="bx bx-compass text-sm" aria-hidden="true" />,
     },
   ];
 
@@ -194,7 +186,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   key={item.id}
                   onClick={() => handleNavClick(item.id)}
-                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
                     isActive
                       ? 'bg-white dark:bg-[#18181B] text-[#09090B] dark:text-white shadow-xs border border-[#E4E4E7] dark:border-[#27272A]'
                       : item.highlight
@@ -202,7 +194,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                       : 'text-[#52525B] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white hover:bg-white/60 dark:hover:bg-[#18181B]/60'
                   }`}
                 >
-                  {item.icon}
                   <span>{isBn ? item.labelBn : item.labelEn}</span>
                 </button>
               );
@@ -452,13 +443,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 key={item.id}
                 onClick={() => handleNavClick(item.id)}
-                className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
+                className={`w-full flex items-center px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
                   activeSection === item.id
                     ? 'bg-[#09090B] text-white dark:bg-[#FAFAFA] dark:text-[#09090B] shadow-xs'
                     : 'text-[#52525B] dark:text-[#A1A1AA] hover:bg-[#F4F4F5] dark:hover:bg-[#18181B]'
                 }`}
               >
-                {item.icon}
                 <span>{isBn ? item.labelBn : item.labelEn}</span>
               </button>
             ))}
