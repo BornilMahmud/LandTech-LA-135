@@ -341,6 +341,28 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
     }
   };
 
+  // POI selection from category data list: pans & deep-zooms map to POI, opens inspection card
+  const handleSelectPOI = (poi: DistrictPOI) => {
+    setSelectedPOI(poi);
+    setSelectedUpazilaId(poi.id);
+
+    // If district is not selected or different, select it
+    if (!selectedDistrict || selectedDistrict.id !== activeDistrict.id) {
+      onSelectDistrict(activeDistrict);
+    }
+
+    // Zoom directly to the selected POI on SVG map
+    if (mapMode === 'districts') {
+      const containerH = mapSvgRef.current?.parentElement?.clientHeight || 620;
+      const svgScale = Math.min(containerH, 660) / 872;
+      const targetZoom = 11.5;
+      const targetPanX = (300 - poi.x) * svgScale * targetZoom;
+      const targetPanY = (436 - poi.y) * svgScale * targetZoom;
+      setZoomLevel(targetZoom);
+      setPanOffset({ x: targetPanX, y: targetPanY });
+    }
+  };
+
   // Theme styling definitions matching BMS design system
   const themeStyles = useMemo(() => {
     if (theme === "light") {
@@ -2015,72 +2037,162 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
               </div>
             )}
 
-            {/* Upazilas & Municipal Zones List (Wrapping Up and Down, No Left-Right Overflow) */}
-            <div className="space-y-2 flex flex-col">
-              <div className="flex items-center justify-between shrink-0">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-xs font-bold uppercase tracking-wider text-zinc-700 dark:text-zinc-300">
-                    {isBn ? "উপজেলা ও পৌর এলাকা" : "Upazilas & Municipal Zones"}
-                  </span>
-                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-                    {currentDistrictGeo.upazilas.length}
-                  </span>
-                </div>
-                <span className="text-[10px] text-zinc-400 font-medium">
-                  {isBn ? "ক্লিক করে ম্যাপে যান" : "Click to fly on map"}
-                </span>
-              </div>
+            {/* Dynamic Filtered POI & Category Data List */}
+            {(() => {
+              const categoryMeta: Record<string, { label: string; bnLabel: string; icon: string }> = {
+                all: { label: "All Points of Interest", bnLabel: "সকল তথ্য ও পয়েন্ট", icon: "🔘" },
+                upazila: { label: "Upazilas & Municipal Zones", bnLabel: "উপজেলা ও পৌর এলাকা", icon: "🏛️" },
+                pourashava: { label: "Municipalities (Pourashavas)", bnLabel: "পৌরসভা ও নগর এলাকা", icon: "🏢" },
+                college: { label: "Colleges & Higher Education", bnLabel: "কলেজ ও উচ্চ শিক্ষা প্রতিষ্ঠান", icon: "🎓" },
+                school: { label: "Schools & Institutes", bnLabel: "বিদ্যালয় ও শিক্ষা প্রতিষ্ঠান", icon: "🏫" },
+                hospital: { label: "Hospitals & Health Centers", bnLabel: "হাসপাতাল ও স্বাস্থ্য কমপ্লেক্স", icon: "🏥" },
+              };
+              const activeMeta = categoryMeta[activeLayerFilter] || categoryMeta.all;
 
-              {/* Vertical Wrapping Pills Container: flex-wrap, no horizontal scroll, scrolls naturally downwards */}
-              <div className="flex flex-wrap gap-2 p-1">
-                {currentDistrictGeo.upazilas.map((upz) => {
-                  const isSelected =
-                    selectedUpazilaId === upz.id ||
-                    Boolean(selectedPOI?.name && selectedPOI.name.toLowerCase().includes(upz.name.toLowerCase()));
-                  return (
-                    <button
-                      key={upz.id}
-                      type="button"
-                      onClick={() => handleSelectUpazilaFromSidebox(upz)}
-                      className={`px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
-                        isSelected
-                          ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/40 ring-2 ring-emerald-400/80 scale-[1.02]"
-                          : theme === "light"
-                          ? "bg-[#F4F4F5] text-zinc-800 hover:bg-[#E4E4E7] hover:text-zinc-950 border border-zinc-300/80 shadow-2xs"
-                          : "bg-[#1E2430] text-zinc-100 hover:bg-[#2A3345] border border-zinc-700/80 shadow-xs"
-                      }`}
-                      title={`Inspect ${upz.name}`}
-                    >
-                      <Building2
-                        size={13}
-                        className={
-                          isSelected
-                            ? "text-white"
-                            : theme === "light"
-                            ? "text-emerald-700"
-                            : "text-emerald-400"
-                        }
-                      />
-                      <span>{isBn ? upz.bnName : upz.name}</span>
-                      {upz.pourashava && (
-                        <span
-                          className={`text-[9px] font-black px-1.5 py-0.5 rounded uppercase ${
-                            isSelected
-                              ? "bg-amber-400/30 text-amber-100 border border-amber-300/40"
-                              : theme === "light"
-                              ? "bg-amber-100 text-amber-900 border border-amber-300/80"
-                              : "bg-amber-500/25 text-amber-300 border border-amber-500/40"
-                          }`}
-                        >
-                          {isBn ? "পৌর" : "Mun"}
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+              return (
+                <div className="space-y-2.5 flex flex-col">
+                  {/* Category Section Header */}
+                  <div className="flex items-center justify-between shrink-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm leading-none">{activeMeta.icon}</span>
+                      <span className="text-xs font-bold uppercase tracking-wider text-zinc-700 dark:text-zinc-300">
+                        {isBn ? activeMeta.bnLabel : activeMeta.label}
+                      </span>
+                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                        {visiblePOIs.length}
+                      </span>
+                    </div>
+                    <span className="text-[10px] text-zinc-400 font-medium">
+                      {isBn ? "ক্লিক করে ম্যাপে যান" : "Click item to fly on map"}
+                    </span>
+                  </div>
+
+                  {/* If in Upazilas mode: also render the quick-select pills bar */}
+                  {activeLayerFilter === "upazila" && currentDistrictGeo.upazilas.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 pb-1">
+                      {currentDistrictGeo.upazilas.map((upz) => {
+                        const isSelected =
+                          selectedUpazilaId === upz.id ||
+                          Boolean(selectedPOI?.name && selectedPOI.name.toLowerCase().includes(upz.name.toLowerCase()));
+                        return (
+                          <button
+                            key={upz.id}
+                            type="button"
+                            onClick={() => handleSelectUpazilaFromSidebox(upz)}
+                            className={`px-2.5 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                              isSelected
+                                ? "bg-emerald-600 text-white shadow-xs scale-[1.02]"
+                                : theme === "light"
+                                ? "bg-[#F4F4F5] hover:bg-[#E4E4E7] text-zinc-800 border border-zinc-200"
+                                : "bg-[#18181D] hover:bg-[#23232A] text-zinc-300 border border-zinc-800"
+                            }`}
+                            title={`Inspect ${upz.name}`}
+                          >
+                            <Building2
+                              size={12}
+                              className={isSelected ? "text-white" : theme === "light" ? "text-emerald-700" : "text-emerald-400"}
+                            />
+                            <span>{isBn ? upz.bnName : upz.name}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* The Data List: Interactive cards showing the items of the clicked category */}
+                  {visiblePOIs.length === 0 ? (
+                    <div className="p-4 text-center rounded-xl border border-dashed border-zinc-300 dark:border-zinc-800 text-xs text-zinc-400">
+                      {isBn ? "এই ক্যাটাগরিতে কোনো পয়েন্ট পাওয়া যায়নি" : "No items found in this category"}
+                    </div>
+                  ) : (
+                    <div className="space-y-1.5">
+                      {visiblePOIs.map((poi) => {
+                        const isSelected =
+                          selectedPOI?.id === poi.id ||
+                          Boolean(selectedPOI?.name && selectedPOI.name.toLowerCase() === poi.name.toLowerCase());
+
+                        const catBadgeStyle =
+                          poi.category === "upazila"
+                            ? "text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 border-indigo-500/20"
+                            : poi.category === "pourashava"
+                            ? "text-amber-600 dark:text-amber-400 bg-amber-500/10 border-amber-500/20"
+                            : poi.category === "college"
+                            ? "text-sky-600 dark:text-sky-400 bg-sky-500/10 border-sky-500/20"
+                            : poi.category === "school"
+                            ? "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
+                            : "text-rose-600 dark:text-rose-400 bg-rose-500/10 border-rose-500/20";
+
+                        const catIcon =
+                          poi.category === "upazila"
+                            ? "🏛️"
+                            : poi.category === "pourashava"
+                            ? "🏢"
+                            : poi.category === "college"
+                            ? "🎓"
+                            : poi.category === "school"
+                            ? "🏫"
+                            : "🏥";
+
+                        return (
+                          <div
+                            key={poi.id}
+                            onClick={() => handleSelectPOI(poi)}
+                            className={`p-2.5 sm:p-3 rounded-xl border transition-all cursor-pointer flex items-start gap-2.5 text-left group ${
+                              isSelected
+                                ? "bg-emerald-50/90 dark:bg-emerald-950/40 border-emerald-500 shadow-sm ring-1 ring-emerald-500/50"
+                                : theme === "light"
+                                ? "bg-white hover:bg-zinc-50 border-zinc-200/90 hover:border-zinc-300 shadow-2xs"
+                                : "bg-[#141418] hover:bg-[#1A1A20] border-zinc-800 hover:border-zinc-700"
+                            }`}
+                          >
+                            <span className="text-base leading-none mt-0.5 select-none shrink-0 group-hover:scale-110 transition-transform">
+                              {catIcon}
+                            </span>
+
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center justify-between gap-1.5 mb-0.5">
+                                <h5 className="font-heading font-black text-xs leading-snug text-zinc-900 dark:text-zinc-100 truncate group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                                  {isBn ? poi.bnName : poi.name}
+                                </h5>
+                                <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded-full border shrink-0 ${catBadgeStyle}`}>
+                                  {isBn ? poi.badge : poi.category.toUpperCase()}
+                                </span>
+                              </div>
+
+                              <p className="text-[11px] text-zinc-500 dark:text-zinc-400 line-clamp-1 leading-tight">
+                                {isBn ? (poi.bnDetails || poi.bnUpazila) : (poi.details || poi.upazila)}
+                              </p>
+
+                              <div className="flex items-center gap-2 mt-1.5 text-[10px] flex-wrap">
+                                {poi.metadata?.beds && (
+                                  <span className="font-bold text-rose-500 bg-rose-500/10 px-1.5 py-0.2 rounded">
+                                    {poi.metadata.beds} {isBn ? "টি বেড" : "Beds"}
+                                  </span>
+                                )}
+                                {poi.metadata?.pourashavaGrade && (
+                                  <span className="font-bold text-amber-500 bg-amber-500/10 px-1.5 py-0.2 rounded">
+                                    {poi.metadata.pourashavaGrade}
+                                  </span>
+                                )}
+                                {poi.metadata?.areaSqKm && (
+                                  <span className="font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-1.5 py-0.2 rounded">
+                                    {poi.metadata.areaSqKm} km²
+                                  </span>
+                                )}
+                                <span className="text-zinc-400 ml-auto flex items-center gap-0.5 font-medium">
+                                  <MapPin size={10} className="text-zinc-400" />
+                                  <span className="truncate max-w-[120px]">{isBn ? poi.bnUpazila : poi.upazila}</span>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
 
           </div>
 
