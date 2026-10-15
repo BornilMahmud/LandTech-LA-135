@@ -1951,15 +1951,32 @@ export const BangladeshInteractiveMap: React.FC<BangladeshInteractiveMapProps> =
                         isSelected
                           ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/40 ring-2 ring-emerald-400/80 scale-[1.02]"
                           : theme === "light"
-                          ? "bg-[#27303F] text-white hover:bg-[#334155] border border-zinc-600/80 shadow-xs"
+                          ? "bg-[#F4F4F5] text-zinc-800 hover:bg-[#E4E4E7] hover:text-zinc-950 border border-zinc-300/80 shadow-2xs"
                           : "bg-[#1E2430] text-zinc-100 hover:bg-[#2A3345] border border-zinc-700/80 shadow-xs"
                       }`}
                       title={`Inspect ${upz.name}`}
                     >
-                      <Building2 size={13} className={isSelected ? "text-white" : "text-emerald-400"} />
+                      <Building2
+                        size={13}
+                        className={
+                          isSelected
+                            ? "text-white"
+                            : theme === "light"
+                            ? "text-emerald-700"
+                            : "text-emerald-400"
+                        }
+                      />
                       <span>{isBn ? upz.bnName : upz.name}</span>
                       {upz.pourashava && (
-                        <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-500/25 text-amber-300 border border-amber-500/40 uppercase">
+                        <span
+                          className={`text-[9px] font-black px-1.5 py-0.5 rounded uppercase ${
+                            isSelected
+                              ? "bg-amber-400/30 text-amber-100 border border-amber-300/40"
+                              : theme === "light"
+                              ? "bg-amber-100 text-amber-900 border border-amber-300/80"
+                              : "bg-amber-500/25 text-amber-300 border border-amber-500/40"
+                          }`}
+                        >
                           {isBn ? "পৌর" : "Mun"}
                         </span>
                       )}
