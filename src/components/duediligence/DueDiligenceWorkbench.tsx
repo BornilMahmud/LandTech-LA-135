@@ -17,37 +17,23 @@ import { CrossVerificationMatrix } from './CrossVerificationMatrix';
 import { EnvironmentalRiskCard } from './EnvironmentalRiskCard';
 import { DocumentUploadModal } from './DocumentUploadModal';
 import { DueDiligenceReportModal } from './DueDiligenceReportModal';
-import {
-  ShieldAlert,
-  ShieldCheck,
-  AlertTriangle,
-  UploadCloud,
-  FileCheck2,
-  FileText,
-  Compass,
-  GitCommit,
-  BookOpen,
-  Scale,
-  Sparkles,
-  ExternalLink,
-  Layers,
-  MapPin,
-  CheckCircle2,
-  AlertOctagon,
-  Download
-} from 'lucide-react';
+import { DeedAnnotationModal } from './DeedAnnotationModal';
+
 
 interface DueDiligenceWorkbenchProps {
   isBn: boolean;
+  theme?: 'dark' | 'light';
   selectedDistrictId?: string;
   onSelectDistrictById?: (id: string) => void;
 }
 
 export const DueDiligenceWorkbench: React.FC<DueDiligenceWorkbenchProps> = ({
   isBn,
+  theme = 'light',
   selectedDistrictId,
   onSelectDistrictById,
 }) => {
+  const isLight = theme === 'light';
   // All cases state, allowing additions of custom documents
   const [cases, setCases] = useState<DueDiligenceCase[]>(AUTHENTIC_DUE_DILIGENCE_CASES);
   const [selectedCaseId, setSelectedCaseId] = useState<string>(AUTHENTIC_DUE_DILIGENCE_CASES[0].id);
@@ -58,6 +44,7 @@ export const DueDiligenceWorkbench: React.FC<DueDiligenceWorkbenchProps> = ({
   // Modals
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [inspectedDoc, setInspectedDoc] = useState<ExtractedLandDocument | null>(null);
 
   // Unit display choice
   const [preferredUnit, setPreferredUnit] = useState<'decimals' | 'katha' | 'bigha' | 'sqFeet'>('decimals');
@@ -96,54 +83,80 @@ export const DueDiligenceWorkbench: React.FC<DueDiligenceWorkbenchProps> = ({
     );
   };
 
+  // Handler for Human-in-the-Loop OCR override
+  const handleSaveDocumentOverride = (docId: string, updatedFields: Partial<ExtractedLandDocument>) => {
+    setCases((prevCases) =>
+      prevCases.map((c) => {
+        if (c.id === activeCase.id) {
+          const updatedDocs = c.documents.map((d) => {
+            if (d.id === docId) {
+              const patched = { ...d, ...updatedFields };
+              // Also sync inspectedDoc if active
+              if (inspectedDoc && inspectedDoc.id === docId) {
+                setInspectedDoc(patched);
+              }
+              return patched;
+            }
+            return d;
+          });
+          return {
+            ...c,
+            documents: updatedDocs,
+          };
+        }
+        return c;
+      })
+    );
+  };
+
   const areaConversions = convertFromDecimals(activeCase.claimedAreaDecimals);
 
   return (
-    <section id="due-diligence" className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <div className="w-full max-w-[1180px] mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
       
       {/* ── WORKBENCH TOP HEADER & VALUE PROPOSITION ── */}
       <div className="text-center max-w-3xl mx-auto space-y-3">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold">
-          <FileCheck2 size={14} className="text-emerald-500" />
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-800 dark:text-emerald-300 text-xs font-semibold">
+          <i className="bx bx-shield-quarter text-emerald-600 dark:text-emerald-400 text-sm" aria-hidden="true" />
           <span>
             {isBn
-              ? '🛡️ ল্যান্ডওয়াইজ এআই • বাংলাদেশ ভূমি দলিল অডিট ও স্বত্ব যাচাই সহকারী'
-              : '🛡️ LANDWISE AI • BANGLADESH LAND DUE-DILIGENCE ASSISTANT'}
+              ? 'ল্যান্ডওয়াইজ অডিট • স্বত্ব ও ক্যাডাস্ট্রাল ভেরিফিকেশন'
+              : 'LANDWISE AUDIT • CADASTRAL & TITLE DUE DILIGENCE'}
           </span>
         </div>
 
-        <h2 className="text-2xl sm:text-4xl font-heading font-black tracking-tight text-slate-900 dark:text-white">
+        <h2 className="text-2xl sm:text-4xl font-heading font-extrabold tracking-tight text-zinc-950 dark:text-white">
           {isBn ? (
             <>
-              টাকা দেওয়ার পূর্বে <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-600 to-amber-600 dark:from-emerald-400 dark:via-teal-300 dark:to-amber-300">দলিল, খতিয়ান ও নামজারি</span> যাচাই করুন
+              জমির স্বত্ব ও রেকর্ড <span className="text-emerald-700 dark:text-emerald-400">ডিজিটাল ক্রস-ভেরিফিকেশন</span>
             </>
           ) : (
             <>
-              Investigate Land Records, <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-600 to-amber-600 dark:from-emerald-400 dark:via-teal-300 dark:to-amber-300">Title Chains & Hidden Risks</span> Before Paying
+              Land Title Due Diligence & <span className="text-emerald-700 dark:text-emerald-400">Cadastral Verification</span>
             </>
           )}
         </h2>
 
-        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto leading-relaxed">
           {isBn
-            ? 'বিক্রেতার সাফ-কবলা দলিল, আরএস খতিয়ান, ই-নামজারি এবং খাজনা দাখিলার মধ্যে দাগ নম্বর, জমির হিস্যা ও মালিকানার ধারাবাহিকতায় অসঙ্গতি বা জালিয়াতি থাকলে তা তাৎক্ষণিক শনাক্ত করুন।'
-            : 'Reconcile seller deeds, RS khatians, mutation porchas, and tax receipts. Detect broken title chains, area deficits, mismatched dag numbers, and environmental hazards with evidence references.'}
+            ? 'বিক্রেতার সাফ-কবলা দলিল, আরএস খতিয়ান, ই-নামজারি ও খাজনা দাখিলা স্বয়ংক্রিয়ভাবে ক্রস-যাচাই করে দাগ নম্বর, জমির হিস্যা, মালিকানার ধারাবাহিকতা এবং পরিবেশগত ঝুঁকির সুনির্দিষ্ট প্রমাণ নিরীক্ষা করুন।'
+            : 'Cross-examine seller deeds, RS khatians, mutation records, and tax dakhilas. Instantly detect broken title chains, area discrepancies, mismatched dag numbers, and spatial hazards with statutory evidence grounding.'}
         </p>
       </div>
 
       {/* ── CASE SELECTOR STRIP ── */}
       <div className="space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-            <Sparkles size={14} className="text-emerald-500" />
-            {isBn ? 'বাস্তবসম্মত ডেমো কেস প্যাকেজ নির্বাচন করুন:' : 'Select Authentic Demonstration Case or Test Your Own:'}
+          <span className="text-xs font-bold uppercase tracking-wider text-zinc-600 dark:text-zinc-400 flex items-center gap-1.5">
+            <i className="bx bx-file-find text-emerald-600 dark:text-emerald-400 text-sm" aria-hidden="true" />
+            {isBn ? 'বাস্তব কেস স্টাডি নির্বাচন করুন বা নিজস্ব দলিল পরীক্ষা করুন:' : 'Select Real Case Study or Audit Your Own Document:'}
           </span>
 
           <button
             onClick={() => setIsUploadModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm transition-all"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium bg-emerald-600 hover:bg-emerald-500 text-white shadow-xs transition-colors"
           >
-            <UploadCloud size={14} />
+            <i className="bx bx-cloud-upload text-sm" aria-hidden="true" />
             <span>{isBn ? '+ কাস্টম দলিল / পর্চা আপলোড করুন' : '+ Upload Custom Document'}</span>
           </button>
         </div>
@@ -162,17 +175,21 @@ export const DueDiligenceWorkbench: React.FC<DueDiligenceWorkbenchProps> = ({
                 }}
                 className={`p-3.5 rounded-xl border text-left cursor-pointer transition-all ${
                   isSelected
-                    ? 'bg-slate-900 text-white dark:bg-emerald-950/40 dark:border-emerald-500 ring-2 ring-emerald-500 shadow-md'
-                    : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-400 text-slate-800 dark:text-slate-200'
+                    ? isLight
+                      ? 'bg-emerald-50/70 border-emerald-500 ring-2 ring-emerald-500/25 shadow-sm text-zinc-950 font-semibold'
+                      : 'bg-emerald-950/30 border-emerald-500 ring-2 ring-emerald-500/30 shadow-sm text-white font-semibold'
+                    : isLight
+                    ? 'bg-white hover:bg-zinc-50 border-zinc-200 hover:border-zinc-300 text-zinc-800 shadow-xs'
+                    : 'bg-[#121215] hover:bg-[#18181D] border-zinc-800 hover:border-zinc-700 text-zinc-200 shadow-xs'
                 }`}
               >
                 <div className="flex items-center justify-between gap-1 mb-1.5">
                   <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                     c.riskScore >= 65
-                      ? 'bg-rose-500/20 text-rose-500'
+                      ? isLight ? 'bg-rose-100 text-rose-800 border border-rose-300' : 'bg-rose-500/15 text-rose-400 border border-rose-500/20'
                       : c.riskScore >= 35
-                      ? 'bg-amber-500/20 text-amber-500'
-                      : 'bg-emerald-500/20 text-emerald-500'
+                      ? isLight ? 'bg-amber-100 text-amber-800 border border-amber-300' : 'bg-amber-500/15 text-amber-400 border border-amber-500/20'
+                      : isLight ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/20'
                   }`}>
                     {c.riskScore >= 65
                       ? (isBn ? 'রেড ফ্ল্যাগ' : 'Red Flags')
@@ -180,17 +197,29 @@ export const DueDiligenceWorkbench: React.FC<DueDiligenceWorkbenchProps> = ({
                       ? (isBn ? 'সতর্কতা' : 'Warning')
                       : (isBn ? 'পরিষ্কার স্বত্ব' : 'Clean Title')}
                   </span>
-                  <span className={`text-[11px] font-mono ${isSelected ? 'text-slate-300' : 'text-slate-400'}`}>
+                  <span className={`text-[11px] font-mono font-semibold ${
+                    isSelected 
+                      ? (isLight ? 'text-emerald-700 font-bold' : 'text-emerald-400 font-bold') 
+                      : (isLight ? 'text-zinc-500' : 'text-zinc-400')
+                  }`}>
                     {c.claimedAreaDecimals} Dec
                   </span>
                 </div>
 
-                <h4 className="text-xs font-bold line-clamp-1 leading-snug">
+                <h4 className={`text-xs leading-snug line-clamp-1 ${
+                  isSelected
+                    ? isLight ? 'text-zinc-950 font-bold' : 'text-white font-bold'
+                    : isLight ? 'text-zinc-800 font-semibold' : 'text-zinc-200 font-semibold'
+                }`}>
                   {isBn ? c.caseTitleBn : c.caseTitleEn}
                 </h4>
 
-                <div className={`flex items-center gap-1 text-[11px] mt-1 ${isSelected ? 'text-slate-300' : 'text-slate-500'}`}>
-                  <MapPin size={11} className="shrink-0" />
+                <div className={`flex items-center gap-1 text-[11px] mt-1 ${
+                  isSelected 
+                    ? isLight ? 'text-zinc-700 font-medium' : 'text-zinc-300 font-medium' 
+                    : isLight ? 'text-zinc-500' : 'text-zinc-400'
+                }`}>
+                  <i className={`bx bx-map-pin text-xs shrink-0 ${isLight ? 'text-emerald-600' : 'text-emerald-400'}`} aria-hidden="true" />
                   <span className="truncate">{c.mouzaName}, {c.districtName}</span>
                 </div>
               </div>
@@ -200,25 +229,25 @@ export const DueDiligenceWorkbench: React.FC<DueDiligenceWorkbenchProps> = ({
       </div>
 
       {/* ── ACTIVE CASE DOSSIER HERO BANNER ── */}
-      <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+      <div className="p-6 rounded-2xl bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800 shadow-sm space-y-6">
         
         {/* Banner Top Details */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-b border-slate-100 dark:border-slate-800 pb-6">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-b border-zinc-100 dark:border-zinc-800 pb-6">
           <div className="space-y-2 max-w-2xl">
             <div className="flex items-center gap-2 flex-wrap">
               <span className="px-2.5 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-bold">
                 {activeCase.districtName} • {activeCase.upazilaName}
               </span>
-              <span className="text-xs text-slate-500">
+              <span className="text-xs text-zinc-500">
                 {isBn ? 'মৌজা:' : 'Mouza:'} <strong>{activeCase.mouzaName}</strong> (J.L. #{activeCase.jlNumber})
               </span>
             </div>
 
-            <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+            <h3 className="text-xl sm:text-2xl font-black text-zinc-950 dark:text-white">
               {isBn ? activeCase.caseTitleBn : activeCase.caseTitleEn}
             </h3>
 
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed">
               {isBn ? activeCase.targetPropertyDescriptionBn : activeCase.targetPropertyDescriptionEn}
             </p>
           </div>
@@ -226,9 +255,9 @@ export const DueDiligenceWorkbench: React.FC<DueDiligenceWorkbenchProps> = ({
           {/* Right KPIs & Download Report Trigger */}
           <div className="flex flex-col sm:flex-row lg:flex-col items-start sm:items-center lg:items-end gap-3 shrink-0">
             {/* Risk Gauge */}
-            <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800">
+            <div className="flex items-center gap-3 p-3 rounded-xl bg-zinc-50 dark:bg-[#18181B] border border-zinc-200 dark:border-zinc-800">
               <div className="text-right">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 block">
                   {isBn ? 'ঝুঁকি স্কোর' : 'Hazard Index'}
                 </span>
                 <span className={`text-2xl font-black ${
@@ -239,53 +268,55 @@ export const DueDiligenceWorkbench: React.FC<DueDiligenceWorkbenchProps> = ({
                     : 'text-emerald-600 dark:text-emerald-400'
                 }`}>
                   {riskAnalysis.score}
-                  <span className="text-xs font-normal text-slate-400">/100</span>
+                  <span className="text-xs font-normal text-zinc-400">/100</span>
                 </span>
               </div>
 
-              <div className="h-8 w-px bg-slate-200 dark:bg-slate-700" />
+              <div className="h-8 w-px bg-zinc-200 dark:bg-zinc-800" />
 
               <div>
                 {riskAnalysis.score >= 65 ? (
-                  <div className="inline-flex items-center gap-1 text-xs font-bold text-rose-600 dark:text-rose-400">
-                    <ShieldAlert size={16} />
+                  <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-rose-600 dark:text-rose-400">
+                    <i className="bx bx-error-circle text-base" aria-hidden="true" />
                     <span>{isBn ? 'উচ্চ ঝুঁকি!' : 'Red Flags Detected'}</span>
                   </div>
                 ) : riskAnalysis.score >= 35 ? (
-                  <div className="inline-flex items-center gap-1 text-xs font-bold text-amber-600 dark:text-amber-400">
-                    <AlertTriangle size={16} />
+                  <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-600 dark:text-amber-400">
+                    <i className="bx bx-error text-base" aria-hidden="true" />
                     <span>{isBn ? 'তদন্ত আবশ্যক' : 'Caution Required'}</span>
                   </div>
                 ) : (
-                  <div className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
-                    <ShieldCheck size={16} />
+                  <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                    <i className="bx bx-check-circle text-base" aria-hidden="true" />
                     <span>{isBn ? 'স্বত্ব সুসংগত' : 'Favorable Pre-Screen'}</span>
                   </div>
                 )}
-                <div className="text-[10px] text-slate-500">
+                <div className="text-[10px] text-zinc-500">
                   {riskAnalysis.breakdown.criticalCount} Red Flags • {riskAnalysis.breakdown.highCount} Warnings
                 </div>
               </div>
             </div>
 
-            {/* Download Due-Diligence Report */}
+            {/* Download Verification Report */}
             <button
               onClick={() => setIsReportModalOpen(true)}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white dark:bg-emerald-600 dark:hover:bg-emerald-500 shadow-md transition-colors"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-md text-xs font-medium bg-[#121215] hover:bg-[#18181B] text-white dark:bg-emerald-600 dark:hover:bg-emerald-500 shadow-xs transition-colors"
             >
-              <Download size={15} />
-              <span>{isBn ? 'পূর্ণাঙ্গ ডিউ-ডিলিজেন্স রিপোর্ট' : 'Download Due-Diligence Report'}</span>
+              <i className="bx bx-download text-sm" aria-hidden="true" />
+              <span>{isBn ? 'পূর্ণাঙ্গ রেকর্ড রিপোর্ট ডাউনলোড' : 'Download Verification Report'}</span>
             </button>
           </div>
         </div>
 
         {/* Quick Area Unit Converter Pill Strip */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-1 text-xs">
+        <div className={`flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl border transition-colors ${
+          isLight ? 'bg-zinc-50/80 border-zinc-200' : 'bg-[#14141A] border-zinc-800'
+        }`}>
           <div className="flex items-center gap-2">
-            <span className="font-bold text-slate-500">
-              {isBn ? 'জমির পরিমাণ:' : 'Claimed Area:'}
+            <span className={`text-xs font-semibold ${isLight ? 'text-zinc-600' : 'text-zinc-400'}`}>
+              {isBn ? 'জমির মোট পরিমাণ:' : 'Claimed Area:'}
             </span>
-            <span className="font-black text-slate-900 dark:text-white text-sm">
+            <span className={`text-sm sm:text-base font-black ${isLight ? 'text-zinc-950' : 'text-white'}`}>
               {preferredUnit === 'decimals' && `${areaConversions.decimals} Decimals (শতক)`}
               {preferredUnit === 'katha' && `${areaConversions.katha} Katha (কাঠা)`}
               {preferredUnit === 'bigha' && `${areaConversions.bigha} Bigha (বিঘা)`}
@@ -293,15 +324,21 @@ export const DueDiligenceWorkbench: React.FC<DueDiligenceWorkbenchProps> = ({
             </span>
           </div>
 
-          <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+          <div className={`flex items-center gap-1 p-1 rounded-xl border ${
+            isLight ? 'bg-white border-zinc-200' : 'bg-[#181820] border-zinc-800'
+          }`}>
             {(['decimals', 'katha', 'bigha', 'sqFeet'] as const).map((unit) => (
               <button
                 key={unit}
                 onClick={() => setPreferredUnit(unit)}
-                className={`px-2 py-0.5 rounded-lg text-[11px] font-semibold transition-all ${
+                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
                   preferredUnit === unit
-                    ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
-                    : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+                    ? isLight
+                      ? 'bg-emerald-600 text-white shadow-xs font-bold'
+                      : 'bg-white text-zinc-950 shadow-xs font-bold'
+                    : isLight
+                    ? 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100'
+                    : 'text-zinc-400 hover:text-white hover:bg-zinc-800'
                 }`}
               >
                 {unit === 'decimals' && (isBn ? 'শতক' : 'Decimal')}
@@ -314,14 +351,17 @@ export const DueDiligenceWorkbench: React.FC<DueDiligenceWorkbenchProps> = ({
         </div>
 
         {/* Document Inventory Cards Strip */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-500">
-            <span>{isBn ? 'সংযুক্ত নথিপত্র (' + activeCase.documents.length + 'টি)' : 'Submitted Documents (' + activeCase.documents.length + ')'}</span>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between text-xs font-bold">
+            <span className={isLight ? 'text-zinc-800' : 'text-zinc-200'}>
+              {isBn ? 'সংযুক্ত নথিপত্র (' + activeCase.documents.length + 'টি)' : 'Submitted Documents (' + activeCase.documents.length + ')'}
+            </span>
             <button
               onClick={() => setIsUploadModalOpen(true)}
-              className="text-emerald-600 dark:text-emerald-400 hover:underline font-semibold"
+              className="text-emerald-600 dark:text-emerald-400 hover:underline font-semibold flex items-center gap-1"
             >
-              {isBn ? '+ আরও নথি যোগ করুন' : '+ Add Document to Case'}
+              <i className="bx bx-plus-circle text-sm" aria-hidden="true" />
+              <span>{isBn ? 'আরও নথি যোগ করুন' : 'Add Document to Case'}</span>
             </button>
           </div>
 
@@ -331,75 +371,203 @@ export const DueDiligenceWorkbench: React.FC<DueDiligenceWorkbenchProps> = ({
                 key={doc.id}
                 document={doc}
                 isBn={isBn}
+                theme={theme}
+                onInspect={(d) => setInspectedDoc(d)}
+                isSelected={inspectedDoc?.id === doc.id}
               />
             ))}
           </div>
         </div>
 
-        {/* ── WORKBENCH TABS NAVIGATION ── */}
-        <div className="border-b border-slate-200 dark:border-slate-800 pt-2">
-          <div className="flex items-center gap-2 overflow-x-auto pb-px">
+        {/* ── WORKBENCH BOTTOM FEATURE BOXES (NO SIDE SCROLL — CLEAN RESPONSIVE 5-COLUMN GRID) ── */}
+        <div className="pt-4 space-y-2.5">
+          <div className="flex items-center justify-between text-xs">
+            <span className={`font-bold uppercase tracking-wider ${isLight ? 'text-zinc-700' : 'text-zinc-300'}`}>
+              {isBn ? 'তদন্ত ও অডিট ফিচার মডিউল' : 'Investigation & Due-Diligence Feature Modules'}
+            </span>
+            <span className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
+              {isBn ? '৫টি সক্রিয় ফিচার' : '5 Modules Available'}
+            </span>
+          </div>
+
+          {/* 5-Column Responsive Feature Cards Grid — ZERO Side Scroll */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 w-full">
+            {/* Feature Box 1: 12-Field Reconciliation & Red Flags */}
             <button
+              type="button"
               onClick={() => setActiveTab('matrix')}
-              className={`flex items-center gap-2 px-4 py-2.5 border-b-2 text-xs font-bold whitespace-nowrap transition-all ${
+              className={`text-left p-3.5 rounded-2xl border transition-all flex flex-col justify-between ${
                 activeTab === 'matrix'
-                  ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400'
-                  : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                  ? isLight
+                    ? 'bg-emerald-50 border-emerald-500 text-zinc-950 ring-2 ring-emerald-500/20 shadow-md font-semibold'
+                    : 'bg-emerald-950/40 border-emerald-500 text-white ring-2 ring-emerald-500/30 shadow-md font-semibold'
+                  : isLight
+                  ? 'bg-white hover:bg-zinc-50 border-zinc-200 text-zinc-800 hover:border-zinc-300 shadow-xs'
+                  : 'bg-[#14141A] hover:bg-[#1A1A22] border-zinc-800 text-zinc-300 hover:text-white shadow-xs'
               }`}
             >
-              <FileCheck2 size={15} />
-              <span>{isBn ? '১২টি নির্দেশক ও রেড ফ্ল্যাগ' : '12-Field Cross-Reconciliation & Red Flags'}</span>
-              <span className="px-1.5 py-0.2 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px]">
-                {findings.length}
-              </span>
+              <div className="flex items-center justify-between mb-2">
+                <span className={`p-2 rounded-xl border ${
+                  isLight ? 'bg-emerald-100/70 border-emerald-200 text-emerald-800' : 'bg-emerald-950/60 border-emerald-800 text-emerald-400'
+                }`}>
+                  <i className="bx bx-check-shield text-base" aria-hidden="true" />
+                </span>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30 font-mono">
+                  {findings.length} {isBn ? 'টি অসঙ্গতি' : 'Red Flags'}
+                </span>
+              </div>
+              <div className="space-y-0.5">
+                <h5 className={`text-xs font-bold leading-tight ${activeTab === 'matrix' ? (isLight ? 'text-zinc-950' : 'text-white') : (isLight ? 'text-zinc-900' : 'text-zinc-200')}`}>
+                  {isBn ? '১২টি নির্দেশক অডিট' : '12-Field Reconciliation'}
+                </h5>
+                <p className={`text-[11px] leading-snug ${isLight ? 'text-zinc-600' : 'text-zinc-400'}`}>
+                  {isBn ? 'দাগ, খতিয়ান ও নামের অসঙ্গতি ক্রস-চেক' : 'Deed vs Khatian discrepancies'}
+                </p>
+              </div>
             </button>
 
+            {/* Feature Box 2: Chain of Title Flow */}
             <button
+              type="button"
               onClick={() => setActiveTab('chain')}
-              className={`flex items-center gap-2 px-4 py-2.5 border-b-2 text-xs font-bold whitespace-nowrap transition-all ${
+              className={`text-left p-3.5 rounded-2xl border transition-all flex flex-col justify-between ${
                 activeTab === 'chain'
-                  ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400'
-                  : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                  ? isLight
+                    ? 'bg-emerald-50 border-emerald-500 text-zinc-950 ring-2 ring-emerald-500/20 shadow-md font-semibold'
+                    : 'bg-emerald-950/40 border-emerald-500 text-white ring-2 ring-emerald-500/30 shadow-md font-semibold'
+                  : isLight
+                  ? 'bg-white hover:bg-zinc-50 border-zinc-200 text-zinc-800 hover:border-zinc-300 shadow-xs'
+                  : 'bg-[#14141A] hover:bg-[#1A1A22] border-zinc-800 text-zinc-300 hover:text-white shadow-xs'
               }`}
             >
-              <GitCommit size={15} />
-              <span>{isBn ? 'স্বত্বলিপির পরম্পরা (Chain of Title)' : 'Chain of Title Flow'}</span>
+              <div className="flex items-center justify-between mb-2">
+                <span className={`p-2 rounded-xl border ${
+                  isLight ? 'bg-teal-100/70 border-teal-200 text-teal-800' : 'bg-teal-950/60 border-teal-800 text-teal-400'
+                }`}>
+                  <i className="bx bx-git-branch text-base" aria-hidden="true" />
+                </span>
+                <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border font-mono ${
+                  isLight ? 'bg-teal-50 text-teal-800 border-teal-200' : 'bg-teal-950/60 text-teal-300 border-teal-800'
+                }`}>
+                  Ancestry
+                </span>
+              </div>
+              <div className="space-y-0.5">
+                <h5 className={`text-xs font-bold leading-tight ${activeTab === 'chain' ? (isLight ? 'text-zinc-950' : 'text-white') : (isLight ? 'text-zinc-900' : 'text-zinc-200')}`}>
+                  {isBn ? 'স্বত্বলিপির পরম্পরা' : 'Chain of Title Flow'}
+                </h5>
+                <p className={`text-[11px] leading-snug ${isLight ? 'text-zinc-600' : 'text-zinc-400'}`}>
+                  {isBn ? 'মালিকানা হস্তান্তর ও ওয়ারিশান প্রবাহ' : 'Ownership transfer genealogy tree'}
+                </p>
+              </div>
             </button>
 
+            {/* Feature Box 3: Environmental & Spatial Hazards */}
             <button
+              type="button"
               onClick={() => setActiveTab('spatial')}
-              className={`flex items-center gap-2 px-4 py-2.5 border-b-2 text-xs font-bold whitespace-nowrap transition-all ${
+              className={`text-left p-3.5 rounded-2xl border transition-all flex flex-col justify-between ${
                 activeTab === 'spatial'
-                  ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400'
-                  : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                  ? isLight
+                    ? 'bg-emerald-50 border-emerald-500 text-zinc-950 ring-2 ring-emerald-500/20 shadow-md font-semibold'
+                    : 'bg-emerald-950/40 border-emerald-500 text-white ring-2 ring-emerald-500/30 shadow-md font-semibold'
+                  : isLight
+                  ? 'bg-white hover:bg-zinc-50 border-zinc-200 text-zinc-800 hover:border-zinc-300 shadow-xs'
+                  : 'bg-[#14141A] hover:bg-[#1A1A22] border-zinc-800 text-zinc-300 hover:text-white shadow-xs'
               }`}
             >
-              <Compass size={15} />
-              <span>{isBn ? 'পরিবেশগত ও জোনিং ঝুঁকি' : 'Environmental & Spatial Hazards'}</span>
+              <div className="flex items-center justify-between mb-2">
+                <span className={`p-2 rounded-xl border ${
+                  isLight ? 'bg-sky-100/70 border-sky-200 text-sky-800' : 'bg-sky-950/60 border-sky-800 text-sky-400'
+                }`}>
+                  <i className="bx bx-compass text-base" aria-hidden="true" />
+                </span>
+                <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border font-mono ${
+                  isLight ? 'bg-sky-50 text-sky-800 border-sky-200' : 'bg-sky-950/60 text-sky-300 border-sky-800'
+                }`}>
+                  Spatial GIS
+                </span>
+              </div>
+              <div className="space-y-0.5">
+                <h5 className={`text-xs font-bold leading-tight ${activeTab === 'spatial' ? (isLight ? 'text-zinc-950' : 'text-white') : (isLight ? 'text-zinc-900' : 'text-zinc-200')}`}>
+                  {isBn ? 'পরিবেশ ও জোনিং ঝুঁকি' : 'Spatial Hazards'}
+                </h5>
+                <p className={`text-[11px] leading-snug ${isLight ? 'text-zinc-600' : 'text-zinc-400'}`}>
+                  {isBn ? 'বন্যা ঝুঁকি ও মাস্টারপ্ল্যান জোনিং' : 'Flood risk & RAJUK zoning scan'}
+                </p>
+              </div>
             </button>
 
+            {/* Feature Box 4: Official Verification Roadmap */}
             <button
+              type="button"
               onClick={() => setActiveTab('roadmap')}
-              className={`flex items-center gap-2 px-4 py-2.5 border-b-2 text-xs font-bold whitespace-nowrap transition-all ${
+              className={`text-left p-3.5 rounded-2xl border transition-all flex flex-col justify-between ${
                 activeTab === 'roadmap'
-                  ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400'
-                  : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                  ? isLight
+                    ? 'bg-emerald-50 border-emerald-500 text-zinc-950 ring-2 ring-emerald-500/20 shadow-md font-semibold'
+                    : 'bg-emerald-950/40 border-emerald-500 text-white ring-2 ring-emerald-500/30 shadow-md font-semibold'
+                  : isLight
+                  ? 'bg-white hover:bg-zinc-50 border-zinc-200 text-zinc-800 hover:border-zinc-300 shadow-xs'
+                  : 'bg-[#14141A] hover:bg-[#1A1A22] border-zinc-800 text-zinc-300 hover:text-white shadow-xs'
               }`}
             >
-              <CheckCircle2 size={15} />
-              <span>{isBn ? '৪-দফা সরকারি ভেরিফিকেশন গাইড' : 'Official Verification Roadmap'}</span>
+              <div className="flex items-center justify-between mb-2">
+                <span className={`p-2 rounded-xl border ${
+                  isLight ? 'bg-indigo-100/70 border-indigo-200 text-indigo-800' : 'bg-indigo-950/60 border-indigo-800 text-indigo-400'
+                }`}>
+                  <i className="bx bx-list-check text-base" aria-hidden="true" />
+                </span>
+                <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border font-mono ${
+                  isLight ? 'bg-indigo-50 text-indigo-800 border-indigo-200' : 'bg-indigo-950/60 text-indigo-300 border-indigo-800'
+                }`}>
+                  4 Steps
+                </span>
+              </div>
+              <div className="space-y-0.5">
+                <h5 className={`text-xs font-bold leading-tight ${activeTab === 'roadmap' ? (isLight ? 'text-zinc-950' : 'text-white') : (isLight ? 'text-zinc-900' : 'text-zinc-200')}`}>
+                  {isBn ? '৪-দফা সরকারি গাইড' : 'Gov Verification Guide'}
+                </h5>
+                <p className={`text-[11px] leading-snug ${isLight ? 'text-zinc-600' : 'text-zinc-400'}`}>
+                  {isBn ? 'সাব-রেজিস্ট্রি ও ভূমি অফিসে কী দেখবেন' : 'Official pre-purchase checklist'}
+                </p>
+              </div>
             </button>
 
+            {/* Feature Box 5: Bhumipedia Legal Glossary */}
             <button
+              type="button"
               onClick={() => setActiveTab('bhumipedia')}
-              className={`flex items-center gap-2 px-4 py-2.5 border-b-2 text-xs font-bold whitespace-nowrap transition-all ${
+              className={`text-left p-3.5 rounded-2xl border transition-all flex flex-col justify-between ${
                 activeTab === 'bhumipedia'
-                  ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400'
-                  : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                  ? isLight
+                    ? 'bg-emerald-50 border-emerald-500 text-zinc-950 ring-2 ring-emerald-500/20 shadow-md font-semibold'
+                    : 'bg-emerald-950/40 border-emerald-500 text-white ring-2 ring-emerald-500/30 shadow-md font-semibold'
+                  : isLight
+                  ? 'bg-white hover:bg-zinc-50 border-zinc-200 text-zinc-800 hover:border-zinc-300 shadow-xs'
+                  : 'bg-[#14141A] hover:bg-[#1A1A22] border-zinc-800 text-zinc-300 hover:text-white shadow-xs'
               }`}
             >
-              <BookOpen size={15} />
-              <span>{isBn ? 'ভূমিপিডিয়া আইন কোষ' : 'Bhumipedia Legal Glossary'}</span>
+              <div className="flex items-center justify-between mb-2">
+                <span className={`p-2 rounded-xl border ${
+                  isLight ? 'bg-amber-100/70 border-amber-200 text-amber-800' : 'bg-amber-950/60 border-amber-800 text-amber-400'
+                }`}>
+                  <i className="bx bx-book-bookmark text-base" aria-hidden="true" />
+                </span>
+                <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border font-mono ${
+                  isLight ? 'bg-amber-50 text-amber-800 border-amber-200' : 'bg-amber-950/60 text-amber-300 border-amber-800'
+                }`}>
+                  Statutory
+                </span>
+              </div>
+              <div className="space-y-0.5">
+                <h5 className={`text-xs font-bold leading-tight ${activeTab === 'bhumipedia' ? (isLight ? 'text-zinc-950' : 'text-white') : (isLight ? 'text-zinc-900' : 'text-zinc-200')}`}>
+                  {isBn ? 'ভূমিপিডিয়া আইন কোষ' : 'Legal Glossary'}
+                </h5>
+                <p className={`text-[11px] leading-snug ${isLight ? 'text-zinc-600' : 'text-zinc-400'}`}>
+                  {isBn ? 'আইনি ধারা ও দলিলের পরিভাষা' : 'Statutory land acts & definitions'}
+                </p>
+              </div>
             </button>
           </div>
         </div>
@@ -433,13 +601,13 @@ export const DueDiligenceWorkbench: React.FC<DueDiligenceWorkbenchProps> = ({
 
           {activeTab === 'roadmap' && (
             <div className="space-y-6">
-              <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-4">
-                <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
-                  <h4 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                    <Scale className="text-emerald-500" size={18} />
+              <div className="p-5 rounded-xl bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800 shadow-xs space-y-4">
+                <div className="border-b border-zinc-100 dark:border-zinc-800 pb-3">
+                  <h4 className="text-sm font-semibold text-zinc-950 dark:text-white flex items-center gap-2">
+                    <i className="bx bx-award text-emerald-500 text-base" aria-hidden="true" />
                     <span>{isBn ? 'জমি কেনার পূর্বে ৪-দফা বাধ্যতামূলক সরকারি যাচাইকরণ' : 'Actionable 4-Step Pre-Purchase Verification Roadmap'}</span>
                   </h4>
-                  <p className="text-xs text-slate-500 mt-0.5">
+                  <p className="text-xs text-zinc-500 mt-0.5">
                     {isBn
                       ? 'যেকোনো বায়না বা সাফ-কবলা দলিল রেজিস্ট্রেশনের পূর্বে এই সরকারি যাচাইগুলো সম্পন্ন করা আইনত জরুরি'
                       : 'Statutory verification steps every buyer must execute through official Ministry of Land portals'}
@@ -450,11 +618,11 @@ export const DueDiligenceWorkbench: React.FC<DueDiligenceWorkbenchProps> = ({
                   {OFFICIAL_GOV_VERIFICATION_PORTALS.map((portal) => (
                     <div
                       key={portal.name}
-                      className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 flex flex-col justify-between space-y-3"
+                      className="p-4 rounded-lg bg-zinc-50 dark:bg-[#18181B] border border-zinc-200 dark:border-zinc-800 flex flex-col justify-between space-y-3"
                     >
                       <div className="space-y-1.5">
                         <div className="flex items-center justify-between gap-2">
-                          <h5 className="text-sm font-bold text-slate-900 dark:text-white">
+                          <h5 className="text-sm font-semibold text-zinc-950 dark:text-white">
                             {portal.name}
                           </h5>
                           <a
@@ -463,10 +631,10 @@ export const DueDiligenceWorkbench: React.FC<DueDiligenceWorkbenchProps> = ({
                             rel="noreferrer"
                             className="p-1 rounded text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 transition-colors"
                           >
-                            <ExternalLink size={14} />
+                            <i className="bx bx-link-external text-sm" aria-hidden="true" />
                           </a>
                         </div>
-                        <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                        <p className="text-xs text-zinc-600 dark:text-zinc-300 leading-relaxed">
                           {isBn ? portal.descriptionBn : portal.descriptionEn}
                         </p>
                       </div>
@@ -475,10 +643,10 @@ export const DueDiligenceWorkbench: React.FC<DueDiligenceWorkbenchProps> = ({
                         href={portal.url}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-500 text-slate-800 dark:text-slate-200 transition-colors"
+                        className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium bg-white dark:bg-[#18181B] border border-zinc-200 dark:border-zinc-800 hover:border-emerald-500 text-zinc-800 dark:text-zinc-200 transition-colors shadow-xs"
                       >
                         <span>{isBn ? 'সরকারি পোর্টালে অনুসন্ধান করুন' : 'Verify on Official Portal'}</span>
-                        <ExternalLink size={12} />
+                        <i className="bx bx-link-external text-xs" aria-hidden="true" />
                       </a>
                     </div>
                   ))}
@@ -488,14 +656,14 @@ export const DueDiligenceWorkbench: React.FC<DueDiligenceWorkbenchProps> = ({
           )}
 
           {activeTab === 'bhumipedia' && (
-            <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-5">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
+            <div className="p-5 rounded-xl bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800 shadow-xs space-y-5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-100 dark:border-zinc-800 pb-3">
                 <div>
-                  <h4 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                    <BookOpen className="text-emerald-500" size={18} />
+                  <h4 className="text-sm font-semibold text-zinc-950 dark:text-white flex items-center gap-2">
+                    <i className="bx bx-book-open text-emerald-500 text-base" aria-hidden="true" />
                     <span>{isBn ? 'ভূমিপিডিয়া আইন কোষ ও পরিভাষা গাইড' : 'Bhumipedia Legal Glossary & Terminology'}</span>
                   </h4>
-                  <p className="text-xs text-slate-500 mt-0.5">
+                  <p className="text-xs text-zinc-500 mt-0.5">
                     {isBn
                       ? 'ভূমি মন্ত্রণালয় (bhumipedia.land.gov.bd) ও প্রজাস্বত্ব আইন ১৯৫০ এর প্রামাণ্য পরিভাষা'
                       : 'Authentic statutory definitions from Ministry of Land & SAT Act 1950'}
@@ -505,33 +673,34 @@ export const DueDiligenceWorkbench: React.FC<DueDiligenceWorkbenchProps> = ({
                   href="https://bhumipedia.land.gov.bd/"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline"
                 >
                   <span>bhumipedia.land.gov.bd</span>
-                  <ExternalLink size={12} />
+                  <i className="bx bx-link-external text-xs" aria-hidden="true" />
                 </a>
               </div>
+
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {Object.entries(BANGLADESH_LAND_TERMS).map(([key, term]) => (
                   <div
                     key={key}
-                    className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-2"
+                    className="p-4 rounded-xl bg-zinc-50 dark:bg-[#18181B] border border-zinc-200 dark:border-zinc-800 space-y-2"
                   >
                     <div className="flex items-baseline justify-between gap-2">
-                      <h5 className="text-sm font-bold text-slate-900 dark:text-white">
+                      <h5 className="text-sm font-bold text-zinc-950 dark:text-white">
                         {isBn ? term.termBn : term.termEn}
                       </h5>
-                      <span className="text-[10px] font-mono text-slate-400">
+                      <span className="text-[10px] font-mono text-zinc-400">
                         {term.phonetic}
                       </span>
                     </div>
 
-                    <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    <p className="text-xs text-zinc-600 dark:text-zinc-300 leading-relaxed">
                       {isBn ? term.definitionBn : term.definitionEn}
                     </p>
 
-                    <div className="pt-2 border-t border-slate-200/60 dark:border-slate-800/60 text-[11px] text-emerald-800 dark:text-emerald-300 bg-emerald-500/5 p-2 rounded-lg">
+                    <div className="pt-2 border-t border-zinc-200 dark:border-zinc-800 text-[11px] text-emerald-800 dark:text-emerald-300 bg-emerald-500/5 p-2 rounded-lg">
                       <strong>{isBn ? 'আইনি তাৎপর্য:' : 'Practical Impact:'}</strong>{' '}
                       {isBn ? term.practicalSignificanceBn : term.practicalSignificanceEn}
                     </div>
@@ -564,6 +733,15 @@ export const DueDiligenceWorkbench: React.FC<DueDiligenceWorkbenchProps> = ({
         isBn={isBn}
       />
 
-    </section>
+      <DeedAnnotationModal
+        document={inspectedDoc}
+        isOpen={Boolean(inspectedDoc)}
+        onClose={() => setInspectedDoc(null)}
+        isBn={isBn}
+        theme={theme}
+        onSaveOverride={handleSaveDocumentOverride}
+      />
+
+    </div>
   );
 };

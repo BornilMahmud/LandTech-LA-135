@@ -1,27 +1,265 @@
+@import "boxicons/css/boxicons.min.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --font-sans: 'Inter', sans-serif;
-    --font-heading: 'Outfit', sans-serif;
-    --font-bangla: 'Hind Siliguri', sans-serif;
+    /* BMS Design Tokens — Global Design System v2.0 */
+    --white:       #FFFFFF;
+    --black:       #000000;
+    --gray-50:     #FAFAFA;
+    --gray-100:    #F4F4F5;
+    --gray-200:    #E4E4E7;
+    --gray-300:    #D4D4D8;
+    --gray-400:    #A1A1AA;
+    --gray-500:    #71717A;
+    --gray-600:    #52525B;
+    --gray-700:    #3F3F46;
+    --gray-800:    #27272A;
+    --gray-900:    #18181B;
+    --gray-950:    #09090B;
+
+    --bg:          #FFFFFF;
+    --bg-2:        #FAFAFA;
+    --bg-3:        #F4F4F5;
+    --bg-base:     #FFFFFF;
+    --bg-subtle:   #FAFAFA;
+    --bg-muted:    #F4F4F5;
+
+    --ink:         #09090B;
+    --ink-2:       #52525B;
+    --ink-3:       #71717A;
+    --ink-muted:   #71717A;
+    --text-primary:   #09090B;
+    --text-secondary: #52525B;
+    --text-muted:     #71717A;
+    --text-disabled:  #A1A1AA;
+
+    --line:        #E4E4E7;
+    --line-2:      #D4D4D8;
+    --border:      #E4E4E7;
+    --border-md:   #D4D4D8;
+    --border-strong: #A1A1AA;
+
+    --accent:      #09090B;
+    --accent-fg:   #FFFFFF;
+    --accent-emerald: #16A34A;
+    --accent-gold: #F6BA42;
+
+    --card-bg:     #FFFFFF;
+    --card-hover:  #FAFAFA;
+
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --font-bangla: 'Hind Siliguri', 'Inter', sans-serif;
+    --font-mono: 'SF Mono', 'Fira Code', ui-monospace, monospace;
+
+    --r-xs:  4px;
+    --r-sm:  6px;
+    --r:     8px;
+    --r-md:  12px;
+    --r-lg:  18px;
+    --r-xl:  24px;
+    --r-full: 9999px;
+
+    --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.07), 0 4px 6px -2px rgba(0,0,0,0.04);
+    --shadow-card: 0 16px 36px -12px rgba(0,0,0,0.06);
+
+    --ease: cubic-bezier(.16, 1, .3, 1);
+  }
+
+  [data-theme="dark"],
+  .dark {
+    --white:       #000000;
+    --black:       #FFFFFF;
+    --gray-50:     #09090B;
+    --gray-100:    #18181B;
+    --gray-200:    #27272A;
+    --gray-300:    #3F3F46;
+    --gray-400:    #52525B;
+    --gray-500:    #71717A;
+    --gray-600:    #A1A1AA;
+    --gray-700:    #D4D4D8;
+    --gray-800:    #E4E4E7;
+    --gray-900:    #F4F4F5;
+    --gray-950:    #09090B;
+
+    --bg:          #09090B;
+    --bg-2:        #121215;
+    --bg-3:        #18181B;
+    --bg-base:     #09090B;
+    --bg-subtle:   #121215;
+    --bg-muted:    #18181B;
+
+    --ink:         #FAFAFA;
+    --ink-2:       #A1A1AA;
+    --ink-3:       #71717A;
+    --ink-muted:   #A1A1AA;
+    --text-primary:   #FAFAFA;
+    --text-secondary: #A1A1AA;
+    --text-muted:     #71717A;
+    --text-disabled:  #52525B;
+
+    --line:        #27272A;
+    --line-2:      #3F3F46;
+    --border:      #27272A;
+    --border-md:   #3F3F46;
+    --border-strong: #52525B;
+
+    --accent:      #FAFAFA;
+    --accent-fg:   #09090B;
+    --accent-emerald: #4ADE80;
+    --accent-gold: #FBBF24;
+
+    --card-bg:     #121215;
+    --card-hover:  #18181B;
+
+    --shadow-xs: 0 1px 2px rgba(0,0,0,0.4);
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.5), 0 1px 2px rgba(0,0,0,0.4);
+    --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.5), 0 4px 6px -2px rgba(0,0,0,0.4);
+    --shadow-card: 0 20px 40px -15px rgba(0,0,0,0.5);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    font-size: 16px;
   }
 
   body {
-    font-family: var(--font-sans);
+    font-family: var(--font);
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    background: var(--bg);
+    min-height: 100vh;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "cv02","cv03","cv04","cv11";
   }
 
   h1, h2, h3, h4, .font-heading {
     font-family: var(--font-heading);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    font-feature-settings: "cv02","cv03","cv04","cv11";
   }
 
   .font-bangla {
     font-family: var(--font-bangla);
   }
 }
+
+/* BMS Box & Card Design System Classes */
+.bms-card {
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.2s var(--ease), border-color 0.2s, box-shadow 0.2s;
+}
+.bms-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--ink);
+}
+
+.bms-pill-box {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  transition: transform 0.2s var(--ease), border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+}
+.bms-pill-box:hover {
+  transform: translateY(-2px);
+  border-color: var(--ink);
+  background: var(--bg);
+}
+
+/* Buttons from BMS */
+.btn-bms-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  border-radius: 10px;
+  cursor: pointer;
+  background: var(--ink);
+  color: var(--bg);
+  border: 1px solid var(--ink);
+  transition: all 0.2s var(--ease);
+}
+.btn-bms-primary:hover {
+  transform: translateY(-1px);
+  opacity: 0.92;
+}
+
+.btn-bms-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  border-radius: 10px;
+  cursor: pointer;
+  background: var(--bg-3);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  transition: all 0.2s var(--ease);
+}
+.btn-bms-secondary:hover {
+  transform: translateY(-1px);
+  border-color: var(--line-2);
+  background: var(--line);
+}
+
+/* Live Pulse Indicator from BMS */
+.bms-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22C55E;
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+  animation: bmsPulse 2s infinite ease-in-out;
+}
+@keyframes bmsPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+/* Circular View Transition animations copied from newDark_portfolio */
+::view-transition-group(root) {
+  animation-duration: 0.75s;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+  animation: none;
+  display: block;
+}
+
+::view-transition-old(root) {
+  z-index: 1 !important;
+}
+
+::view-transition-new(root) {
+  z-index: 9999 !important;
+}
+
 
 /* Custom Scrollbars */
 .scrollbar-thin::-webkit-scrollbar {
@@ -105,5 +343,138 @@
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   OFFICE-GRADE PROFESSIONAL PDF & PRINT STYLESHEET
+   ========================================================================== */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm 12mm 12mm 12mm;
+  }
+
+  /* Force light theme colors & high contrast print reproduction */
+  *,
+  *::before,
+  *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    text-shadow: none !important;
+  }
+
+  /* Reset document flow */
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow: visible !important;
+    background: #FFFFFF !important;
+    color: #0F172A !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 10pt !important;
+    line-height: 1.4 !important;
+  }
+
+  /* Hide root application UI and interactive chrome */
+  #root > nav,
+  #root > footer,
+  #root > main,
+  header,
+  nav,
+  footer,
+  aside,
+  .print\:hidden,
+  button,
+  [role="dialog"] > div:first-child:not(#printable-dossier) {
+    display: none !important;
+  }
+
+  /* Ensure the modal overlay does not constrain height or add gray backdrop */
+  .fixed,
+  .absolute,
+  [role="dialog"] {
+    position: static !important;
+    inset: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  /* Printable Dossier Container */
+  #printable-dossier {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #FFFFFF !important;
+    color: #0F172A !important;
+    box-shadow: none !important;
+    border: none !important;
+    overflow: visible !important;
+  }
+
+  /* Force pure white backgrounds and crisp black/slate text on cards */
+  #printable-dossier .bg-zinc-50,
+  #printable-dossier .bg-white,
+  #printable-dossier .dark\:bg-\[\#18181B\],
+  #printable-dossier .dark\:bg-\[\#121215\] {
+    background-color: #FFFFFF !important;
+    border-color: #E2E8F0 !important;
+  }
+
+  #printable-dossier .dark\:text-white,
+  #printable-dossier .dark\:text-zinc-100,
+  #printable-dossier .dark\:text-zinc-200,
+  #printable-dossier .dark\:text-zinc-300 {
+    color: #0F172A !important;
+  }
+
+  #printable-dossier .dark\:text-zinc-400,
+  #printable-dossier .dark\:text-zinc-500 {
+    color: #475569 !important;
+  }
+
+  /* Page break rules for clean office documents */
+  .print-break-inside-avoid,
+  .print-card,
+  table,
+  tr,
+  .break-inside-avoid {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .print-page-break {
+    page-break-before: always !important;
+    break-before: page !important;
+  }
+
+  /* Table borders */
+  table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+  }
+
+  th, td {
+    border: 1px solid #CBD5E1 !important;
+  }
+
+  th {
+    background-color: #F1F5F9 !important;
+    color: #0F172A !important;
+  }
 }
 

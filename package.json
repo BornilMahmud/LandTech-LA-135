@@ -10,7 +10,9 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@google/genai": "^2.29.1",
     "@turf/turf": "^7.4.0",
+    "boxicons": "^2.1.4",
     "clsx": "^2.1.1",
     "lucide-react": "^0.475.0",
     "maplibre-gl": "^6.14.0",
